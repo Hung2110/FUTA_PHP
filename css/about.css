@@ -1,0 +1,342 @@
+/* --- Video Section --- */
+.video-section {
+    position: relative;
+    width: 100%;
+    height: 85vh; /* Điều chỉnh chiều cao tùy ý */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+}
+
+.video-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.video-content {
+    position: relative;
+    z-index: 1;
+    padding: 20px;
+}
+
+.video-content h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 3em;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+.video-content p {
+    font-size: 1.1em;
+    font-weight: 400;
+    max-width: 600px;
+    margin: auto;
+}
+/* Section Giới thiệu */
+.section-intro {
+  text-align: center;
+  padding: 60px 20px;
+  background: #fff;
+}
+.section-intro .container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.section-intro .intro-title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.section-intro .intro-text {
+  font-size: 22px;
+  color: #444;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.section-intro .highlight {
+  color: #007bff;
+  font-weight: 600;
+}
+
+.section-intro .intro-subtitle {
+  font-size: 18px;
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 25px;
+}
+
+.section-intro .intro-map img {
+  max-width: 100%;
+  max-height: 1200px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+.vision-mission {
+  padding: 60px 20px;
+  background: #fff;
+  text-align: center;
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 40px 0 30px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.vm-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 25px;
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.vm-box {
+  position: relative;
+  height: 350px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  transition: transform 0.5s ease;
+}
+
+.vm-box:hover {
+  transform: scale(1.03);
+}
+
+.vm-box.vision {
+  background: url("../assets/images/banners/istockphoto-1454671518-612x612.jpg") no-repeat center/cover;
+}
+
+.vm-box.mission {
+  background: url("../assets/images/banners/istockphoto-2166990605-612x612.jpg") no-repeat center/cover;
+}
+
+.vm-overlay {
+  background: rgba(0,0,0,0.65);
+  padding: 30px 25px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.vm-icon {
+  font-size: 60px;
+  margin-bottom: 15px;
+  display: block;
+  color: #fff;
+}
+
+/* --- Core Values --- */
+.core-values {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 50px;
+  max-width: 1100px;
+  margin: 20px auto 0;
+}
+
+.cv-box {
+  background: #f9f9f9;
+  border-radius: 12px;
+  padding: 25px 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.cv-box:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+}
+
+.cv-icon {
+  font-size: 35px;
+  color: #007bff;
+  margin-bottom: 12px;
+}
+
+.cv-box h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cv-box p {
+  font-size: 20px;
+  line-height: 1.6;
+  color: #444;
+}
+/* ===== BANNER GỐC ===== */
+.banner-approach {
+    width: 100%;
+    position: relative;
+}
+
+.banner-approach-wrapper {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+}
+
+.banner-approach-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* overlay mờ giống hình */
+.banner-approach-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1;
+}
+
+/* ===== TEXT ===== */
+.banner-approach-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    color: #fff;
+    width: 90%;
+}
+
+/* KHÔNG XUỐNG DÒNG */
+.banner-approach-text p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 6px 0;
+}
+
+/* SIZE CHỮ */
+.line-1 {
+    font-size: 28px;
+}
+
+.line-2 {
+    font-size: 28px;
+}
+
+/* ===== ANIMATION ===== */
+.line {
+    opacity: 0;
+}
+
+.line-1 {
+    animation: slideLeft 1s ease forwards;
+}
+
+.line-2 {
+    animation: slideRight 1s ease forwards 0.4s;
+}
+/* Section chứa ảnh */
+.full-banner {
+    width: 100%;
+    margin: 80px 0;      /* khoảng cách trên & dưới */
+}
+
+/* Ảnh full chiều ngang, không zoom, không cắt */
+.full-banner-img {
+    width: 100%;
+    height: auto;
+    display: block;      /* bỏ khoảng trắng dưới ảnh */
+    object-fit: cover;   /* giữ tỉ lệ ảnh */
+}
+/* KEYFRAMES */
+@keyframes slideLeft {
+    0% { transform: translateX(-40px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+    0% { transform: translateX(40px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .line-1 { font-size: 16px; }
+    .line-2 { font-size: 20px; }
+}
+
+@media (max-width: 480px) {
+    .line-1 { font-size: 14px; }
+    .line-2 { font-size: 18px; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .line-1, .line-2 { font-size: 16px; }
+    .line-3 { font-size: 19px; }
+    .banner-wrapper { height: 200px; }
+}
+
+@media (max-width: 480px) {
+    .line-1, .line-2 { font-size: 14px; }
+    .line-3 { font-size: 17px; }
+    .banner-wrapper { height: 180px; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .intro-video {
+    height: 40vh;
+  }
+
+  .intro-overlay h1 {
+    font-size: 22px;
+  }
+
+  .intro-overlay p {
+    font-size: 14px;
+  }
+
+  .section-intro {
+    padding: 40px 15px;
+  }
+
+  .section-intro .intro-title {
+    font-size: 22px;
+  }
+
+  .section-intro .intro-text {
+    font-size: 14px;
+  }
+
+  .section-intro .intro-map img {
+    max-height: 280px;
+  }
+}

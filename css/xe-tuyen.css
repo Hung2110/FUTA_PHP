@@ -1,0 +1,494 @@
+/* =========================================== */
+/* XE TUYẾN - xe-tuyen.css */
+/* =========================================== */
+/* Hero Section */
+.img-section {
+  width: 100%;
+}
+
+.img-section .img-background {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+/* =========================================== */
+/* ADS ROUTE SECTION */
+/* =========================================== */
+.adsroute-section {
+  padding: 110px 20px;
+  border-radius: 32px;
+}
+
+.adsroute-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  border-radius: 24px;
+}
+
+.adsroute-image {
+  position: relative;
+}
+
+.adsroute-image img {
+  width: 100%;
+  border-radius: 28px;
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1), box-shadow 0.4s cubic-bezier(0.4,0,0.2,1);
+  filter: brightness(1.04) saturate(1.1);
+}
+.adsroute-content h2 {
+  font-size: 45px;
+  font-weight: 900;
+  color: #004aad;
+  margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  letter-spacing: -1px;
+  text-shadow: 0 2px 16px rgba(0, 74, 173, 0.10);
+}
+
+.adsroute-line {
+  width: 6px;
+  height: 60px;
+  border-radius: 3px;
+}
+
+.adsroute-content p {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #555;
+  margin-bottom: 50px;
+  font-weight: 400;
+}
+
+.adsroute-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 25px;
+}
+
+.adsroute-box {
+  background: linear-gradient(120deg, #fafdff 60%, #e3f0ff 100%);
+  padding: 38px 32px;
+  border-radius: 22px;
+
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1.5px solid rgba(0, 74, 173, 0.13);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.adsroute-box p {
+  font-size: 15px;
+  color: #6a7a8c;
+  margin-bottom: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.7px;
+}
+
+.adsroute-box h3 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #004aad;
+  margin: 0;
+  line-height: 1.4;
+  text-shadow: 0 2px 12px rgba(0, 74, 173, 0.08);
+}
+
+/* =========================================== */
+/* ADS OUT CAR SECTION */
+/* =========================================== */
+.adsoutcar-section {
+  padding: 120px 20px;
+  border-radius: 32px;
+ 
+}
+
+.adsoutcar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.adsoutcar-content {
+  position: relative;
+}
+
+.adsoutcar-number {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+.adsoutcar-number .index {
+  font-size: 80px;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -2px;
+}
+
+.adsoutcar-number .bar {
+  width: 70px;
+  height: 5px;
+
+  border-radius: 3px;
+}
+
+.adsoutcar-title {
+  font-size: 48px;
+  font-weight: 800;
+  color: #1f2a37;
+  margin-bottom: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.adsoutcar-title span {
+  color: #004aad;
+}
+
+.adsoutcar-text {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #555;
+  margin-bottom: 35px;
+  font-weight: 400;
+}
+
+.adsoutcar-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.adsoutcar-content ul li {
+  font-size: 17px;
+  color: #444;
+  padding: 15px 0;
+  padding-left: 40px;
+  position: relative;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.adsoutcar-content ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #004aad;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.adsoutcar-image {
+  position: relative;
+}
+
+.adsoutcar-image img {
+  width: 100%;
+  border-radius: 28px;
+ 
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  filter: brightness(1.04) saturate(1.1);
+}
+
+
+/* =========================================== */
+/* ADS COMPARTMENT SECTION */
+/* =========================================== */
+.adscompartment-section {
+  padding: 120px 20px;
+ 
+  border-radius: 32px;
+
+}
+
+.adscompartment-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.adscompartment-image {
+  order: 1;
+}
+
+.adscompartment-content {
+  order: 2;
+}
+
+.adscompartment-number {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+.adscompartment-content h2 {
+  font-size: 45px;
+  font-weight: 900;
+  color: #1f2a37;
+  margin-bottom: 32px;
+  line-height: 1.15;
+  letter-spacing: -1px;
+  text-shadow: 0 2px 16px rgba(0, 74, 173, 0.10);
+  text-shadow: 0 2px 16px rgba(0, 74, 173, 0.10);
+}
+
+.adscompartment-content h2 span {
+  color: #004aad;
+  filter: brightness(1.2);
+}
+
+.adscompartment-content p {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #555;
+  margin-bottom: 35px;
+  font-weight: 400;
+}
+
+.adscompartment-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.adscompartment-content ul li {
+  font-size: 17px;
+  color: #444;
+  padding: 15px 0;
+  padding-left: 40px;
+  position: relative;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.adscompartment-content ul li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #004aad;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.adscompartment-image img {
+  width: 100%;
+  border-radius: 28px;
+
+  transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
+  filter: brightness(1.04) saturate(1.1);
+}
+
+
+
+/* =========================================== */
+/* BANNER SECTION */
+/* =========================================== */
+/* ===== Banner gốc ===== */
+.banner-intro {
+    width: 100%;
+    position: relative;
+}
+
+.banner-wrapper {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+}
+
+/* ===== Vùng chữ ===== */
+.banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+/* ===== KHÔNG CHO XUỐNG DÒNG ===== */
+.banner-text p {
+    white-space: nowrap;      /* Giữ 1 dòng */
+    overflow: hidden;         /* Ẩn tràn nếu quá dài */
+    text-overflow: ellipsis;  /* Thêm ... nếu quá dài */
+    margin: 6px 0;
+}
+
+/* ===== TÙY CHỈNH KÍCH THƯỚC CHỮ ===== */
+.line-1 { font-size: 28px; }
+.line-2 { font-size: 28px; }
+.line-3 { font-size:30px; font-weight: 700; }
+
+/* ===== EFFECT CHUYỂN ĐỘNG ===== */
+.line { opacity: 0; }
+
+.line-1 { animation: slideLeft 1s ease forwards; }
+.line-2 { animation: slideRight 1s ease forwards 0.3s; }
+.line-3 { animation: slideUp 1s ease forwards 0.6s; }
+
+/* ===== Keyframes ===== */
+@keyframes slideLeft {
+    0% { transform: translateX(-40px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+    0% { transform: translateX(40px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(25px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .line-1, .line-2 { font-size: 16px; }
+    .line-3 { font-size: 19px; }
+    .banner-wrapper { height: 200px; }
+}
+
+@media (max-width: 480px) {
+    .line-1, .line-2 { font-size: 14px; }
+    .line-3 { font-size: 17px; }
+    .banner-wrapper { height: 180px; }
+}
+
+/* =========================================== */
+/* RESPONSIVE */
+/* =========================================== */
+@media (max-width: 1200px) {
+  .adsroute-container,
+  .adsoutcar-container,
+  .adscompartment-container {
+    gap: 60px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 992px) {
+  .adsroute-container,
+  .adsoutcar-container,
+  .adscompartment-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .adscompartment-image {
+    order: 1;
+  }
+
+  .adscompartment-content {
+    order: 2;
+  }
+
+  .adsroute-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .adsroute-content h2,
+  .adsoutcar-title,
+  .adscompartment-content h2 {
+    font-size: 38px;
+  }
+
+  .adsoutcar-number .index,
+  .adscompartment-number .index {
+    font-size: 70px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 50vh;
+  }
+
+  .adsroute-section,
+  .adsoutcar-section,
+  .adscompartment-section {
+    padding: 80px 20px;
+  }
+
+  .adsroute-content h2,
+  .adsoutcar-title,
+  .adscompartment-content h2 {
+    font-size: 32px;
+  }
+
+  .adsroute-content p,
+  .adsoutcar-text,
+  .adscompartment-content p {
+    font-size: 17px;
+  }
+
+  .adsoutcar-number .index,
+  .adscompartment-number .index {
+    font-size: 60px;
+  }
+
+  .banner-content p {
+    font-size: 18px;
+  }
+
+  .banner-content .highlight {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 40vh;
+  }
+
+  .adsroute-section,
+  .adsoutcar-section,
+  .adscompartment-section {
+    padding: 60px 20px;
+  }
+
+  .adsroute-content h2,
+  .adsoutcar-title,
+  .adscompartment-content h2 {
+    font-size: 28px;
+  }
+
+  .adsroute-box {
+    padding: 25px 20px;
+  }
+
+  .adsoutcar-number .index,
+  .adscompartment-number .index {
+    font-size: 50px;
+  }
+}
+

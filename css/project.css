@@ -1,0 +1,268 @@
+/* =========================================== */
+/* PROJECT PAGE - project.css */
+/* =========================================== */
+
+.futa-project-page * {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.futa-project-page {
+  background: #f8f9fa;
+  color: #1f2a37;
+  padding-bottom: 80px;
+}
+
+/* =========================================== */
+/* BANNER SECTION */
+/* =========================================== */
+.futa-project-page section.futa-banner {
+  position: relative;
+  background: url("../assets/images/banners/istockphoto-486255352-612x612.jpg") center/cover no-repeat;
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  text-align: center;
+  overflow: hidden;
+}
+
+.futa-project-page section.futa-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.futa-project-page section.futa-banner .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 1;
+}
+
+.futa-project-page section.futa-banner .banner-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 20px;
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.futa-project-page section.futa-banner h1 {
+  font-size: 3.5em;
+  letter-spacing: 2px;
+  font-weight: 800;
+  margin-bottom: 15px;
+  text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.futa-project-page section.futa-banner p {
+  font-size: 1.4em;
+  font-weight: 400;
+  opacity: 0.95;
+}
+
+/* =========================================== */
+/* PROJECTS SECTION */
+/* =========================================== */
+.futa-project-page .projects {
+  max-width: 1200px;
+  margin: 80px auto;
+  padding: 0 20px;
+}
+
+.futa-project-page .projects h2 {
+  text-align: center;
+  color: #004aad;
+  margin-bottom: 50px;
+  font-size: 2.5em;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 800;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.futa-project-page .projects h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #004aad, #007bff);
+  border-radius: 2px;
+}
+
+.futa-project-page .project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 35px;
+}
+
+/* Wrapper cho thẻ dự án có thể click */
+.futa-project-page .project-link-wrapper {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* =========================================== */
+/* PROJECT CARD */
+/* =========================================== */
+.futa-project-page .project {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 74, 173, 0.1);
+  position: relative;
+}
+
+.futa-project-page .project img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.futa-project-page .project-content {
+  padding: 30px;
+}
+
+.futa-project-page .project-content h3 {
+  color: #004aad;
+  font-size: 1.5em;
+  margin-bottom: 12px;
+  font-weight: 700;
+}
+
+.futa-project-page .project-content .client {
+  color: #666;
+  font-size: 0.95em;
+  margin-bottom: 15px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.futa-project-page .project-content .client i {
+  color: #004aad;
+}
+
+.futa-project-page .project-content p {
+  font-size: 1em;
+  color: #555;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.futa-project-page .no-projects {
+  text-align: center;
+  padding: 80px 20px;
+  color: #999;
+  font-size: 1.3em;
+}
+
+/* =========================================== */
+/* FADE IN ANIMATION */
+/* =========================================== */
+.futa-project-page .fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.futa-project-page .fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =========================================== */
+/* RESPONSIVE */
+/* =========================================== */
+@media (max-width: 992px) {
+  .futa-project-page section.futa-banner {
+    height: 500px;
+  }
+
+  .futa-project-page section.futa-banner h1 {
+    font-size: 2.8em;
+  }
+
+  .futa-project-page section.futa-banner p {
+    font-size: 1.2em;
+  }
+
+  .futa-project-page .project-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .futa-project-page section.futa-banner {
+    height: 400px;
+  }
+
+  .futa-project-page section.futa-banner h1 {
+    font-size: 2.2em;
+    letter-spacing: 1px;
+  }
+
+  .futa-project-page section.futa-banner p {
+    font-size: 1.1em;
+  }
+
+  .futa-project-page .projects {
+    margin: 60px auto;
+  }
+
+  .futa-project-page .projects h2 {
+    font-size: 2em;
+  }
+
+  .futa-project-page .project-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .futa-project-page .project img {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .futa-project-page section.futa-banner {
+    height: 350px;
+  }
+
+  .futa-project-page section.futa-banner h1 {
+    font-size: 1.8em;
+  }
+
+  .futa-project-page section.futa-banner p {
+    font-size: 1em;
+  }
+
+  .futa-project-page .projects h2 {
+    font-size: 1.6em;
+  }
+
+  .futa-project-page .project-content {
+    padding: 20px;
+  }
+}

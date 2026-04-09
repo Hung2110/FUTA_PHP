@@ -1,0 +1,411 @@
+/* =========================================== */
+/* XE BUÝT - xe-buyt.css */
+/* =========================================== */
+
+.img-section {
+  width: 100%;
+}
+
+.img-section .img-background {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+/*============= */
+/* ADS BUS INTRO SECTION */
+/* =========================================== */
+.adsbus-intro-section {
+  padding: 100px 20px;
+  background: #fff;
+}
+
+.adsbus-intro-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.adsbus-intro-content {
+  position: relative;
+}
+
+.adsbus-intro-title {
+  font-size: 40px;
+  font-weight: 800;
+  color: #004aad;
+  margin-bottom: 30px;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.adsbus-intro-title span {
+  display: block;
+}
+
+.adsbus-intro-text {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #555;
+  margin-bottom: 25px;
+  font-weight: 400;
+}
+
+.adsbus-intro-list {
+  list-style: none;
+  padding: 0;
+  margin: 35px 0;
+}
+
+.adsbus-intro-list li {
+  font-size: 17px;
+  color: #444;
+  padding: 15px 0;
+  padding-left: 40px;
+  position: relative;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.adsbus-intro-list li:hover {
+  color: #004aad;
+}
+
+.adsbus-intro-list li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #004aad;
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.adsbus-intro-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 45px;
+  background: linear-gradient(135deg, #004aad 0%, #007bff 100%);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 35px;
+  font-weight: 700;
+  transition: all 0.4s ease;
+  margin-top: 25px;
+  box-shadow: 0 6px 20px rgba(0, 74, 173, 0.3);
+}
+
+.adsbus-intro-cta:hover {
+  background: linear-gradient(135deg, #007bff 0%, #004aad 100%);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 74, 173, 0.4);
+}
+
+.adsbus-intro-image {
+  position: relative;
+}
+
+.adsbus-intro-image img {
+  width: 100%;
+  border-radius: 25px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  transition: transform 0.4s ease;
+}
+
+.adsbus-intro-image img:hover {
+  transform: scale(1.02);
+}
+
+/* =========================================== */
+/* BUS ADS SECTION */
+/* =========================================== */
+.bus-ads-section {
+  padding: 100px 20px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf1 100%);
+}
+
+.bus-ads-section .container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.bus-ads-section .intro {
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.bus-ads-section .intro h2 {
+  font-size: 48px;
+  font-weight: 800;
+  color: #004aad;
+  margin-bottom: 25px;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.bus-ads-section .intro h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #004aad, #007bff);
+  border-radius: 2px;
+}
+
+.bus-ads-section .intro p {
+  font-size: 19px;
+  line-height: 1.9;
+  color: #555;
+  max-width: 900px;
+  margin: 0 auto;
+  font-weight: 400;
+}
+
+.bus-ads-gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 35px;
+}
+
+.ads-item {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: #fff;
+  border: 1px solid rgba(0, 74, 173, 0.1);
+}
+
+.ads-item:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 50px rgba(0, 74, 173, 0.2);
+  border-color: rgba(0, 74, 173, 0.3);
+}
+
+.ads-item img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.ads-item:hover img {
+  transform: scale(1.05);
+}
+
+.ads-item .overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255, 250, 250, 0.3);
+  color: #000;
+  text-align: center;
+  padding: 35px 25px 25px;
+  transform: translateY(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ads-item:hover .overlay {
+  transform: translateY(0);
+}
+
+.ads-item .overlay p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.7;
+  font-weight: 500;
+}
+
+/* =========================================== */
+/* BANNER SECTION */
+/* =========================================== */
+.banner-intro {
+    width: 100%;
+    position: relative;
+}
+
+.banner-wrapper {
+    position: relative;
+    width: 100%;
+    height: 230px;
+    overflow: hidden;
+}
+
+.banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.banner-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.35);
+}
+
+/* ===== Vùng chữ ===== */
+.banner-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+/* ===== KHÔNG CHO XUỐNG DÒNG ===== */
+.banner-text p {
+    white-space: nowrap;      /* Giữ 1 dòng */
+    overflow: hidden;         /* Ẩn tràn nếu quá dài */
+    text-overflow: ellipsis;  /* Thêm ... nếu quá dài */
+    margin: 6px 0;
+}
+
+/* ===== TÙY CHỈNH KÍCH THƯỚC CHỮ ===== */
+.line-1 { font-size: 28px; }
+.line-2 { font-size: 28px; }
+.line-3 { font-size:30px; font-weight: 700; }
+
+/* ===== EFFECT CHUYỂN ĐỘNG ===== */
+.line { opacity: 0; }
+
+.line-1 { animation: slideLeft 1s ease forwards; }
+.line-2 { animation: slideRight 1s ease forwards 0.3s; }
+.line-3 { animation: slideUp 1s ease forwards 0.6s; }
+
+/* ===== Keyframes ===== */
+@keyframes slideLeft {
+    0% { transform: translateX(-40px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideRight {
+    0% { transform: translateX(40px); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(25px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+/* =========================================== */
+/* RESPONSIVE */
+/* =========================================== */
+@media (max-width: 1200px) {
+  .adsbus-intro-container {
+    gap: 60px;
+  }
+
+  .bus-ads-gallery {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .adsbus-intro-container {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .adsbus-intro-title {
+    font-size: 38px;
+  }
+
+  .bus-ads-section .intro h2 {
+    font-size: 38px;
+  }
+
+  .bus-ads-gallery {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    height: 50vh;
+  }
+
+  .adsbus-intro-section,
+  .bus-ads-section {
+    padding: 80px 20px;
+  }
+
+  .adsbus-intro-title {
+    font-size: 32px;
+  }
+
+  .adsbus-intro-text {
+    font-size: 17px;
+  }
+
+  .bus-ads-section .intro h2 {
+    font-size: 32px;
+  }
+
+  .bus-ads-section .intro p {
+    font-size: 17px;
+  }
+
+  .bus-ads-gallery {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .ads-item img {
+    height: 280px;
+  }
+
+  .banner-content p {
+    font-size: 18px;
+  }
+
+  .banner-content .highlight {
+    font-size: 26px;
+  }
+
+  .line-1, .line-2 { font-size: 13px; }
+  .line-3 { font-size: 15px; }
+  .banner-wrapper { height: 100px; }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 40vh;
+  }
+
+  .adsbus-intro-section,
+  .bus-ads-section {
+    padding: 60px 20px;
+  }
+
+  .adsbus-intro-title {
+    font-size: 28px;
+  }
+
+  .bus-ads-section .intro h2 {
+    font-size: 28px;
+  }
+
+  .ads-item img {
+    height: 250px;
+  }
+
+  .line-1, .line-2 { font-size: 14px; }
+  .line-3 { font-size: 17px; }
+  .banner-wrapper { height: 180px; }
+}

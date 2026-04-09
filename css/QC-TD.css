@@ -1,0 +1,487 @@
+/* =========================================== */
+/* QC TRẠM DỪNG - QC-TD.css */
+/* =========================================== */
+
+.img-section {
+  position: relative;
+  width: 100%;
+  height: 85vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.img-section img.img-background {
+  width: 100%;
+  height: 90%;
+  object-fit: cover;
+}
+
+/* =========================================== */
+/* MAP SECTION */
+/* =========================================== */
+.map-box-section {
+  padding: 100px 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.map-box {
+  background: #fff;
+  padding: 40px;
+  max-width: 1400px;
+  width: 100%;
+  border-radius: 25px;
+}
+
+.map-box h2 {
+  margin-bottom: 40px;
+  font-size: 42px;
+  text-align: center;
+  color: #004aad;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+.map-box h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, #004aad, #007bff);
+  border-radius: 2px;
+}
+
+.map-stopstation {
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.map-stopstation svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+
+
+.province {
+cursor: pointer;
+}
+.province .p-area {
+transition: 0.5s all;
+}
+.province.active .p-area {
+stroke: #000000;
+stroke-width: 5px;
+fill: red;
+}
+
+.cls-1 {
+font-size: 24.16px;
+}
+
+.cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+fill: #fff;
+}
+
+.cls-1, .cls-2, .cls-3, .cls-5, .cls-7, .cls-8, .cls-6 {
+font-family: Arial, Helvetica, sans-serif;
+font-weight: 550;
+}
+
+.cls-2 {
+font-size: 30px;
+}
+
+.cls-9 {
+fill: url(#linear-gradient-8);
+}
+
+.cls-10 {
+fill: url(#linear-gradient-7);
+}
+
+.cls-11 {
+fill: url(#linear-gradient-5);
+}
+
+.cls-12 {
+fill: url(#linear-gradient-6);
+}
+
+.cls-13 {
+fill: url(#linear-gradient-9);
+}
+
+.cls-14 {
+fill: url(#linear-gradient-4);
+}
+
+.cls-15 {
+fill: url(#linear-gradient-3);
+}
+
+.cls-16 {
+fill: url(#linear-gradient-2);
+}
+.cls-17, .cls-18 {
+fill: #06f7da;
+}
+
+.cls-19 {
+fill: url(#linear-gradient);
+}
+
+.cls-20 {
+fill: #42210b;
+}
+
+.cls-20, .cls-21, .cls-22, .cls-23, .cls-24, .cls-18 {
+fill-rule: evenodd;
+}
+
+.cls-21 {
+fill: #f4580b;
+}
+
+.cls-25 {
+font-family: Arial, Helvetica, sans-serif;
+font-size: 23px;
+}
+
+.cls-22 {
+fill: #0650f7;
+}
+
+.cls-3 {
+font-size: 27.62px;
+}
+
+.cls-26 {
+letter-spacing: 0em;
+}
+
+.cls-23 {
+fill: #ffb600;
+}
+
+.cls-27 {
+letter-spacing: 0em;
+}
+
+.cls-5 {
+font-size: 35.08px;
+}
+
+.cls-7 {
+font-size: 60px;
+}
+
+.cls-28 {
+letter-spacing: 0em;
+}
+
+.cls-29 {
+fill: url(#linear-gradient-10);
+}
+
+.cls-30 {
+fill: url(#linear-gradient-11);
+}
+
+.cls-31 {
+fill: url(#linear-gradient-12);
+}
+
+.cls-32 {
+fill: url(#linear-gradient-13);
+}
+
+.cls-33 {
+fill: url(#linear-gradient-19);
+}
+
+.cls-34 {
+fill: url(#linear-gradient-14);
+}
+
+.cls-35 {
+fill: url(#linear-gradient-15);
+}
+
+.cls-36 {
+fill: url(#linear-gradient-16);
+}
+
+.cls-37 {
+fill: url(#linear-gradient-17);
+}
+
+.cls-38 {
+fill: url(#linear-gradient-18);
+}
+
+.cls-24 {
+fill: #72d38b;
+}
+
+.cls-8 {
+font-size: 40px;
+}
+
+.cls-39 {
+letter-spacing: -.13em;
+}
+
+.cls-40 {
+letter-spacing: -.13em;
+}
+
+.cls-41 {
+letter-spacing: -.11em;
+}
+
+.cls-42 {
+letter-spacing: -.02em;
+}
+
+.cls-43 {
+letter-spacing: -.02em;
+}
+
+.cls-44 {
+letter-spacing: -.02em;
+}
+
+.cls-45 {
+letter-spacing: -.02em;
+}
+
+.cls-46 {
+letter-spacing: -.06em;
+}
+
+.cls-47 {
+letter-spacing: -.04em;
+}
+
+.cls-48 {
+letter-spacing: -.04em;
+}
+
+.cls-49 {
+letter-spacing: -.04em;
+}
+
+.cls-50 {
+letter-spacing: -.04em;
+}
+
+.cls-51 {
+letter-spacing: -.04em;
+}
+
+.cls-6 {
+font-size: 20px;
+}
+ .station {
+  fill: red;
+  stroke: #fff;
+  stroke-width: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+ /* Ẩn line + text mặc định */
+.station-group .leader,
+.station-group .label {
+ opacity: 0;
+  transition: opacity 0.3s;
+ }
+
+ /* Hover vào circle thì hiện line + text */
+ .station-group:hover .leader,
+.station-group:hover .label {
+ opacity: 1;
+}
+
+.leader {
+stroke:black;
+stroke-dasharray: 15;
+stroke-width: 4px;
+}
+.label {
+  font-size: 50px;
+  fill: #111;
+  font-weight: bold;
+   -webkit-text-stroke: 2px blue; /* viền xanh */
+  text-shadow: 2px 2px 2px rgba(0,0,255,0.3); /* bóng xanh nhạt */
+}
+.ads-sections {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* mỗi block */
+.ads-accessory {
+  position: relative;
+  width: 100vw;
+  height: 65vh;
+  background: no-repeat center;
+  background-size: cover;
+}
+
+/* overlay chung */
+.ads-accessory .overlay {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 45%;
+  display: flex;
+  background: rgba(255, 250, 250, 0.1); /* lớp mờ đen */
+  justify-content: center;   /* căn giữa ngang */
+  align-items: center;       /* căn giữa dọc */
+  text-align: center;        /* căn chữ giữa trong content */
+  
+}
+
+.ads-accessory .overlay.right { right: 0; }
+.ads-accessory .overlay.left { left: 0; }
+
+/* nội dung */
+.ads-accessory .content {
+  color: #000000;
+  max-width: 450px;
+}
+
+.ads-accessory h3 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.ads-accessory p {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 25px;
+}
+
+.ads-accessory .btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 32px;
+  
+  
+  text-decoration: none;
+  font-weight: 700;
+  transition: all 0.4s ease;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.ads-accessory .btn:hover {
+  background: #fff;
+  color: #004aad;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* =========================================== */
+/* RESPONSIVE */
+/* =========================================== */
+@media (max-width: 992px) {
+  .map-box-section {
+    padding: 80px 20px;
+  }
+
+  .map-box {
+    padding: 30px;
+  }
+
+  .map-box h2 {
+    font-size: 36px;
+  }
+
+  .ads-accessory {
+    height: 55vh;
+  }
+
+  .ads-accessory .overlay {
+    width: 50%;
+  }
+}
+
+@media (max-width: 768px) {
+  .img-section {
+    height: 50vh;
+  }
+
+  .map-box-section {
+    padding: 60px 20px;
+  }
+
+  .map-box {
+    padding: 25px;
+  }
+
+  .map-box h2 {
+    font-size: 32px;
+  }
+
+  .ads-accessory {
+    height: 50vh;
+  }
+
+  
+  .ads-accessory h3 {
+    font-size: 24px;
+  }
+
+  .ads-accessory p {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .img-section {
+    height: 40vh;
+  }
+
+  .map-box-section {
+    padding: 40px 15px;
+  }
+
+  .map-box {
+    padding: 20px;
+  }
+
+  .map-box h2 {
+    font-size: 28px;
+  }
+
+  .ads-accessory {
+    height: 45vh;
+  }
+
+  .ads-accessory h3 {
+    font-size: 20px;
+  }
+
+  .ads-accessory p {
+    font-size: 14px;
+  }
+
+  .ads-accessory .btn {
+    padding: 12px 24px;
+    font-size: 14px;
+  }
+}

@@ -1,0 +1,321 @@
+/* ========================= */
+/* 🔽 Hero Banner Xe Khách */
+.img-section {
+  width: 100%;
+}
+
+.img-section .img-background {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+/* --- Hiển thị Xe --- */
+.vehicle-display {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 30px;
+  margin-top: 30px;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.vehicle-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+.vehicle-item img {
+  height: 250px;
+  filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.5));
+}
+
+.vehicle-label {
+  color: #000;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  margin-top: 20px;
+  box-shadow: none;
+  font-size: 1.5em;
+  white-space: nowrap;
+}
+
+/* ========================= */
+/* 🔽 Responsive */
+/* ========================= */
+
+/* Tablet (<=992px) */
+@media (max-width: 992px) {
+  /* --- CSS cho màn hình nhỏ hơn (Responsive) --- */
+@media (max-width: 768px) {
+  .hero-banner-section {
+    height: 40vh; /* Giảm chiều cao trên thiết bị di động */
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem; /* Giảm kích thước chữ trên thiết bị di động */
+  }
+}
+
+
+  .vehicle-item img {
+    height: 180px;
+  }
+
+  .vehicle-label {
+    font-size: 1.2em;
+    margin-top: 15px;
+  }
+}
+
+/* Mobile (<=768px) */
+@media (max-width: 768px) {
+  .hero-banner-section {
+    padding-top: 80px;
+    padding-bottom: 60px;
+  }
+
+  .hero-title {
+    font-size: 1.8em;
+  }
+
+  .hero-tagline {
+    font-size: 1em;
+    margin-bottom: 15px;
+  }
+
+  .vehicle-display {
+    flex-direction: column; /* Các xe xếp dọc */
+    gap: 20px;
+    margin-top: 20px;
+  }
+
+  .vehicle-item img {
+    height: 150px;
+  }
+
+  .vehicle-label {
+    font-size: 1em;
+    padding: 8px 15px;
+  }
+}
+
+/* Small mobile (<=480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.5em;
+  }
+
+  .hero-tagline {
+    font-size: 0.9em;
+  }
+
+  .vehicle-item img {
+    height: 120px;
+  }
+
+  .vehicle-label {
+    font-size: 0.9em;
+    padding: 6px 12px;
+  }
+}
+
+.intercity-features {
+  padding: 70px 20px;
+  background: #fff;
+}
+.intercity-features .container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.intercity-title {
+  text-align: center;
+  font-size: 30px;
+  margin-bottom: 15px;
+  font-weight: 700;
+  color: #007bff;
+}
+.intercity-desc {
+  text-align: center;
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1.7;
+  margin-bottom: 60px;
+  color: #000;
+}
+.intercity-desc span {
+  color: #007bff;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.intercity-section {
+  margin-bottom: 80px; /* Khoảng cách giữa các khối dịch vụ */
+}
+
+.intercity-section:last-child {
+  margin-bottom: 20px; /* Giảm khoảng cách cho khối cuối cùng */
+}
+.section-title {
+  font-size: 30px;
+  text-align: center;
+  font-weight: bold;
+  color: #007bff;
+  transition: all 0.3s ease-in-out;
+}
+
+.section-title:hover {
+  color: #333; /* đổi màu khi hover */
+}
+    .intercity-wrapper {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+    }
+
+    .text-content {
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+    }
+
+    .intercity-feature {
+      background: #f1f1f1;
+      padding: 15px;
+      border-radius: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+
+    .intercity-feature i {
+      font-size: 28px;
+      color: #007bff;
+      flex-shrink: 0;
+    }
+
+    .intercity-feature p {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .intercity-feature span {
+      display: block;
+      font-size: 15px;
+      color: #000;
+      margin-top: 5px;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.4s ease;
+    }
+
+    .intercity-feature:hover {
+      background: #e9f3ff;
+      transform: translateX(5px);
+    }
+
+    .intercity-feature:hover span {
+      opacity: 1;
+      max-height: 200px;
+    }
+
+    .image-content {
+      flex: 1;
+      min-width: 320px;
+      position: relative;
+    }
+
+    .image-content img {
+      width: 100%;
+      max-width: 500px;
+      border-radius: 80px 20px 80px 20px;
+      object-fit: cover;
+      transition: box-shadow 0.4s ease, transform 0.3s ease;
+    }
+.intercity-wrapper-2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.text-content-2 {
+  min-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  text-align: left;
+}
+
+.intercity-feature-2 {
+  background: #fff7f0;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.intercity-feature-2 i {
+  font-size: 28px;
+  color: #007bff;
+  flex-shrink: 0;
+}
+
+.intercity-feature-2 p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.intercity-feature-2 span {
+  display: block;
+  font-size: 15px;
+  color: #000;
+  margin-top: 5px;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.intercity-feature-2:hover {
+  background: #fff1e0;
+  transform: translateX(5px);
+}
+
+.intercity-feature-2:hover span {
+  opacity: 1;
+  max-height: 200px;
+}
+
+.image-content-2 {
+  flex: 1;
+  min-width: 320px;
+  position: relative;
+}
+
+.image-content-2 img {
+  width: 100%;
+  max-width: 500px;
+  border-radius: 20px 80px 20px 80px;
+  object-fit: cover;
+  transition: box-shadow 0.4s ease, transform 0.3s ease;
+}

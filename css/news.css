@@ -1,0 +1,279 @@
+
+
+.news-banner {
+    background-image: url('../assets/images/banners/back.jpeg')  ;
+    background-position: center;
+    background-size: cover;
+    padding: 5rem 0;
+    text-align: center;
+    color: white;
+    margin-bottom: 3rem;
+}
+
+.news-banner h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.news-banner .breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.news-banner .breadcrumb-item a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.news-banner .breadcrumb-item.active {
+    color: #fff;
+}
+
+.post-card-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+}
+
+.search-form-container {
+    margin-bottom: 2.5rem;
+}
+
+.post-card {
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);    
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: #fff;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+}
+
+.img-wrapper {
+    overflow: hidden;
+    height: 240px;
+    position: relative;
+}
+
+.post-card .card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.post-card:hover .card-img-top {
+    transform: scale(1.08);
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.card-title {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-text {
+    flex-grow: 1;
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.read-more {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #003c71; /* FUTA Orange */
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: auto;
+}
+
+.read-more:hover {
+    color: #003c71;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    padding-left: 1rem;
+}
+
+.widget {
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border: 1px solid rgba(0,0,0,0.02);
+}
+
+.widget-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+    color: #003c71; /* FUTA Blue */
+}
+
+.widget-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background-color: #003c71; /* FUTA Orange */
+    border-radius: 2px;
+}
+
+/* Search Form */
+.search-form .input-group {
+    border: 1px solid #e0e0e0;
+    border-radius: 50px;
+    overflow: hidden;
+    padding: 3px;
+    transition: border-color 0.3s;
+}
+
+.search-form .input-group:focus-within {
+    border-color: #003c71;
+}
+
+.search-form .form-control {
+    border: none;
+    box-shadow: none;
+    padding-left: 1.2rem;
+}
+
+.search-form .btn {
+    border-radius: 50px;
+    padding: 0.5rem 1.2rem;
+    background-color: #003c71;
+    border-color: #003c71;
+    color: white;
+}
+
+.search-form .btn:hover {
+    background-color: #003c71;
+}
+
+/* Recent Posts */
+.recent-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.recent-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.recent-item img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.recent-item h6 {
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+}
+
+.recent-item h6 a {
+    color: #333;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.recent-item h6 a:hover {
+    color: #003c71;
+}
+
+.recent-item .text-muted {
+    font-size: 0.8rem;
+    color: #888 !important;
+}
+
+/* Filter Menu */
+.filter-menu .btn {
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    transition: all 0.3s;
+}
+
+.filter-menu .btn-primary {
+    background-color: #003c71;
+    border-color: #003c71;
+}
+
+.filter-menu .btn-outline-primary {
+    color: #003c71;
+    border-color: #003c71;
+}
+
+.filter-menu .btn-outline-primary:hover {
+    background-color: #003c71;
+    color: #fff;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #003c71;
+    border-color: #003c71;
+}
+
+.pagination .page-link {
+    color: #333;
+    border: none;
+    margin: 0 5px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination .page-link:hover {
+    background-color: #f0f0f0;
+    color: #003c71;
+}
