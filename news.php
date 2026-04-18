@@ -36,11 +36,11 @@ if ($result) {
 
 <div class="news-banner">
     <div class="container">
-        <h1>Tin Tức & Dự án</h1>
+        <h1 data-i18n="news.page_title">Tin Tức & Dự án</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-center mb-0">
-                <li class="breadcrumb-item"><a href="news.php" class="text-white">Trang chủ</a></li>
-                <li class="breadcrumb-item active text-white" aria-current="page">Tin Tức & Dự án</li>
+                <li class="breadcrumb-item"><a href="news.php" class="text-white" data-i18n="news.breadcrumb_home">Trang chủ</a></li>
+                <li class="breadcrumb-item active text-white" aria-current="page" data-i18n="news.page_title">Tin Tức & Dự án</li>
             </ol>
         </nav>
     </div>
@@ -51,27 +51,28 @@ if ($result) {
         <div class="col-lg-8">
             <!-- Menu phân loại -->
             <div class="filter-menu mb-4 d-flex justify-content-center gap-2">
-                <a href="?type=all" class="btn <?php echo $type == 'all' ? 'btn-primary' : 'btn-outline-primary'; ?> rounded-pill px-4">Tất cả</a>
-                <a href="?type=post" class="btn <?php echo $type == 'post' ? 'btn-primary' : 'btn-outline-primary'; ?> rounded-pill px-4">Tin Tức</a>
-                <a href="?type=project" class="btn <?php echo $type == 'project' ? 'btn-primary' : 'btn-outline-primary'; ?> rounded-pill px-4">Dự án</a>
+                <a href="?type=all" class="btn <?php echo $type == 'all' ? 'btn-primary' : 'btn-outline-primary'; ?> rounded-pill px-4" data-i18n="news.filter_all">Tất cả</a>
+                <a href="?type=post" class="btn <?php echo $type == 'post' ? 'btn-primary' : 'btn-outline-primary'; ?> rounded-pill px-4" data-i18n="news.filter_news">Tin Tức</a>
+                <a href="?type=project" class="btn <?php echo $type == 'project' ? 'btn-primary' : 'btn-outline-primary'; ?> rounded-pill px-4" data-i18n="news.filter_project">Dự án</a>
             </div>
 
             <div class="row">
                 <?php if (empty($items)): ?>
                     <div class="col-12 text-center">
-                        <p>Chưa có nội dung nào.</p>
+                        <p data-i18n="news.empty_content">Chưa có nội dung nào.</p>
                     </div>
                 <?php else: ?>
                     <?php foreach ($items as $item): 
                         $link = ($item['type'] === 'post') ? 'news_single.php?slug=' . htmlspecialchars($item['slug']) : 'project-detail.php?id=' . htmlspecialchars($item['id']);
                         $badge_text = ($item['type'] === 'post') ? 'Tin Tức' : 'Dự án';
                         $badge_class = ($item['type'] === 'post') ? 'bg-info' : 'bg-success';
+                        $badge_i18n = ($item['type'] === 'post') ? 'news.filter_news' : 'news.filter_project';
                     ?>
                         <div class="col-md-6 mb-4">
                             <a href="<?php echo $link; ?>" class="post-card-link">
                                 <div class="card h-100 post-card shadow-sm border-0">
                                     <div class="img-wrapper position-relative">
-                                        <span class="badge <?php echo $badge_class; ?> position-absolute top-0 start-0 m-2"><?php echo $badge_text; ?></span>
+                                        <span class="badge <?php echo $badge_class; ?> position-absolute top-0 start-0 m-2" data-i18n="<?php echo $badge_i18n; ?>"><?php echo $badge_text; ?></span>
                                         <img src="<?php echo htmlspecialchars($item['image'] ?? 'assets/img/placeholder.png'); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($item['title']); ?>">
                                     </div>
                                     <div class="card-body d-flex flex-column">
@@ -80,7 +81,7 @@ if ($result) {
                                             <i class="fas fa-calendar-alt me-1"></i> <?php echo date('d/m/Y', strtotime($item['created_at'])); ?>
                                         </p>
                                         <p class="card-text flex-grow-1 text-truncate-3"><?php echo htmlspecialchars($item['excerpt']); ?></p>
-                                        <span class="read-more text-primary fw-bold">Xem chi tiết <i class="fas fa-arrow-right small"></i></span>
+                                        <span class="read-more text-primary fw-bold"><span data-i18n="news.read_more">Xem chi tiết</span> <i class="fas fa-arrow-right small"></i></span>
                                     </div>
                                 </div>
                             </a>
@@ -93,17 +94,17 @@ if ($result) {
         <div class="col-lg-4">
             <div class="sidebar ps-lg-4">
                 <div class="widget mb-5">
-                    <h4 class="widget-title">Tìm kiếm</h4>
+                    <h4 class="widget-title" data-i18n="news.search">Tìm kiếm</h4>
                     <form action="" class="search-form">
                         <div class="input-group">
-                            <input type="text" class="form-control" placeholder="Nhập từ khóa...">
+                            <input type="text" class="form-control" data-i18n-placeholder="news.search_placeholder" placeholder="Nhập từ khóa...">
                             <button class="btn btn-primary" type="submit"><i class="fas fa-search"></i></button>
                         </div>
                     </form>
                 </div>
 
                 <div class="widget mb-5">
-                    <h4 class="widget-title">Mới cập nhật</h4>
+                    <h4 class="widget-title" data-i18n="news.recently_updated">Mới cập nhật</h4>
                     <div class="recent-posts">
                         <?php 
                         $recent = array_slice($items, 0, 5);

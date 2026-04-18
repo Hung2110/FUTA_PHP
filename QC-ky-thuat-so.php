@@ -10,8 +10,8 @@ include 'includes/header.php';
 <section class="led-section" id="led">
   <!-- Phần giới thiệu -->
   <div class="led-intro">
-    <h2>Màn Hình LED</h2>
-    <p>
+    <h2 data-i18n="qc_kts.led_title">Màn Hình LED</h2>
+    <p data-i18n="qc_kts.led_desc">
       Màn hình LED sắc nét, hiển thị liên tục tại các bến xe và trạm dừng, giúp thương hiệu nổi bật và thu hút ánh nhìn.
       <br> Giải pháp quảng cáo hiện đại, linh hoạt với hình ảnh và video ấn tượng.
     </p>
@@ -31,25 +31,25 @@ include 'includes/header.php';
         <div class="icon">
           <i class="fa-solid fa-location-dot fa-2xl"></i>
         </div>
-        <p>Vị Trí Đặt<br><strong>Tại Bến Xe & Trạm Dừng</strong></p>
+        <p><span data-i18n="qc_kts.led_info1_label">Vị Trí Đặt</span><br><strong data-i18n="qc_kts.led_info1_val">Tại Bến Xe & Trạm Dừng</strong></p>
       </div>
       <div class="info-item">
         <div class="icon">
          <i class="fa-solid fa-eye fa-2xl"></i>
         </div>
-        <p>Tầm Nhìn<br><strong>Điểm Nhìn Đắt Giá</strong></p>
+        <p><span data-i18n="qc_kts.led_info2_label">Tầm Nhìn</span><br><strong data-i18n="qc_kts.led_info2_val">Điểm Nhìn Đắt Giá</strong></p>
       </div>
       <div class="info-item">
         <div class="icon">
           <i class="fa-solid fa-images fa-2xl"></i>
         </div>
-        <p>Chất Lượng Hình Ảnh<br><strong>Sống Động Hiển Thị Tần Suất Cao</strong></p>
+        <p><span data-i18n="qc_kts.led_info3_label">Chất Lượng Hình Ảnh</span><br><strong data-i18n="qc_kts.led_info3_val">Sống Động Hiển Thị Tần Suất Cao</strong></p>
       </div>
       <div class="info-item">
         <div class="icon">
           <i class="fa-solid fa-arrows-down-to-people fa-2xl"></i>
         </div>
-        <p>Tiếp Cận<br><strong>Đa Dạng Khách Hàng</strong></p>
+        <p><span data-i18n="qc_kts.led_info4_label">Tiếp Cận</span><br><strong data-i18n="qc_kts.led_info4_val">Đa Dạng Khách Hàng</strong></p>
       </div>
     </div>
   </div>
@@ -57,15 +57,15 @@ include 'includes/header.php';
 <section class="lcd-section" id="lcd">
   <!-- Nội dung bên trái -->
   <div class="lcd-content">
-    <h2>Màn Hình LCD</h2>
-    <p>
+    <h2 data-i18n="qc_kts.lcd_title">Màn Hình LCD</h2>
+    <p data-i18n="qc_kts.lcd_desc">
      Màn hình LCD dọc, độ phân giải cao, hiển thị hình ảnh và video sống động. Đặt tại sảnh, bến xe hay trạm dừng, giúp thương hiệu nổi bật và thu hút khách hàng ngay từ ánh nhìn đầu tiên.
     </p>
     <ul>
-      <li>📌 Kích thước: 65 inch</li>
-      <li>📌 Độ phân giải: 4K Ultra HD</li>
-      <li>📌 Hỗ trợ video / hình ảnh / slideshow</li>
-      <li>📌 Lắp đặt tại cái bến xe,trạm dừng chân</li>
+      <li data-i18n="qc_kts.lcd_li1">📌 Kích thước: 65 inch</li>
+      <li data-i18n="qc_kts.lcd_li2">📌 Độ phân giải: 4K Ultra HD</li>
+      <li data-i18n="qc_kts.lcd_li3">📌 Hỗ trợ video / hình ảnh / slideshow</li>
+      <li data-i18n="qc_kts.lcd_li4">📌 Lắp đặt tại cái bến xe,trạm dừng chân</li>
     </ul>
   </div>
 
@@ -89,14 +89,14 @@ include 'includes/header.php';
 
   <!-- Nội dung mô tả bên phải -->
   <div class="wifimkt-content">
-    <h2>WiFi Marketing</h2>
-    <p>
+    <h2 data-i18n="qc_kts.wifi_title">WiFi Marketing</h2>
+    <p data-i18n="qc_kts.wifi_desc">
       Kết nối WiFi miễn phí quảng cáo thương hiệu trực tiếp đến khách hàng qua trang chào và banner. Giải pháp hiện đại giúp tăng nhận diện thương hiệu và tiếp cận khách hàng hiệu quả.
     </p>
     <ul>
-      <li>🎯 Nhắm đúng khách hàng mục tiêu</li>
-      <li>📊 Báo cáo & thống kê chi tiết</li>
-      <li>⚡ Tăng độ nhận diện thương hiệu</li>
+      <li data-i18n="qc_kts.wifi_li1">🎯 Nhắm đúng khách hàng mục tiêu</li>
+      <li data-i18n="qc_kts.wifi_li2">📊 Báo cáo & thống kê chi tiết</li>
+      <li data-i18n="qc_kts.wifi_li3">⚡ Tăng độ nhận diện thương hiệu</li>
     </ul>
   </div>
 </section>

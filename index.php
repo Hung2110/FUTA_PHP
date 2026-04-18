@@ -148,9 +148,9 @@ if ($carousel_slides_query) {
 <section class="mission-section">
     <div class="mission-block">
         <h3 class="mission-line">
-            VỚI SỨ MỆNH <span class="blue-text">“LAN TỎA THƯƠNG HIỆU KHẮP MỌI NƠI”</span>
+            <span data-i18n="home.mission_title">VỚI SỨ MỆNH</span> <span class="blue-text">“<span data-i18n="home.mission_quote">LAN TỎA THƯƠNG HIỆU KHẮP MỌI NƠI</span>”</span>
         </h3>
-        <h3 class="mission-sub">
+        <h3 class="mission-sub" data-i18n="home.mission_subtitle">
             CHÚNG TÔI MANG LẠI CHO THƯƠNG HIỆU CỦA BẠN
         </h3>
     </div>
@@ -217,7 +217,7 @@ if ($carousel_slides_query) {
     <div class="container">
         <div class="section-title">
             <h2 data-i18n="home.news_title">TIN TỨC & SỰ KIỆN</h2>
-            <p data-i18n="home.news_desc">Cập nhật những thông tin và sự kiện mới nhất từ FUTA Ads</p>
+            <p data-i18n="home.news_desc">Cập nhật những thông tin và sự kiện mới nhất từ FUTA ADS</p>
         </div>
 
         <?php if (!empty($latest_items)): ?>
@@ -353,17 +353,16 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="partner-logo"><img src="assets/images/client/ACECOOK.png" alt="Logo Acecook" loading="lazy"></div>
             <div class="partner-logo"><img src="assets/images/client/MOMO.png" alt="Logo Momo" loading="lazy"></div>
             <div class="partner-logo"><img src="assets/images/client/CELLPHONES.jpeg" alt="Logo Cellphone S" loading="lazy"></div>
-            <div class="partner-logo"><img src="assets/images/client/dulux.jpg" alt="Logo Dulux" loading="lazy"></div>
-            <div class="partner-logo"><img src="assets/images/client/AZNOSE.jpg" alt="Logo AZ Nose" loading="lazy"></div>          
+            <div class="partner-logo"><img src="assets/images/client/DULUX.png" alt="Logo Dulux" loading="lazy"></div>         
         </div>
 </section>
 <section class="advertising">
    <!-- Banner -->
    <div class="banner-container">
       <div class="banner-content">
-        <p class="sub-title">HÃY ĐỂ CHÚNG TÔI KIẾN TẠO</p>
-        <h2 class="main-title">CHIẾN DỊCH TRUYỀN THÔNG CỦA BẠN</h2>
-        <a href="contact.php" class="btn-register">ĐĂNG KÝ TƯ VẤN</a>
+        <p class="sub-title" data-i18n="home.banner_subtitle">HÃY ĐỂ CHÚNG TÔI KIẾN TẠO</p>
+        <h2 class="main-title" data-i18n="home.banner_title">CHIẾN DỊCH TRUYỀN THÔNG CỦA BẠN</h2>
+        <a href="contact.php" class="btn-register" data-i18n="home.banner_btn">ĐĂNG KÝ TƯ VẤN</a>
       </div>
     </div>
     <!-- Logo Section -->

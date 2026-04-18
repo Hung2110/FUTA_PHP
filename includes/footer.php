@@ -17,7 +17,7 @@
           <a href="index.php" target="_blank" data-i18n="footer.website_link">Truy Cập Website</a>
           </li>
           <li><span class="icon"><i class="fas fa-map-marker-alt"></i></span> 
-              <span data-i18n="footer.address">218 Đề Thám, Phường Phạm Ngũ Lão, Quận 1, Hồ Chí Minh</span>
+              <span data-i18n="footer.address">218 Đề Thám,Phường Bến Thành,TP.Hồ Chí Minh</span>
           </li> 
           </ul>
             </div>

@@ -1,79 +1,8 @@
 <?php
 require_once 'db.php';
 
-$applicationMessage = '';
-$applicationType = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])) {
-    $fullname = trim($_POST['fullname'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $position = trim($_POST['position'] ?? '');
-    $message = trim($_POST['message'] ?? '');
-    $cvFile = $_FILES['cv_file'] ?? null;
-
-    if ($fullname === '' || $email === '' || $phone === '' || $position === '') {
-        $applicationMessage = 'Vui lòng điền đầy đủ thông tin bắt buộc.';
-        $applicationType = 'error';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $applicationMessage = 'Email không hợp lệ.';
-        $applicationType = 'error';
-    } elseif (!$cvFile || $cvFile['error'] !== UPLOAD_ERR_OK) {
-        $applicationMessage = 'Vui lòng tải lên CV hợp lệ.';
-        $applicationType = 'error';
-    } else {
-        $allowedExtensions = ['pdf', 'doc', 'docx'];
-        $extension = strtolower(pathinfo($cvFile['name'], PATHINFO_EXTENSION));
-
-        if (!in_array($extension, $allowedExtensions, true)) {
-            $applicationMessage = 'Định dạng CV không được hỗ trợ. Chỉ chấp nhận PDF, DOC, DOCX.';
-            $applicationType = 'error';
-        } else {
-            $uploadDir = 'uploads/cv/';
-            if (!is_dir($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-
-            $safeFileName = preg_replace('/[^A-Za-z0-9_\-\.]/', '_', pathinfo($cvFile['name'], PATHINFO_FILENAME));
-            $fileName = $safeFileName . '_' . time() . '.' . $extension;
-            $uploadPath = $uploadDir . $fileName;
-
-            if (move_uploaded_file($cvFile['tmp_name'], $uploadPath)) {
-                $stmt = $conn->prepare("INSERT INTO applications (fullname, email, phone, position, message, cv_file) VALUES (?, ?, ?, ?, ?, ?)");
-                $stmt->bind_param("ssssss", $fullname, $email, $phone, $position, $message, $uploadPath);
-
-                if ($stmt->execute()) {
-                    $application_id = $conn->insert_id;
-                    $applicationMessage = 'Ứng tuyển thành công! Chúng tôi sẽ liên hệ với bạn sớm.';
-                    $applicationType = 'success';
-
-                    // --- Tạo thông báo cho admin/manager ---
-                    $admin_users_query = $conn->query("SELECT id FROM users WHERE role IN ('admin', 'manager')");
-                    if ($admin_users_query) {
-                        $notification_message = "Đơn ứng tuyển mới cho vị trí '" . htmlspecialchars($position) . "' từ " . htmlspecialchars($fullname);
-                        $notification_link = "view_application.php?id=" . $application_id;
-                        $notification_type = 'application';
-
-                        $notify_stmt = $conn->prepare("INSERT INTO notifications (user_id, type, message, link) VALUES (?, ?, ?, ?)");
-                        while ($admin_user = $admin_users_query->fetch_assoc()) {
-                            $notify_stmt->bind_param("isss", $admin_user['id'], $notification_type, $notification_message, $notification_link);
-                            $notify_stmt->execute();
-                        }
-                        $notify_stmt->close();
-                    }
-                    // --- Kết thúc tạo thông báo ---
-                } else {
-                    $applicationMessage = 'Không thể gửi đơn ứng tuyển. Vui lòng thử lại.';
-                    $applicationType = 'error';
-                }
-                $stmt->close();
-            } else {
-                $applicationMessage = 'Không thể tải lên tệp CV. Vui lòng thử lại.';
-                $applicationType = 'error';
-            }
-        }
-    }
-}
+// Include logic xử lý form ứng tuyển
+require_once 'includes/process_application.php';
 
 // Giả sử slug được truyền qua URL, ví dụ: /FUTA_PHP/recruitment-detail.php?slug=ten-cong-viec
 $job_id = intval($_GET['id'] ?? 0);
@@ -572,7 +501,7 @@ include 'includes/header.php';
 </style>
 
 <div class="recruitment-banner">
-    <h1>Chi Tiết Tin Tuyển Dụng</h1>
+    <h1 data-i18n="recruitment_detail.title">Chi Tiết Tin Tuyển Dụng</h1>
 </div>
 
 <!-- Thông báo ứng tuyển -->
@@ -588,22 +517,22 @@ include 'includes/header.php';
         <div class="col-lg-8">
             <div class="job-content-wrapper">
                 <h1 class="job-title-main"><?php echo htmlspecialchars($job['title']); ?></h1>
-                <p class="job-post-date"><i class="far fa-calendar-alt"></i> Ngày đăng: <?php echo date('d/m/Y', strtotime($job['created_at'])); ?></p>
+                <p class="job-post-date"><i class="far fa-calendar-alt"></i> <span data-i18n="recruitment_detail.post_date">Ngày đăng:</span> <?php echo date('d/m/Y', strtotime($job['created_at'])); ?></p>
                 
                 <div class="job-detail-section">
-                    <h3 class="section-title"><i class="fas fa-info-circle"></i> Chi tiết công việc</h3>
+                    <h3 class="section-title"><i class="fas fa-info-circle"></i> <span data-i18n="recruitment_detail.job_detail">Chi tiết công việc</span></h3>
                     <?php if (!empty($details['description'])): ?>
-                        <h4 class="detail-subtitle"><i class="fas fa-briefcase"></i> Mô tả công việc</h4>
+                        <h4 class="detail-subtitle"><i class="fas fa-briefcase"></i> <span data-i18n="recruitment_detail.job_desc">Mô tả công việc</span></h4>
                         <div class="job-full-description"><?php echo nl2br(htmlspecialchars($details['description'])); ?></div>
                     <?php endif; ?>
 
                     <?php if (!empty($details['requirements'])): ?>
-                        <h4 class="detail-subtitle"><i class="fas fa-user-check"></i> Yêu cầu công việc</h4>
+                        <h4 class="detail-subtitle"><i class="fas fa-user-check"></i> <span data-i18n="recruitment_detail.job_req">Yêu cầu công việc</span></h4>
                         <div class="job-full-description"><?php echo nl2br(htmlspecialchars($details['requirements'])); ?></div>
                     <?php endif; ?>
 
                     <?php if (!empty($details['benefits'])): ?>
-                        <label class="section-title-benefits"><i class="fa fa-grin pull-left ico-ttd"></i> Phúc lợi:</label>
+                        <label class="section-title-benefits"><i class="fa fa-grin pull-left ico-ttd"></i> <span data-i18n="recruitment_detail.benefits">Phúc lợi:</span></label>
                         <div class="benefits-wrapper">
                             <?php 
                             $benefit_lines = explode("\n", $details['benefits']);
@@ -640,10 +569,10 @@ include 'includes/header.php';
                 </div>
 
                 <div class="job-detail-section contact-info">
-                    <h3 class="section-title"><i class="fas fa-paper-plane"></i> Thông tin liên hệ & Ứng tuyển</h3>
-                    <p><i class="fas fa-envelope"></i> Để ứng tuyển, vui lòng gửi CV và các giấy tờ liên quan về địa chỉ email: <strong>futaadvertising@futa.vn</strong></p>
-                    <p><i class="fas fa-pen"></i> Tiêu đề email ghi rõ: "Ứng tuyển vị trí [<?php echo htmlspecialchars($job['title']); ?>] - [Họ và tên]"</p>
-                    <p><i class="fas fa-phone-alt"></i> Hoặc liên hệ qua số điện thoại: <strong>1900 6912 </strong> để được hướng dẫn.</p>
+                    <h3 class="section-title"><i class="fas fa-paper-plane"></i> <span data-i18n="recruitment_detail.contact_apply">Thông tin liên hệ & Ứng tuyển</span></h3>
+                    <p><i class="fas fa-envelope"></i> <span data-i18n="recruitment_detail.contact_desc1">Để ứng tuyển, vui lòng gửi CV và các giấy tờ liên quan về địa chỉ email:</span> <strong>futaadvertising@futa.vn</strong></p>
+                    <p><i class="fas fa-pen"></i> <span data-i18n="recruitment_detail.contact_desc2">Tiêu đề email ghi rõ:</span> "Ứng tuyển vị trí [<?php echo htmlspecialchars($job['title']); ?>] - [Họ và tên]"</p>
+                    <p><i class="fas fa-phone-alt"></i> <span data-i18n="recruitment_detail.contact_desc3">Hoặc liên hệ qua số điện thoại:</span> <strong>1900 6912 </strong> <span data-i18n="recruitment_detail.contact_desc4">để được hướng dẫn.</span></p>
                 </div>
             </div>
         </div>
@@ -651,17 +580,17 @@ include 'includes/header.php';
         <!-- Cột thông tin tóm tắt -->
         <div class="col-lg-4">
             <div class="job-summary-card">
-                <h4 class="summary-title">Thông tin chung</h4>
+                <h4 class="summary-title" data-i18n="recruitment_detail.general_info">Thông tin chung</h4>
                 <?php
                     $summary_items = [
-                        ['icon' => 'fa-map-marker-alt', 'label' => 'Nơi làm việc', 'value' => $details['work_location']],
-                        ['icon' => 'fa-dollar-sign', 'label' => 'Mức lương', 'value' => $details['salary']],
-                        ['icon' => 'fa-users', 'label' => 'Cấp bậc', 'value' => $details['level']],
-                        ['icon' => 'fa-user-friends', 'label' => 'Số lượng', 'value' => $details['quantity']],
-                        ['icon' => 'fa-user-clock', 'label' => 'Hình thức', 'value' => $details['type']],
-                        ['icon' => 'fa-star', 'label' => 'Kinh nghiệm', 'value' => $details['experience']],
-                        ['icon' => 'fa-briefcase', 'label' => 'Ngành nghề', 'value' => $details['industry']],
-                        ['icon' => 'fa-calendar-times', 'label' => 'Hạn chót', 'value' => $details['deadline']],
+                        ['icon' => 'fa-map-marker-alt', 'label' => 'Nơi làm việc', 'value' => $details['work_location'], 'i18n' => 'recruitment_detail.summary_location'],
+                        ['icon' => 'fa-dollar-sign', 'label' => 'Mức lương', 'value' => $details['salary'], 'i18n' => 'recruitment_detail.summary_salary'],
+                        ['icon' => 'fa-users', 'label' => 'Cấp bậc', 'value' => $details['level'], 'i18n' => 'recruitment_detail.summary_level'],
+                        ['icon' => 'fa-user-friends', 'label' => 'Số lượng', 'value' => $details['quantity'], 'i18n' => 'recruitment_detail.summary_quantity'],
+                        ['icon' => 'fa-user-clock', 'label' => 'Hình thức', 'value' => $details['type'], 'i18n' => 'recruitment_detail.summary_type'],
+                        ['icon' => 'fa-star', 'label' => 'Kinh nghiệm', 'value' => $details['experience'], 'i18n' => 'recruitment_detail.summary_experience'],
+                        ['icon' => 'fa-briefcase', 'label' => 'Ngành nghề', 'value' => $details['industry'], 'i18n' => 'recruitment_detail.summary_industry'],
+                        ['icon' => 'fa-calendar-times', 'label' => 'Hạn chót', 'value' => $details['deadline'], 'i18n' => 'recruitment_detail.summary_deadline'],
                     ];
                 ?>
                 <ul class="summary-list">
@@ -669,13 +598,13 @@ include 'includes/header.php';
                         <li>
                             <i class="fa <?php echo $item['icon']; ?> ico-ttd"></i>
                             <div class="summary-item-content">
-                                <strong><?php echo $item['label']; ?></strong>
+                                    <strong data-i18n="<?php echo $item['i18n']; ?>"><?php echo $item['label']; ?></strong>
                                 <span><?php echo htmlspecialchars($item['value']); ?></span>
                             </div>
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <button onclick="openApplyModal('<?php echo htmlspecialchars($job['title'], ENT_QUOTES); ?>')" class="btn-apply-now">Ứng tuyển ngay</button>
+                <button onclick="openApplyModal('<?php echo htmlspecialchars($job['title'], ENT_QUOTES); ?>')" class="btn-apply-now" data-i18n="recruitment_detail.apply_now">Ứng tuyển ngay</button>
             </div>
         </div>
     </div>
@@ -685,7 +614,7 @@ include 'includes/header.php';
 <div class="modal" id="applyModal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('applyModal')">&times;</span>
-        <h2 data-i18n="recruitment.modal_title">Nộp hồ sơ ứng tuyển</h2>
+        <h2 data-i18n="recruitment_detail.modal_title">Nộp hồ sơ ứng tuyển</h2>
         <p id="applyJobTitle"></p>
         <form method="POST" enctype="multipart/form-data" class="apply-form">
             <input type="hidden" name="position" id="applicationPosition">

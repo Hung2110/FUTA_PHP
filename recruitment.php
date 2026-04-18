@@ -245,6 +245,11 @@ if ($result && $result->num_rows > 0) {
             jobCard.querySelector(".apply-btn").addEventListener("click", () => openApplyModal(job.title));
             container.appendChild(jobCard);
         });
+        
+        // Kích hoạt lại đa ngôn ngữ cho các phần tử vừa tạo
+        if (window.i18n && typeof window.i18n.setLanguage === 'function') {
+            window.i18n.setLanguage(window.i18n.getLanguage());
+        }
     }
 
     function openModal(id) {

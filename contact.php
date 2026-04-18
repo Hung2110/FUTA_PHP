@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="contact-info">
                 <div class="info-group">
                     <h4 data-i18n="contact.headquarters">Trụ sở chính</h4>
-                    <p><i class="bi bi-geo-alt-fill"></i> Số 218 Đề Thám, Phường Phạm Ngũ Lão, Quận 1, TP.HCM, Việt Nam</p>
+                    <p><i class="bi bi-geo-alt-fill"></i> Số 218 Đề Thám,Phường Bến Thành,TP.Hồ Chí Minh</p>
                 </div>
                 <div class="info-group">
                     <h4 data-i18n="contact.hotline">Tổng đài</h4>

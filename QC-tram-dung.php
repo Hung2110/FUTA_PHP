@@ -5,7 +5,7 @@
 </section>
 <section class="map-box-section">
   <div class="map-box">
-    <h2>Hệ Thống Trạm Dừng Chân </h2>
+    <h2 data-i18n="qc_tram_dung.map_title">Hệ Thống Trạm Dừng Chân </h2>
     <div class="map-stopstation">
       <svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 3129.7 4901.01">
         <defs>
@@ -393,11 +393,11 @@
   <div class="ads-accessory" style="background-image: url('assets/images/service/result_billboard (1).jpg')">
     <div class="overlay right">
       <div class="content">
-        <h3>Quảng Cáo Trên Billboard</h3>
-        <p>
+        <h3 data-i18n="qc_tram_dung.billboard_title">Quảng Cáo Trên Billboard</h3>
+        <p data-i18n="qc_tram_dung.billboard_desc">
          Billboard là hình thức quảng cáo ngoài trời nổi bật, có khả năng thu hút sự chú ý mạnh mẽ nhờ kích thước lớn, hình ảnh bắt mắt và vị trí đặt tại các tuyến đường trọng điểm.
         </p>
-        <a href="contact.php" class="btn">LIÊN HỆ NGAY →</a>
+        <a href="contact.php" class="btn" data-i18n="qc_tram_dung.contact_btn">LIÊN HỆ NGAY →</a>
       </div>
     </div>
   </div>
@@ -406,11 +406,11 @@
   <div class="ads-accessory" style="background-image: url('assets/images/service/pano.png')">
     <div class="overlay left">
       <div class="content">
-        <h3>Quảng Cáo Trên Pano</h3>
-        <p>
+        <h3 data-i18n="qc_tram_dung.pano_title">Quảng Cáo Trên Pano</h3>
+        <p data-i18n="qc_tram_dung.pano_desc">
          Pano là hình thức quảng cáo ngoài trời có kích thước lớn, thường được đặt ở các vị trí đông người qua lại như trục đường chính, khu dân cư, trung tâm thương mại… giúp thương hiệu tiếp cận khách hàng hiệu quả.
         </p>
-        <a href="contact.php" class="btn">LIÊN HỆ NGAY →</a>
+        <a href="contact.php" class="btn" data-i18n="qc_tram_dung.contact_btn">LIÊN HỆ NGAY →</a>
       </div>
     </div>
   </div>
@@ -419,11 +419,11 @@
   <div class="ads-accessory" style="background-image: url('assets/images/service/BetterImage_1759717641938.jpeg')">
     <div class="overlay right">
       <div class="content">
-        <h3>Quảng Cáo Trên Light-Box</h3>
-        <p>
+        <h3 data-i18n="qc_tram_dung.lightbox_title">Quảng Cáo Trên Light-Box</h3>
+        <p data-i18n="qc_tram_dung.lightbox_desc">
          Light Box (hộp đèn quảng cáo) là hình thức quảng cáo nổi bật nhờ hiệu ứng ánh sáng, thường đặt tại trung tâm thương mại, sân bay, bến xe hoặc các khu vực công cộng đông người qua lại.
         </p>
-       <a href="contact.php" class="btn">LIÊN HỆ NGAY →</a>
+       <a href="contact.php" class="btn" data-i18n="qc_tram_dung.contact_btn">LIÊN HỆ NGAY →</a>
       </div>
     </div>
   </div>

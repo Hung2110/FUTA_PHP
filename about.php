@@ -101,13 +101,12 @@ include 'includes/header.php';
              class="banner-approach-img" 
              alt="Approach Banner">
         <div class="banner-approach-text">
-            <p class="line line-1">
+            <p class="line line-1" data-i18n="about.approach_subtitle">
                 Tất cả các giải pháp của chúng tôi đều hướng đến một mục tiêu: giúp thương hiệu của bạn
             </p>
             <p class="line line-2">
-                <strong>TIẾP CẬN ĐÚNG ĐỐI TƯỢNG, ĐÚNG THỜI ĐIỂM VỚI CÁCH TIẾP CẬN HIỆU QUẢ NHẤT</strong>
+                <strong data-i18n="about.approach_title">TIẾP CẬN ĐÚNG ĐỐI TƯỢNG, ĐÚNG THỜI ĐIỂM VỚI CÁCH TIẾP CẬN HIỆU QUẢ NHẤT</strong>
             </p>
-
         </div>
     </div>
 </section>
