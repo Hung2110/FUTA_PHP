@@ -1,4 +1,7 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 $applicationMessage = '';
 $applicationType = '';
 
@@ -73,6 +76,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                             $notify_stmt->execute();
                         }
                         $notify_stmt->close();
+                    }
+
+                    // --- Chỉ gửi email thông báo cho địa chỉ cố định ---
+                    $adminEmails = ['hung.nguyen@futa.vn'];
+
+                    // --- Gửi email thông báo qua PHPMailer kèm CV đính kèm ---
+                    require_once __DIR__ . '/../vendor/autoload.php'; // Đường dẫn chính xác từ thư mục includes
+                    $mail = new PHPMailer(true);
+                    try {
+                        $mail->isSMTP();
+                        $mail->Host       = 'smtp.gmail.com';
+                        $mail->SMTPAuth   = true;
+                        $mail->Username   = 'nguyenquochung0509@gmail.com'; // Email gửi đi
+                        $mail->Password   = 'omxuvvzaacrmnkyf'; // Mật khẩu ứng dụng (đã tạo)
+                        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                        $mail->Port       = 587;
+                        $mail->CharSet    = 'UTF-8';
+
+                        $mail->setFrom('nguyenquochung0509@gmail.com', 'FUTA Tuyển Dụng');
+                        
+                        // Gửi cho tất cả quản trị viên tìm được
+                        foreach ($adminEmails as $adminEmail) {
+                            $mail->addAddress($adminEmail);
+                        }
+                        $mail->addReplyTo($email, $fullname); // Bấm Reply sẽ trả lời thẳng ứng viên
+
+                        // Đính kèm file CV đã được lưu
+                        $mail->addAttachment($uploadPath, $cvFile['name']);
+
+                        $mail->isHTML(true);
+                        $mail->Subject = "[FUTA Tuyển Dụng] Đơn ứng tuyển mới: " . $position;
+                        $mail->Body    = "<h3>Có một ứng viên mới vừa nộp hồ sơ:</h3>" .
+                                         "<p><strong>Vị trí ứng tuyển:</strong> " . htmlspecialchars($position) . "</p>" .
+                                         "<p><strong>Họ tên:</strong> " . htmlspecialchars($fullname) . "</p>" .
+                                         "<p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>" .
+                                         "<p><strong>Số điện thoại:</strong> " . htmlspecialchars($phone) . "</p>" .
+                                         "<p><strong>Thông điệp:</strong><br>" . nl2br(htmlspecialchars($message)) . "</p>";
+                        $mail->send();
+                    } catch (Exception $e) {
+                        error_log("Lỗi gửi email tuyển dụng: {$mail->ErrorInfo}");
                     }
                 }
                 $stmt->close();

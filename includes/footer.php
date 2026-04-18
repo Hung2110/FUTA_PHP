@@ -3,7 +3,7 @@
     <div class="footer-container">
         <div class="footer-column">
          <img src="assets/images/logo/Advertising.png">
-            <h3 data-i18n="footer.company_name">CÔNG TY CỔ PHẦN QUẢNG CÁO FUTA PHƯƠNG TRANG VIỆT NAM</h3>
+            <h3 data-i18n="footer.company_name">CÔNG TY CP QUẢNG CÁO FUTA PHƯƠNG TRANG VIỆT NAM</h3>
             <div class="footer-column">
             <div class="footer-column">
             <h3 data-i18n="footer.contact_title">LIÊN HỆ VỚI CHÚNG TÔI</h3>
@@ -17,7 +17,7 @@
           <a href="index.php" target="_blank" data-i18n="footer.website_link">Truy Cập Website</a>
           </li>
           <li><span class="icon"><i class="fas fa-map-marker-alt"></i></span> 
-              <span data-i18n="footer.address">218 Đề Thám,Phường Bến Thành,TP.Hồ Chí Minh</span>
+              <span data-i18n="footer.address"> 218 Đề Thám,Phường Bến Thành,TP.Hồ Chí Minh</span>
           </li> 
           </ul>
             </div>
@@ -48,5 +48,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Custom JS -->
     <script src="js/main.js"></script>
+
+    <!-- Tích hợp Chat Widget dùng chung cho toàn trang -->
+    <?php include 'chat_widget.php'; ?>
 </body>
 </html>

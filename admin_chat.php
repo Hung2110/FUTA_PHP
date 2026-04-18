@@ -102,14 +102,32 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let currentSessionId = null;
-    let pollingInterval = null;
     let lastMessageId = 0;
     // Lưu trạng thái "đã xem" của admin cho các tin nhắn mới từ khách
     let seenSessions = new Set(); 
 
+    // --- KẾT NỐI WEBSOCKET ---
+    let ws = null;
+    function connectWebSocket() {
+        ws = new WebSocket('ws://localhost:8080');
+        ws.onmessage = (e) => {
+            const data = JSON.parse(e.data);
+            if (data.event === 'new_message') {
+                if (data.session_id == currentSessionId) {
+                    loadMessages(false); // Nếu đang mở chat của khách này -> Hiện tin mới ngay lập tức
+                }
+                loadSessionList(); // Cập nhật lại thanh menu bên trái (đẩy khách lên đầu, hiện chấm xanh)
+            } else if (data.event === 'new_session') {
+                loadSessionList(); // Có khách mới bấm "Bắt đầu trò chuyện"
+            }
+        };
+        ws.onerror = (e) => console.error('WebSocket Error:', e);
+        ws.onclose = () => setTimeout(connectWebSocket, 5000); // Tự động kết nối lại sau 5s nếu mất kết nối
+    }
+    connectWebSocket();
+
     $(document).ready(function() {
         loadSessionList();
-        setInterval(loadSessionList, 10000); // Tự động làm mới danh sách session mỗi 10s
     });
 
     function loadSessionList() {
@@ -119,7 +137,8 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
                 sessionList.html(''); // Xóa danh sách cũ
                 res.sessions.forEach(session => {
                     const date = new Date(session.last_message_time);
-                    const formattedTime = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }) + ' ' + date.toLocaleDateString('vi-VN');
+                    const formattedTime = date.toLocaleString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    const safeName = JSON.stringify(session.name); // JSON.stringify để xử lý các ký tự đặc biệt như ' "
 
                     let indicator = '';
                     // Hiển thị chấm xanh nếu tin nhắn cuối là của khách và admin chưa click vào session đó
@@ -128,7 +147,7 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
                     }
 
                     const sessionHtml = `
-                        <div class="session-item" id="session-item-${session.id}" onclick="selectSession(${session.id}, '${$('<div/>').text(session.name).html()}')">
+                        <div class="session-item position-relative" id="session-item-${session.id}" onclick="selectSession(${session.id}, ${safeName})">
                             <div class="session-name">${$('<div/>').text(session.name).html()}</div>
                             <div class="session-info">${session.phone} | ${formattedTime}</div>
                             ${indicator}
@@ -136,6 +155,9 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
                     `;
                     sessionList.append(sessionHtml);
                 });
+            } else {
+                // Hiển thị lỗi nếu API trả về lỗi
+                $('#session-list').html(`<div class="p-3 text-danger">${res.error || 'Không thể tải danh sách chat.'}</div>`);
             }
         });
     }
@@ -156,9 +178,6 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
         lastMessageId = 0;
         $('#messages-box').html('<div class="text-center text-muted p-3">Đang tải tin nhắn...</div>');
         loadMessages(true);
-
-        if (pollingInterval) clearInterval(pollingInterval);
-        pollingInterval = setInterval(() => loadMessages(false), 3000);
     }
 
     function loadMessages(isInitialLoad = false) {
@@ -213,6 +232,9 @@ if (!isset($_SESSION['user_role']) || !in_array($_SESSION['user_role'], ['admin'
             if (res.success) {
                 $('#admin-input').val('');
                 loadMessages(false); // Tải tin nhắn mới ngay sau khi gửi để hiển thị
+                if (ws && ws.readyState === WebSocket.OPEN) {
+                    ws.send(JSON.stringify({ event: 'new_message', session_id: currentSessionId })); // Bắn tín hiệu WebSocket cho khách hàng
+                }
             } else {
                 alert('Lỗi gửi tin');
             }

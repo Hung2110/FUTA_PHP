@@ -29,7 +29,7 @@ $pageStyles = $pageStyles ?? [];
     <!-- Script Google Translate -->
     <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
     <!-- i18n Language Script -->
-    <script src="/FUTA_PHP/js/i18n.js"></script>
+    <script src="<?php css_version('js/i18n.js'); ?>"></script>
 </head>
 <body class="<?php echo isset($bodyClass) ? htmlspecialchars($bodyClass, ENT_QUOTES, 'UTF-8') : ''; ?>">
 

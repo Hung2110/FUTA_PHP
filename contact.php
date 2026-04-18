@@ -1,9 +1,11 @@
 <?php
-$pageStyles = ['css/contact.css'];
-$bodyClass = 'contact-page';
-include 'includes/header.php';
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
 require_once 'db.php';
-$success = false;
+require_once 'vendor/autoload.php'; // Đảm bảo đã cài đặt PHPMailer qua Composer
+
+$success = isset($_GET['success']) && $_GET['success'] == '1';
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
@@ -18,44 +20,75 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $contact_id = $conn->insert_id; // Lấy ID của liên hệ vừa tạo
             $stmt->close();
 
-            // --- Tạo thông báo cho admin/manager ---
-            $admin_users_query = $conn->query("SELECT id FROM users WHERE role IN ('admin', 'manager')");
-            if ($admin_users_query) {
+            // --- Tạo thông báo cho admin/contact_manager ---
+            $admin_users_query = $conn->query("SELECT id FROM users WHERE (FIND_IN_SET('admin', role) > 0 OR FIND_IN_SET('contact_manager', role) > 0) AND status = 'active'");
+            if ($admin_users_query && $admin_users_query->num_rows > 0) {
                 $notification_message = "Có liên hệ mới từ: " . htmlspecialchars($name);
                 $notification_link = "view_contact.php?id=" . $contact_id;
                 $notification_type = 'contact';
 
                 $notify_stmt = $conn->prepare("INSERT INTO notifications (user_id, type, message, link) VALUES (?, ?, ?, ?)");
                 while ($admin_user = $admin_users_query->fetch_assoc()) {
-                    $notify_stmt->bind_param("isss", $admin_user['id'], $notification_type, $notification_message, $notification_link);
-                    $notify_stmt->execute();
+                    if (isset($admin_user['id'])) {
+                        $notify_stmt->bind_param("isss", $admin_user['id'], $notification_type, $notification_message, $notification_link);
+                        $notify_stmt->execute();
+                    }
                 }
                 $notify_stmt->close();
             }
             // --- Kết thúc tạo thông báo ---
         }
-        // Gửi email thông báo cho nhiều admin
-        $adminEmails = [
-            'hung.nguyen@futa.vn',
-            // Thêm email admin khác tại đây, ví dụ:
-            // 'admin2@futa.vn',
-            // 'admin3@futa.vn'
-        ];
-        $mailSubject = "[FUTA Website] Liên hệ mới từ $name";
-        $mailBody = "Bạn nhận được một liên hệ mới từ website FUTA:\n\n" .
-            "Họ tên: $name\n" .
-            "Email: $email\n" .
-            "Điện thoại: $phone\n" .
-            "Chủ đề: $subject\n" .
-            "Nội dung: $content\n";
-        foreach ($adminEmails as $adminEmail) {
-            @mail($adminEmail, $mailSubject, $mailBody, "From: futaadvertising@futa.vn\r\nReply-To: $email");
+        
+        // --- Chỉ gửi email thông báo cho địa chỉ cố định ---
+        $adminEmails = ['hung.nguyen@futa.vn'];
+        
+        $mailSubject = "[FUTA ADVERTISING] Liên hệ mới từ $name";
+        $mailBody = "<h3>Bạn nhận được một liên hệ mới từ website FUTA:</h3>" .
+            "<p><strong>Tên Khách Hàng:</strong> " . htmlspecialchars($name) . "</p>" .
+            "<p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>" .
+            "<p><strong>Điện thoại:</strong> " . htmlspecialchars($phone) . "</p>" .
+            "<p><strong>Website:</strong> " . htmlspecialchars($subject) . "</p>" .
+            "<p><strong>Nội dung:</strong><br>" . nl2br(htmlspecialchars($content)) . "</p>";
+
+        $mail = new PHPMailer(true);
+        try {
+            $mail->SMTPDebug = 0; // Tắt hiển thị chi tiết quá trình kết nối với Google
+            $mail->isSMTP();
+            $mail->Host       = 'smtp.gmail.com'; // Thay bằng SMTP server của bạn (VD: smtp.gmail.com)
+            $mail->SMTPAuth   = true;
+            $mail->Username   = 'nguyenquochung0509@gmail.com'; // Thay bằng email gửi đi của bạn
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mail->Password   = 'pqbxhhjdkrhqwhux';    // Mật khẩu ứng dụng viết liền không khoảng trắng
+            $mail->Port       = 587; // Sử dụng cổng 587 cho STARTTLS của Gmail
+            $mail->CharSet    = 'UTF-8'; // Bổ sung để hỗ trợ tiếng Việt không bị lỗi font
+            $mail->setFrom('nguyenquochung0509@gmail.com', 'FUTA Website');
+            $mail->addReplyTo($email, $name);
+            $mail->isHTML(true);
+            $mail->Subject = $mailSubject;
+            $mail->Body    = $mailBody;
+            
+            foreach ($adminEmails as $adminEmail) {
+                $mail->addAddress($adminEmail);
+            }
+            
+            $mail->send();
+            
+            header("Location: contact.php?success=1");
+            exit;
+        } catch (Exception $e) {
+            // Bắt lỗi và thông báo cho người dùng, đồng thời ghi log
+            error_log("Gửi email thất bại. Lỗi: {$mail->ErrorInfo}");
+            $error = "Đã lưu thông tin liên hệ nhưng hệ thống gặp lỗi khi gửi email thông báo. Vui lòng thử lại sau.";
+            $success = false;
         }
-        $success = true;
     } else {
         $error = 'Vui lòng nhập đầy đủ thông tin!';
     }
 }
+
+$pageStyles = ['css/contact.css'];
+$bodyClass = 'contact-page';
+include 'includes/header.php';
 ?>
 
     <canvas id="background-canvas"></canvas>
@@ -78,7 +111,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="contact-info">
                 <div class="info-group">
                     <h4 data-i18n="contact.headquarters">Trụ sở chính</h4>
-                    <p><i class="bi bi-geo-alt-fill"></i> Số 218 Đề Thám,Phường Bến Thành,TP.Hồ Chí Minh</p>
+                    <p><i class="bi bi-geo-alt-fill"></i> <span data-i18n="footer.address">Số 218 Đề Thám, Phường Bến Thành, TP. Hồ Chí Minh</span></p>
                 </div>
                 <div class="info-group">
                     <h4 data-i18n="contact.hotline">Tổng đài</h4>
@@ -106,34 +139,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="contact-form">
                 <?php if ($success): ?>
                     <div class="alert alert-success">Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.</div>
+                    <script>
+                        // Tự động tải lại trang sạch sau 3 giây
+                        setTimeout(function() {
+                            window.location.href = 'contact.php';
+                        }, 3000);
+                    </script>
                 <?php else: ?>
                 <?php if ($error): ?><div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div><?php endif; ?>
                 <form action="#" method="post" autocomplete="off">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name" data-i18n="contact.form_name">Họ và tên*</label>
-                            <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="phone" data-i18n="contact.form_phone">Điện thoại *</label>
-                            <input type="tel" id="phone" name="phone" required value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="email" data-i18n="contact.form_email">Email *</label>
-                            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
-                        </div>
-                        <div class="form-group">
-                            <label for="subject" data-i18n="contact.form_subject">Website*</label>
-                            <input type="text" id="subject" name="subject" required value="<?php echo htmlspecialchars($_POST['subject'] ?? ''); ?>">
-                        </div>
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" placeholder="Tên của bạn *" data-i18n-placeholder="contact.form_name" required value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
                     </div>
                     <div class="form-group">
-                        <label for="content" data-i18n="contact.form_content">Nội dung *</label>
-                        <textarea id="content" name="content" required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
+                        <input type="email" id="email" name="email" placeholder="Email *" data-i18n-placeholder="contact.form_email" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
                     </div>
-                    <button type="submit" class="submit-btn" data-i18n="contact.form_submit">Gửi nội dung</button>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Điện thoại *" data-i18n-placeholder="contact.form_phone" required value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="subject" name="subject" placeholder="Website *" data-i18n-placeholder="contact.form_subject" required value="<?php echo htmlspecialchars($_POST['subject'] ?? ''); ?>">
+                    </div>
+                    <div class="form-group">
+                        <textarea id="content" name="content" placeholder="Nội Dung *" data-i18n-placeholder="contact.form_content" required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn" data-i18n="contact.form_submit">Nhận tư vấn</button>
                 </form>
                 <?php endif; ?>
             </div>

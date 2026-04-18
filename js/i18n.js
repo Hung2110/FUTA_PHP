@@ -89,22 +89,19 @@ const translations = {
       chat_send: "Gửi"
     },
     contact: {
-      title: "Liên hệ FUTA Advertising",
+      title: "Liên Hệ FUTA ADVERTISING",
       headquarters: "Trụ sở chính",
       hotline: "Tổng đài",
       email_website: "Email & Website",
       social_media: "Mạng xã hội",
-      form_name: "Họ và tên *",
+      form_name: "Tên của bạn *",
       form_phone: "Điện thoại *",
       form_email: "Email *",
       form_address: "Địa chỉ *",
-      form_subject: "Tiêu đề *",
-      form_content: "Nội dung *",
-      form_submit: "Gửi nội dung",
-      form_select_service: "Chọn dịch vụ",
-      form_option1: "Tư vấn dịch vụ",
-      form_option2: "Hỗ trợ kỹ thuật",
-      form_option3: "Phản hồi chất lượng"
+      form_subject: "Website *",
+      form_content: "Nội Dung *",
+      form_submit: "Nhận tư vấn",
+      
     },
     recruitment: {
       banner_title: "WELCOME TO FUTA ADVERTISING",
@@ -267,7 +264,7 @@ const translations = {
       contact_title: "LIÊN HỆ VỚI CHÚNG TÔI",
       email_link: "Email liên hệ",
       website_link: "Truy Cập Website",
-      address: "218 Đề Thám, Phường Phạm Ngũ Lão, Quận 1, Hồ Chí Minh",
+      address: "218 Đề Thám, Phường Bến Thành, TP.Hồ Chí Minh",
       connect_title: "KẾT NỐI VỚI CHÚNG TÔI",
       map_title: "BẢN ĐỒ",
       copyright: "© 2025 FUTA Advertising - All Rights Reserved"
@@ -359,22 +356,19 @@ const translations = {
       chat_send: "Send"
     },
     contact: {
-      title: "Contact FUTA Advertising",
+      title: "Contact FUTA ADVERTISING",
       headquarters: "Headquarters",
       hotline: "Hotline",
       email_website: "Email & Website",
       social_media: "Social Media",
-      form_name: "Full name *",
+      form_name: "Your Name *",
       form_phone: "Phone *",
       form_email: "Email *",
       form_address: "Address *",
-      form_subject: "Subject *",
+      form_subject: "Website *",
       form_content: "Content *",
-      form_submit: "Submit",
-      form_select_service: "Select service",
-      form_option1: "Service consultation",
-      form_option2: "Technical support",
-      form_option3: "Quality feedback"
+      form_submit: "Get Consultation",
+     
     },
     recruitment: {
       banner_title: "WELCOME TO FUTA ADVERTISING",
@@ -537,7 +531,7 @@ const translations = {
       contact_title: "CONTACT US",
       email_link: "Contact Email",
       website_link: "Visit Website",
-      address: "218 De Tham, Pham Ngu Lao Ward, District 1, Ho Chi Minh City",
+      address: "218 De Tham, Ben Thanh Ward, Ho Chi Minh City",
       connect_title: "CONNECT WITH US",
       map_title: "MAP",
       copyright: "© 2025 FUTA Advertising - All Rights Reserved"
@@ -629,22 +623,18 @@ const translations = {
       chat_send: "发送"
     },
     contact: {
-      title: "联系FUTA Advertising",
+      title: "联系FUTA ADVERTISING",
       headquarters: "总部",
       hotline: "热线",
       email_website: "电子邮件和网站",
       social_media: "社交媒体",
-      form_name: "姓名 *",
+      form_name: "您的名字 *",
       form_phone: "电话 *",
       form_email: "电子邮件 *",
       form_address: "地址 *",
-      form_subject: "主题 *",
+      form_subject: "网站 *",
       form_content: "内容 *",
-      form_submit: "提交",
-      form_select_service: "选择服务",
-      form_option1: "服务咨询",
-      form_option2: "技术支持",
-      form_option3: "质量反馈"
+      form_submit: "获取咨询",
     },
     recruitment: {
       banner_title: "欢迎来到FUTA Advertising",
@@ -807,7 +797,7 @@ const translations = {
       contact_title: "联系我们",
       email_link: "联系邮箱",
       website_link: "访问网站",
-      address: "胡志明市第一郡范五老街坊德探街218号",
+      address: "胡志明市，滨城坊，德探街218号",
       connect_title: "与我们联系",
       map_title: "地图",
       copyright: "© 2025 FUTA Advertising - 版权所有"
