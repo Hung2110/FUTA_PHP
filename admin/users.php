@@ -13,7 +13,8 @@ $role_config = [
     'carousel_manager' => ['label' => 'Quản lý Carousel', 'color' => 'info'],
     'news_manager' => ['label' => 'Quản lý Tin tức', 'color' => 'success'],
     'recruitment_manager' => ['label' => 'Quản lý tuyển dụng', 'color' => 'warning'],
-    'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary']
+    'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary'],
+    'chat_manager' => ['label' => 'Quản lý Chat', 'color' => 'primary']
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

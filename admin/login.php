@@ -162,10 +162,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             border-radius: 32px;
             border: 1.5px solid #e2e8f0;
             background: transparent;
+        }
+        .input-group-text:first-child {
             border-right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        .input-group-text.toggle-password {
+            border-left: 0;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            cursor: pointer;
+            color: var(--text-muted);
         }
         .input-group .form-control {
             border-left: 0;
+        }
+        .input-group .form-control:not(:last-child) {
+            border-right: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
         }
         .forgot-link {
             text-align: right;
@@ -235,6 +251,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
                             <input type="password" class="form-control" id="password" name="password" placeholder="Nhập mật khẩu..." required>
+                            <span class="input-group-text toggle-password" id="togglePassword"><i class="fas fa-eye"></i></span>
                         </div>
                     </div>
 
@@ -259,6 +276,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         updateClock();
         setInterval(updateClock, 1000);
+
+        // Xử lý ẩn/hiện mật khẩu
+        const togglePassword = document.getElementById('togglePassword');
+        const password = document.getElementById('password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
     </script>
 </body>
 </html>

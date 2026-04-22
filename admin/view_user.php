@@ -28,13 +28,15 @@ $roles = [
     'carousel_manager' => 'Quản lý Carousel',
     'news_manager' => 'Quản lý Tin tức',
     'recruitment_manager' => 'Quản lý tuyển dụng',
-    'contact_manager' => 'Quản lý liên hệ'
+    'contact_manager' => 'Quản lý liên hệ',
+    'chat_manager' => 'Quản lý Chat'
 ];
 $role_colors = [
     'user' => 'secondary', 'admin' => 'danger',
     'user_manager' => 'dark', 'project_manager' => 'primary',
     'carousel_manager' => 'info', 'blog_manager' => 'success',
-    'news_manager' => 'success', 'recruitment_manager' => 'warning', 'contact_manager' => 'secondary'
+    'news_manager' => 'success', 'recruitment_manager' => 'warning', 'contact_manager' => 'secondary',
+    'chat_manager' => 'primary'
 ];
 
 $status_text = ['active' => 'Hoạt động', 'inactive' => 'Không hoạt động'];

@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # 1. Dịch vụ Web (Apache + PHP)
+  web:
+    build: .
+    container_name: futa_web
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=secret
+      - DB_NAME=futa_advertising
+    volumes:
+      - ./:/var/www/html  # Mount code để có thể sửa live không cần build lại
+    depends_on:
+      - db
+
+  # 2. Dịch vụ WebSocket (Ratchet Chat Server)
+  websocket:
+    build: .
+    container_name: futa_websocket
+    command: php chat_server.php
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_USER=root
+      - DB_PASS=secret
+      - DB_NAME=futa_advertising
+    volumes:
+      - ./:/var/www/html
+    depends_on:
+      - db
+
+  # 3. Dịch vụ Database (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: futa_db
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: futa_advertising
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:

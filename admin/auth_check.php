@@ -6,7 +6,7 @@ ini_set('session.cookie_secure', isset($_SERVER['HTTPS'])); // Chỉ gửi cooki
 ini_set('session.cookie_samesite', 'Lax');
 
 session_start();
-require_once '../db.php';
+require_once __DIR__ . '/../db.php';
 
 if (!isset($_SESSION['admin_id'])) {
     header('Location: login.php');
@@ -22,7 +22,8 @@ $role_config = [
     'carousel_manager' => ['label' => 'Quản lý Carousel', 'color' => 'info'],
     'news_manager' => ['label' => 'Quản lý Tin tức', 'color' => 'success'],
     'recruitment_manager' => ['label' => 'Quản lý tuyển dụng', 'color' => 'warning'],
-    'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary']
+    'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary'],
+    'chat_manager' => ['label' => 'Quản lý Chat', 'color' => 'primary']
 ];
 
 // Cập nhật lại quyền hạn từ database để đảm bảo tính thời gian thực
@@ -63,8 +64,12 @@ $page_permissions = [
 
     // Các trang chung (Admin + Manager + Staff)
     'import.php'            => ['admin', 'project_manager', 'news_manager'],
+    
+    // Phân quyền cho Chat
+    'chat.php'              => ['admin', 'chat_manager'],
 ];
 
+// Lấy tên trang hiện hành
 $current_page = basename($_SERVER['PHP_SELF']);
 
 // Lấy danh sách quyền của người dùng

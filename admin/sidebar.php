@@ -20,8 +20,8 @@ if ($table_exists) {
     }
     $count_stmt->close();
 
-    // Get recent 5 notifications
-    $notif_stmt = $conn->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+    // Lấy 20 thông báo gần nhất để danh sách đủ dài và kích hoạt thanh cuộn
+    $notif_stmt = $conn->prepare("SELECT * FROM notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 20");
     $notif_stmt->bind_param("i", $current_user_id);
     $notif_stmt->execute();
     $notif_result = $notif_stmt->get_result();
@@ -48,7 +48,8 @@ if (!isset($role_config) || empty($role_config)) {
         'carousel_manager' => ['label' => 'Quản lý Carousel', 'color' => 'info'],
         'news_manager' => ['label' => 'Quản lý Tin tức', 'color' => 'success'],
         'recruitment_manager' => ['label' => 'Quản lý tuyển dụng', 'color' => 'warning'],
-        'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary']
+        'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary'],
+        'chat_manager' => ['label' => 'Quản lý Chat', 'color' => 'primary']
     ];
 }
 
@@ -102,6 +103,20 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         width: 350px;
         max-height: 400px;
         overflow-y: auto;
+    }
+    /* Tùy chỉnh giao diện thanh cuộn cho danh sách thông báo */
+    .notification-dropdown-menu::-webkit-scrollbar {
+        width: 6px;
+    }
+    .notification-dropdown-menu::-webkit-scrollbar-track {
+        background: #f8f9fa;
+    }
+    .notification-dropdown-menu::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+    .notification-dropdown-menu::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
     }
     .notification-item small {
         white-space: normal;
@@ -206,6 +221,10 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         <?php if (!empty(array_intersect(['admin', 'contact_manager'], $user_roles))): ?>
         <li><a href="contacts.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'contacts.php' ? 'active' : ''; ?>"><i class="fas fa-envelope"></i> Liên hệ</a></li>
         <?php endif; ?>
+        
+        <?php if (!empty(array_intersect(['admin', 'chat_manager'], $user_roles))): ?>
+        <li><a href="chat.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : ''; ?>"><i class="fas fa-comments"></i> Quản lý Chat</a></li>
+        <?php endif; ?>
     </ul>
 </div>
 
@@ -260,8 +279,23 @@ document.addEventListener('DOMContentLoaded', function() {
         item.addEventListener('click', function(e) {
             const notificationId = this.dataset.id;
             const isUnread = this.classList.contains('fw-bold');
+            const href = this.getAttribute('href');
 
             if (isUnread) {
+                e.preventDefault(); // Ngăn trình duyệt chuyển trang ngay lập tức để chờ API
+                
+                // Cập nhật giao diện ngay lập tức (Optimistic UI)
+                this.classList.remove('fw-bold');
+                const badge = document.querySelector('.notification-badge');
+                if (badge) {
+                    let count = parseInt(badge.textContent) - 1;
+                    if (count > 0) {
+                        badge.textContent = count;
+                    } else {
+                        badge.remove(); // Xóa chấm đỏ nếu đã đọc hết
+                    }
+                }
+
                 fetch('mark_notification_read.php', {
                     method: 'POST',
                     headers: {
@@ -271,10 +305,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    if (!data.success) {
-                        console.error('Failed to mark notification as read.');
-                    }
-                }).catch(error => console.error('Error:', error));
+                    window.location.href = href; // Chuyển trang sau khi đã đánh dấu đọc thành công
+                }).catch(error => {
+                    console.error('Error:', error);
+                    window.location.href = href; // Vẫn cho phép chuyển trang nếu có lỗi mạng
+                });
             }
         });
     });
