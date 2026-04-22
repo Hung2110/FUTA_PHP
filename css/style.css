@@ -799,7 +799,7 @@ body {
     font-size: 14px;
     background:  #2eabe2;
     color: #000000;     /* Màu chữ */
-    padding-bottom: 20px; /* Tạo khoảng trống nhỏ để không bị các nút floating đè sát */
+    padding-bottom: 10px; /* Tạo khoảng trống nhỏ để không bị các nút floating đè sát */
 }
 .contact-details p span {
     font-size: 20px;
