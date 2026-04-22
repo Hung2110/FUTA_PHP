@@ -7,6 +7,8 @@
     <button class="btn-contact-toggle" id="contactToggleBtn" aria-label="Mở menu liên hệ">
       <i class="fa-solid fa-phone icon-toggle icon-phone"></i>
       <i class="fa-brands fa-facebook-messenger icon-toggle icon-messenger"></i>
+      <i class="fa-solid fa-envelope icon-toggle icon-mail"></i>
+      
       <i class="fa-solid fa-xmark icon-toggle icon-close"></i>
     </button>
     

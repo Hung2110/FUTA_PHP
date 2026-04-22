@@ -463,15 +463,20 @@ body {
     }
 
     .btn-contact-toggle .icon-phone {
-      animation: alternate-phone 4s infinite;
+      animation: alternate-1 6s infinite;
     }
 
     .btn-contact-toggle .icon-messenger {
-      animation: alternate-msg 4s infinite;
+      animation: alternate-2 6s infinite;
+    }
+
+    .btn-contact-toggle .icon-mail {
+      animation: alternate-3 6s infinite;
     }
 
     .contact-buttons-wrapper.show .btn-contact-toggle .icon-phone,
-    .contact-buttons-wrapper.show .btn-contact-toggle .icon-messenger {
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-messenger,
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-mail {
       animation: none;
       opacity: 0;
       transform: translate(-50%, -50%) scale(0.5);
@@ -596,17 +601,23 @@ body {
       100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
     }
 
-    /* Hiệu ứng luân phiên cho 2 icon bên trong nút */
-    @keyframes alternate-phone {
-      0%, 40% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      45%, 95% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+    /* Hiệu ứng luân phiên cho 3 icon bên trong nút */
+    @keyframes alternate-1 {
+      0%, 28% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      33%, 95% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
       100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
-    @keyframes alternate-msg {
-      0%, 45% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-      50%, 90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      95%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+    @keyframes alternate-2 {
+      0%, 28% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      33%, 61% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      66%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+    }
+
+    @keyframes alternate-3 {
+      0%, 61% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      66%, 95% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
     }
 
     /* ============================
