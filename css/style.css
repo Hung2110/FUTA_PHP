@@ -420,14 +420,77 @@ body {
  /* ============================
        CONTACT BUTTONS
     ============================ */
-    .contact-buttons {
+    .contact-buttons-wrapper {
       position: fixed;
       bottom: 50px;
       left: 20px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column-reverse; /* Danh sách mở hướng lên trên */
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .btn-contact-toggle {
+      display: none; /* Ẩn mặc định trên PC */
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #004aad, #007bff);
+      color: white;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+      align-items: center;
+      justify-content: center;
+      animation: pulse-blue 2s infinite; /* Thêm hiệu ứng nhịp đập liên tục thu hút sự chú ý */
+      position: relative; /* Thêm relative để chứa các icon absolute */
+    }
+
+    .btn-contact-toggle .icon-toggle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      transition: all 0.3s ease;
+    }
+
+    .btn-contact-toggle .icon-close {
+      opacity: 0;
+      transform: translate(-50%, -50%) rotate(-90deg) scale(0.5);
+    }
+
+    .btn-contact-toggle .icon-phone {
+      animation: alternate-phone 4s infinite;
+    }
+
+    .btn-contact-toggle .icon-messenger {
+      animation: alternate-msg 4s infinite;
+    }
+
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-phone,
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-messenger {
+      animation: none;
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.5);
+    }
+
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-close {
+      opacity: 1;
+      transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    }
+    
+    .contact-buttons-wrapper.show .btn-contact-toggle {
+      animation: none; /* Dừng hiệu ứng đập khi menu đang mở */
+    }
+
+    .contact-buttons {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      z-index: 2000;
+      transition: all 0.3s ease;
     }
 
     .btn-contact {
@@ -525,6 +588,25 @@ body {
       0% { box-shadow: 0 0 0 0 rgba(0,255,255,0.5); }
       70% { box-shadow: 0 0 0 20px rgba(0,255,255,0); }
       100% { box-shadow: 0 0 0 0 rgba(0,255,255,0); }
+    }
+    
+    @keyframes pulse-blue {
+      0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); }
+      70% { box-shadow: 0 0 0 15px rgba(0, 123, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+    }
+
+    /* Hiệu ứng luân phiên cho 2 icon bên trong nút */
+    @keyframes alternate-phone {
+      0%, 40% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      45%, 95% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes alternate-msg {
+      0%, 45% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      50%, 90% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      95%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
     }
 
     /* ============================
@@ -671,6 +753,7 @@ body {
     justify-content: space-between;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 20px; /* Thêm padding để không bị chạm sát lề 2 bên màn hình */
 }
 
 .footer-column {
@@ -716,6 +799,7 @@ body {
     font-size: 14px;
     background:  #2eabe2;
     color: #000000;     /* Màu chữ */
+    padding-bottom: 20px; /* Tạo khoảng trống nhỏ để không bị các nút floating đè sát */
 }
 .contact-details p span {
     font-size: 20px;
@@ -906,6 +990,7 @@ grid-template-columns: 1fr;
     .footer-container {
         flex-direction: column; /* Xếp các cột theo chiều dọc */
         align-items: flex-start; /* Căn các cột về bên trái */
+        padding: 0 20px 0 85px; /* Đẩy chữ sang phải (85px) để tránh hoàn toàn các nút floating (rộng ~75px) */
     }
     .footer-column {
         flex-basis: 100%; /* Mỗi cột chiếm toàn bộ chiều rộng */
@@ -917,6 +1002,9 @@ grid-template-columns: 1fr;
     }
     .footer-column iframe {
         height: 250px; /* Điều chỉnh chiều cao bản đồ cho phù hợp */
+    }
+    .footer-bottom {
+        padding-bottom: 120px; /* Đẩy nội dung lên trên để tránh bị các nút floating (contact/chatbot) đè vào trên thiết bị di động */
     }
 }
 
@@ -1122,5 +1210,24 @@ grid-template-columns: 1fr;
     /* Ẩn chữ trong nút liên hệ cố định góc trái */
     .btn-contact span {
         display: none !important;
+    }
+
+    /* Gộp 3 nút thành 1 nút mở rộng trên mobile */
+    .btn-contact-toggle {
+        display: flex;
+    }
+    .contact-buttons {
+        position: absolute;
+        bottom: 65px; /* Nằm đè lên trên nút toggle */
+        left: 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px) scale(0.9);
+        transform-origin: bottom left;
+    }
+    .contact-buttons-wrapper.show .contact-buttons {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
     }
 }

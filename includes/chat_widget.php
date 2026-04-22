@@ -2,7 +2,7 @@
     /* Giao diện khung Chat nổi */
     .futa-chat-btn {
         position: fixed;
-        bottom: 30px;
+        bottom: 60px;
         right: 30px;
         width: 60px;
         height: 60px;
@@ -24,7 +24,7 @@
     
     .futa-chat-box {
         position: fixed;
-        bottom: 100px;
+        bottom: 130px;
         right: 30px;
         width: 350px;
         height: 480px;

@@ -4,8 +4,6 @@
         <div class="footer-column">
          <img src="assets/images/logo/Advertising.png">
             <h3 data-i18n="footer.company_name">CÔNG TY CP QUẢNG CÁO FUTA PHƯƠNG TRANG VIỆT NAM</h3>
-            <div class="footer-column">
-            <div class="footer-column">
             <h3 data-i18n="footer.contact_title">LIÊN HỆ VỚI CHÚNG TÔI</h3>
             <div class="contact-details">
           <ul>
@@ -21,8 +19,6 @@
           </li> 
           </ul>
             </div>
-        </div>
-        </div>
         </div>
         <div class="footer-column">
             <h3 data-i18n="footer.connect_title">KẾT NỐI VỚI CHÚNG TÔI</h3>
