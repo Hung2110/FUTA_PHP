@@ -137,61 +137,7 @@ if ($result && $result->num_rows > 0) {
 }
 ?>
 
-<style>
-    /* Giao diện UI/UX mới cho trang tuyển dụng */
-    .recruitment-banner {
-        background: linear-gradient(135deg, rgba(0, 74, 173, 0.85), rgba(0, 123, 255, 0.75)), url('assets/images/banners/back.jpeg') center/cover no-repeat;
-        padding: 90px 0 110px;
-        text-align: center;
-        color: white;
-    }
-    .recruitment-banner h1 {
-        font-weight: 800;
-        font-size: 2.8rem;
-        margin-bottom: 15px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
-    .recruitment-banner p {
-        font-size: 1.15rem;
-        opacity: 0.9;
-    }
-    .filter-container {
-        margin-top: -60px;
-        position: relative;
-        z-index: 10;
-    }
-    .job-card-item:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 15px 35px rgba(0,74,173,0.1) !important;
-    }
-    .no-result {
-        text-align: center;
-        padding: 60px 20px;
-        color: #6c757d;
-        font-size: 1.2rem;
-        width: 100%;
-    }
-    /* Modal & Alert Styles */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; animation: fadeIn 0.3s ease; }
-    .modal-content { background: #fff; padding: 35px 30px; border-radius: 12px; max-width: 550px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0px 10px 40px rgba(0,0,0,0.3); position: relative; animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .modal-content h2 { margin-top: 0; margin-bottom: 8px; color: #004aad; font-size: 26px; font-weight: 800; }
-    .modal-content #applyJobTitle { color: #666; margin-bottom: 25px; font-size: 15px; font-weight: 500; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-    .apply-form { display: flex; flex-direction: column; gap: 15px; }
-    .apply-form label { font-weight: 600; color: #333; font-size: 14px; margin-bottom: -5px; }
-    .apply-form input, .apply-form textarea { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f9f9f9; }
-    .apply-form input:focus, .apply-form textarea:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); background-color: #fff; }
-    .apply-form button[type="submit"] { background: linear-gradient(135deg, #004aad 0%, #007bff 100%); color: #fff; border: none; padding: 14px 25px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; transition: all 0.3s ease; margin-top: 10px; text-transform: uppercase; }
-    .apply-form button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); }
-    .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #999; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; background: #f1f1f1; cursor: pointer; }
-    .close-btn:hover { background: #e0e0e0; color: #dc3545; transform: rotate(90deg); }
-    
-    .application-alert { max-width: 800px; margin: 20px auto; padding: 1rem 1.5rem; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 5px solid; }
-    .application-alert.success { background-color: #f0fff4; color: #2f6f44; border-left-color: #48bb78; }
-    .application-alert.error { background-color: #fff5f5; color: #c53030; border-left-color: #f56565; }
-</style>
+
 
 <section class="recruitment-banner">
     <h1 data-i18n="recruitment.banner_title">WELCOME TO FUTA ADVERTISING</h1>
