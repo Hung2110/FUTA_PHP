@@ -94,6 +94,31 @@
         box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
+    .futa-chat-time {
+        font-size: 10px;
+        margin-top: 5px;
+        opacity: 0.7;
+        text-align: right;
+    }
+    
+    .futa-chat-date-separator {
+        text-align: center;
+        font-size: 11px;
+        color: #888;
+        margin: 10px 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .futa-chat-date-separator::before,
+    .futa-chat-date-separator::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #e0e0e0;
+        margin: 0 10px;
+    }
+
     .futa-chat-input-area {
         display: flex;
         padding: 10px;
@@ -221,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let sessionId = localStorage.getItem('futa_chat_session') || null;
     let customerName = localStorage.getItem('futa_chat_name') || '';
     let lastMsgId = 0;
+    let lastRenderedDate = '';
     
     // --- KẾT NỐI WEBSOCKET ---
     let ws = null;
@@ -281,6 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('futa_chat_name');
             sessionId = null;
             customerName = '';
+            lastRenderedDate = '';
             msgContainer.innerHTML = '<div class="futa-chat-message admin" data-i18n="about.chat_welcome">Xin chào! Chúng tôi là FUTA Advertising. Tôi có thể giúp gì cho bạn?</div>';
             registerForm.style.display = 'flex';
             activeArea.style.display = 'none';
@@ -313,6 +340,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ws && ws.readyState === WebSocket.OPEN) {
                 ws.send(JSON.stringify({ event: 'new_session' })); // Bắn tín hiệu cho Admin biết có khách mới
             }
+            
+            fetchMessages(true); // Load ngay lịch sử chat cũ (nếu có)
         }
     });
 
@@ -419,10 +448,38 @@ document.addEventListener('DOMContentLoaded', () => {
         const res = await fetch(`/FUTA_PHP/includes/contact-chat-api.php?action=get_messages&session_id=${sessionId}&last_id=${lastMsgId}&t=${t}`).then(r => r.json());
         if(res.success && res.messages.length > 0) {
             const shouldScroll = forceScroll || (msgContainer.scrollTop + msgContainer.clientHeight >= msgContainer.scrollHeight - 50);
+            
+            // Nếu đang tải lần đầu và có lịch sử tin nhắn cũ, xóa câu chào mặc định đi
+            if (lastMsgId === 0) {
+                msgContainer.innerHTML = '';
+                lastRenderedDate = '';
+            }
+
             res.messages.forEach(m => {
+                const msgDateObj = new Date(m.created_at.replace(' ', 'T'));
+                const msgDateStr = msgDateObj.toLocaleDateString('vi-VN');
+                const msgTimeStr = msgDateObj.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+
+                if (msgDateStr !== lastRenderedDate) {
+                    const dateDiv = document.createElement('div');
+                    dateDiv.className = 'futa-chat-date-separator';
+                    
+                    const todayStr = new Date().toLocaleDateString('vi-VN');
+                    const yesterdayObj = new Date();
+                    yesterdayObj.setDate(yesterdayObj.getDate() - 1);
+                    const yesterdayStr = yesterdayObj.toLocaleDateString('vi-VN');
+
+                    if (msgDateStr === todayStr) dateDiv.textContent = 'Hôm nay';
+                    else if (msgDateStr === yesterdayStr) dateDiv.textContent = 'Hôm qua';
+                    else dateDiv.textContent = msgDateStr;
+                    
+                    msgContainer.appendChild(dateDiv);
+                    lastRenderedDate = msgDateStr;
+                }
+
                 const div = document.createElement('div');
                 div.className = `futa-chat-message ${m.sender}`;
-                div.innerHTML = formatChatMessage(m.message);
+                div.innerHTML = formatChatMessage(m.message) + `<div class="futa-chat-time">${msgTimeStr}</div>`;
                 msgContainer.appendChild(div);
                 lastMsgId = m.id;
             });

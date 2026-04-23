@@ -29,7 +29,7 @@ function handle_upload($file_key, $current_path = '', $allowed_types = [], $max_
 
         $file_info = finfo_open(FILEINFO_MIME_TYPE);
         $mime_type = finfo_file($file_info, $file['tmp_name']);
-        finfo_close($file_info);
+        finfo_close($file_info);    
 
         if (!empty($allowed_types) && !in_array($mime_type, $allowed_types)) {
             $message = "Lỗi: Định dạng file '{$file['name']}' không được phép.";
