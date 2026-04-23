@@ -86,72 +86,186 @@ $sql = "SELECT id, title, industry, position, branch, description FROM jobs WHER
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        // Tạo cấu trúc 'details' để tương thích với JavaScript hiện tại
+        // Tách dữ liệu từ description để hiển thị chính xác ra thẻ Card
+        $desc_lines = explode("\n", $row['description']);
+        $parsed_loc = $row['branch'];
+        $parsed_sal = 'Thỏa thuận';
+        $parsed_dead = 'Không giới hạn';
+        $parsed_level = $row['position'];
+        
+        $desc_text = "";
+        $in_desc = false;
+
+        foreach($desc_lines as $line) {
+            $tline = trim($line);
+            if (empty($tline)) continue;
+
+            if (stripos($tline, 'Nơi làm việc:') === 0) $parsed_loc = trim(substr($tline, strlen('Nơi làm việc:')));
+            elseif (stripos($tline, 'Mức lương:') === 0) $parsed_sal = trim(substr($tline, strlen('Mức lương:')));
+            elseif (stripos($tline, 'Hạn chót nhận hồ sơ:') === 0 || stripos($tline, 'Hạn nộp hồ sơ:') === 0) $parsed_dead = trim(preg_replace('/^Hạn (chót nhận|nộp) hồ sơ:/i', '', $tline));
+            elseif (stripos($tline, 'Cấp bậc:') === 0) $parsed_level = trim(substr($tline, strlen('Cấp bậc:')));
+            
+            // Lấy một đoạn ngắn trong phần "Mô tả công việc" làm Excerpt
+            if (stripos($tline, 'Mô tả công việc:') === 0) {
+                $in_desc = true;
+                $content = trim(substr($tline, strlen('Mô tả công việc:')));
+                if (!empty($content)) $desc_text .= $content . " ";
+                continue;
+            }
+            if ($in_desc) {
+                if (preg_match('/^(Yêu cầu|Phúc lợi|Quyền lợi|Danh sách|Thông tin|Ghi chú|Nơi làm việc|Cấp bậc|Số lượng|Hình thức|Kinh nghiệm|Mức lương|Ngành nghề|Hạn)/i', $tline)) {
+                    $in_desc = false;
+                } else {
+                    $desc_text .= $tline . " ";
+                }
+            }
+        }
+
         $row['details'] = [
             'industry' => $row['industry'],
-            'position' => $row['position'],
-            'work_location' => $row['branch'],
-            'salary' => 'Thỏa thuận', // Bạn có thể thêm cột salary vào bảng jobs nếu cần
-            'deadline' => null // Bạn có thể thêm cột deadline vào bảng jobs nếu cần
+            'position' => $parsed_level,
+            'work_location' => $parsed_loc,
+            'salary' => $parsed_sal,
+            'deadline' => $parsed_dead
         ];
-        $row['excerpt'] = $row['description']; // Sử dụng description làm excerpt
+        
+        $clean_excerpt = trim(strip_tags($desc_text));
+        $row['excerpt'] = empty($clean_excerpt) ? trim(strip_tags($row['description'])) : $clean_excerpt;
+        
         $recruitment_posts[] = $row;
     }
 }
 ?>
 
-<section class="banner">
+<style>
+    /* Giao diện UI/UX mới cho trang tuyển dụng */
+    .recruitment-banner {
+        background: linear-gradient(135deg, rgba(0, 74, 173, 0.85), rgba(0, 123, 255, 0.75)), url('assets/images/banners/back.jpeg') center/cover no-repeat;
+        padding: 90px 0 110px;
+        text-align: center;
+        color: white;
+    }
+    .recruitment-banner h1 {
+        font-weight: 800;
+        font-size: 2.8rem;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    .recruitment-banner p {
+        font-size: 1.15rem;
+        opacity: 0.9;
+    }
+    .filter-container {
+        margin-top: -60px;
+        position: relative;
+        z-index: 10;
+    }
+    .job-card-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0,74,173,0.1) !important;
+    }
+    .no-result {
+        text-align: center;
+        padding: 60px 20px;
+        color: #6c757d;
+        font-size: 1.2rem;
+        width: 100%;
+    }
+    /* Modal & Alert Styles */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 9999; animation: fadeIn 0.3s ease; }
+    .modal-content { background: #fff; padding: 35px 30px; border-radius: 12px; max-width: 550px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0px 10px 40px rgba(0,0,0,0.3); position: relative; animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-content h2 { margin-top: 0; margin-bottom: 8px; color: #004aad; font-size: 26px; font-weight: 800; }
+    .modal-content #applyJobTitle { color: #666; margin-bottom: 25px; font-size: 15px; font-weight: 500; border-bottom: 1px solid #eee; padding-bottom: 15px; }
+    .apply-form { display: flex; flex-direction: column; gap: 15px; }
+    .apply-form label { font-weight: 600; color: #333; font-size: 14px; margin-bottom: -5px; }
+    .apply-form input, .apply-form textarea { width: 100%; padding: 12px 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; transition: all 0.3s ease; background-color: #f9f9f9; }
+    .apply-form input:focus, .apply-form textarea:focus { outline: none; border-color: #007bff; box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); background-color: #fff; }
+    .apply-form button[type="submit"] { background: linear-gradient(135deg, #004aad 0%, #007bff 100%); color: #fff; border: none; padding: 14px 25px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; transition: all 0.3s ease; margin-top: 10px; text-transform: uppercase; }
+    .apply-form button[type="submit"]:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0, 123, 255, 0.3); }
+    .close-btn { position: absolute; top: 15px; right: 15px; font-size: 28px; color: #999; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: all 0.3s ease; background: #f1f1f1; cursor: pointer; }
+    .close-btn:hover { background: #e0e0e0; color: #dc3545; transform: rotate(90deg); }
+    
+    .application-alert { max-width: 800px; margin: 20px auto; padding: 1rem 1.5rem; border-radius: 8px; font-weight: 500; display: flex; align-items: center; gap: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-left: 5px solid; }
+    .application-alert.success { background-color: #f0fff4; color: #2f6f44; border-left-color: #48bb78; }
+    .application-alert.error { background-color: #fff5f5; color: #c53030; border-left-color: #f56565; }
+</style>
+
+<section class="recruitment-banner">
     <h1 data-i18n="recruitment.banner_title">WELCOME TO FUTA ADVERTISING</h1>
     <p data-i18n="recruitment.banner_desc">Nơi cơ hội nghề nghiệp đang chờ đợi bạn!</p>
 </section>
 
 <!-- Bộ lọc tuyển dụng -->
-<section class="filter-box">
-    <div>
-        <label for="chucdanh" data-i18n="recruitment.filter_title">Tìm kiếm công việc</label>
-        <input type="text" id="chucdanh" placeholder="Chức danh tuyển dụng">
-    </div>
-    <div>
-        <label for="nganhnghe" data-i18n="recruitment.filter_industry">Ngành nghề</label>
-        <select id="nganhnghe">
-            <option value="">Tất cả ngành nghề</option>
-            <option>Marketing</option>
-            <option>Thiết kế</option>
-            <option>Kinh doanh</option>
-        </select>
-    </div>
-    <div>
-        <label for="vitri" data-i18n="recruitment.filter_position">Vị trí</label>
-        <select id="vitri">
-            <option value="">Tất cả vị trí</option>
-            <option>Nhân viên</option>
-            <option>Trưởng nhóm</option>
-            <option>Quản lý</option>
-        </select>
-    </div>
-    <div>
-        <label for="chinhanh" data-i18n="recruitment.filter_branch">Chi nhánh</label>
-        <select id="chinhanh">
-            <option value="">Tất cả chi nhánh</option>
-            <option>Hồ Chí Minh</option>
-            <option>Hà Nội</option>
-            <option>Đà Nẵng</option>
-        </select>
-    </div>
-    <div>
-        <button onclick="searchJobs()" data-i18n="recruitment.filter_search">Tìm Kiếm</button>
+<section class="container filter-container">
+    <div class="card shadow-sm border-0 p-4" style="border-radius: 15px;">
+        <div class="row g-3">
+            <div class="col-lg-3 col-md-6">
+                <label for="chucdanh" class="form-label fw-bold text-muted small" data-i18n="recruitment.filter_title">Tìm kiếm công việc</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-search text-muted"></i></span>
+                    <input type="text" id="chucdanh" class="form-control border-start-0 bg-light" placeholder="Nhập chức danh...">
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <label for="nganhnghe" class="form-label fw-bold text-muted small" data-i18n="recruitment.filter_industry">Ngành nghề</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-briefcase text-muted"></i></span>
+                    <select id="nganhnghe" class="form-select border-start-0 bg-light">
+                        <option value="">Tất cả ngành nghề</option>
+                        <option>Content Marketing</option>
+                        <option>Thiết kế</option>
+                        <option>Kinh doanh</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label for="vitri" class="form-label fw-bold text-muted small" data-i18n="recruitment.filter_position">Vị trí</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-user-tie text-muted"></i></span>
+                    <select id="vitri" class="form-select border-start-0 bg-light">
+                        <option value="">Tất cả</option>
+                        <option>Nhân viên</option>
+                        <option>Trưởng nhóm</option>
+                        <option>Quản lý</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-6">
+                <label for="chinhanh" class="form-label fw-bold text-muted small" data-i18n="recruitment.filter_branch">Chi nhánh</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0"><i class="fas fa-map-marker-alt text-muted"></i></span>
+                    <select id="chinhanh" class="form-select border-start-0 bg-light">
+                        <option value="">Tất cả</option>
+                        <option>Hồ Chí Minh</option>
+                        <option>Hà Nội</option>
+                        <option>Đà Nẵng</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-12 d-flex align-items-end">
+                <button onclick="searchJobs()" class="btn btn-primary w-100" style="padding: 10px; font-weight: 600; background: linear-gradient(135deg, #004aad 0%, #007bff 100%); border: none; border-radius: 8px;" data-i18n="recruitment.filter_search">
+                    <i class="fas fa-filter me-2"></i>Tìm Kiếm
+                </button>
+            </div>
+        </div>
     </div>
 </section>
 
 <!-- Thông báo ứng tuyển -->
 <?php if ($applicationMessage): ?>
     <div class="application-alert <?php echo $applicationType === 'success' ? 'success' : 'error'; ?>">
+        <i class="fas <?php echo $applicationType === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'; ?> fa-lg"></i>
         <?php echo htmlspecialchars($applicationMessage, ENT_QUOTES, 'UTF-8'); ?>
     </div>
 <?php endif; ?>
 
 <!-- Danh sách công việc -->
-<section class="job-list" id="jobList"></section>
+<section class="container mb-5 mt-4">
+    <div class="row g-4" id="jobList"></div>
+</section>
 
 <!-- Modal ứng tuyển -->
 <div class="modal" id="applyModal">
@@ -216,30 +330,52 @@ if ($result && $result->num_rows > 0) {
         container.innerHTML = "";
 
         if (jobList.length === 0) {
-            container.innerHTML = `<p class="no-result">Không tìm thấy tin tuyển dụng phù hợp</p>`;
+            container.innerHTML = `
+                <div class="col-12">
+                    <div class="no-result bg-white rounded-3 shadow-sm border p-5">
+                        <i class="fas fa-search fa-3x mb-3 text-muted opacity-50"></i><br>
+                        <span data-i18n="recruitment.no_result">Không tìm thấy tin tuyển dụng phù hợp</span>
+                    </div>
+                </div>`;
             return;
         }
 
         jobList.forEach(job => {
             const jobCard = document.createElement("div");
-            jobCard.className = "job-card";
+            jobCard.className = "col-lg-6 col-md-12";
             const jobDetails = job.details || {};
             const safeTitle = escapeHtml(job.title || '');
             const safeLocation = escapeHtml(jobDetails.work_location || 'Đang cập nhật');
             const safeSalary = escapeHtml(jobDetails.salary || 'Thỏa thuận');
-            const safeDeadline = jobDetails.deadline ? new Date(jobDetails.deadline).toLocaleDateString('vi-VN') : 'Không giới hạn';
+            const safeDeadline = escapeHtml(jobDetails.deadline || 'Không giới hạn');
             const detailUrl = `recruitment-detail.php?id=${job.id}`;
+            const excerpt = escapeHtml((job.excerpt || '').replace(/<[^>]*>?/gm, '')).substring(0, 140) + '...';
 
             jobCard.innerHTML = `
-                <h3><a href="${detailUrl}" class="job-title-link">${safeTitle}</a></h3>
-                <div class="job-meta">
-                    <span><i class="fas fa-map-marker-alt"></i> ${safeLocation}</span>
-                    <span><i class="fas fa-money-bill-wave"></i> ${safeSalary}</span>
-                    <span><i class="fas fa-calendar-times"></i> ${safeDeadline}</span>
-                </div>
-                <div class="job-card-actions">
-                    <a href="${detailUrl}" class="detail-btn">Xem chi tiết</a>
-                    <button class="apply-btn">Ứng tuyển</button>
+                <div class="card h-100 shadow-sm border-0 job-card-item" style="border-radius: 12px; transition: transform 0.3s ease, box-shadow 0.3s ease;">
+                    <div class="card-body p-4 pb-2">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h4 class="card-title fw-bold mb-0" style="font-size: 1.25rem; line-height: 1.4;">
+                                <a href="${detailUrl}" class="text-decoration-none text-dark hover-primary" style="transition: color 0.3s;">${safeTitle}</a>
+                            </h4>
+                            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 border border-success border-opacity-25 ms-2" style="font-size: 0.75rem; white-space: nowrap;"><i class="fas fa-fire me-1"></i> Đang tuyển</span>
+                        </div>
+                        <div class="text-muted small mb-2 d-flex align-items-center gap-3">
+                            <span><i class="fas fa-building me-1 opacity-75"></i> FUTA Group</span>
+                        </div>
+                        <p class="text-muted small mt-3 mb-4" style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 0.95rem; min-height: 42px;">${excerpt}</p>
+                        <div class="d-flex flex-wrap gap-2 mt-auto text-muted" style="font-size: 0.85rem;">
+                            <span class="d-flex align-items-center bg-light rounded px-2 py-1"><i class="fas fa-map-marker-alt text-danger me-2"></i> ${safeLocation}</span>
+                            <span class="d-flex align-items-center bg-light rounded px-2 py-1"><i class="fas fa-money-bill-wave text-success me-2"></i> ${safeSalary}</span>
+                            <span class="d-flex align-items-center bg-light rounded px-2 py-1"><i class="fas fa-calendar-times text-warning me-2"></i> ${safeDeadline}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-top-0 p-4 pt-3">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-primary flex-grow-1 apply-btn" style="background: linear-gradient(135deg, #004aad 0%, #007bff 100%); border: none; font-weight: 600; padding: 10px 15px; border-radius: 8px;"><i class="fas fa-paper-plane me-2"></i>Ứng tuyển</button>
+                            <a href="${detailUrl}" class="btn btn-outline-primary flex-grow-1" style="font-weight: 600; padding: 10px 15px; border-radius: 8px; border-color: #004aad; color: #004aad;">Xem chi tiết</a>
+                        </div>
+                    </div>
                 </div>
             `;
             jobCard.querySelector(".apply-btn").addEventListener("click", () => openApplyModal(job.title));

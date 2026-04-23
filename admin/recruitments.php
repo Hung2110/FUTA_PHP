@@ -49,11 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         if (!empty($_POST['benefits'])) {
             $description_parts[] = "\nQuyền lợi:\n" . trim($_POST['benefits']);
         }
+        if (!empty($_POST['documents'])) {
+            $description_parts[] = "\nDanh sách hồ sơ xin việc:\n" . trim($_POST['documents']);
+        }
         // Thêm các thông tin khác vào description
-        $description_parts[] = "\nNơi làm việc: " . $branch;
-        $description_parts[] = "Mức lương: " . trim($_POST['salary'] ?? 'Thỏa thuận');
+        $description_parts[] = "\nNơi làm việc: " . trim($_POST['work_location'] ?? '');
+        $description_parts[] = "Cấp bậc: " . trim($_POST['level'] ?? 'Nhân viên');
         $description_parts[] = "Số lượng: " . intval($_POST['quantity'] ?? 1);
-        $description_parts[] = "Hạn nộp hồ sơ: " . trim($_POST['deadline'] ?? 'Không giới hạn');
+        $description_parts[] = "Hình thức: " . trim($_POST['type'] ?? 'Toàn thời gian');
+        $description_parts[] = "Kinh nghiệm: " . trim($_POST['experience'] ?? 'Không yêu cầu');
+        $description_parts[] = "Mức lương: " . trim($_POST['salary'] ?? 'Thỏa thuận');
+        $description_parts[] = "Ngành nghề: " . trim($_POST['industry'] ?? '');
+        $description_parts[] = "Hạn chót nhận hồ sơ: " . trim($_POST['deadline'] ?? 'Không giới hạn');
         $description = implode("\n", $description_parts);
         
         if ($title === '') {
@@ -151,13 +158,16 @@ if (isset($_GET['edit'])) {
         // --- PARSE DESCRIPTION FOR EDIT FORM ---
         $description_content = $edit_job['description'] ?? '';
         $parsed_details = [
-            'description' => '', 'requirements' => '', 'benefits' => '',
-            'salary' => '', 'quantity' => '1', 'deadline' => ''
+            'description' => '', 'requirements' => '', 'benefits' => '', 
+            'documents' => '',
+            'salary' => '', 'quantity' => '1', 'deadline' => '',
+            'level' => '', 'type' => '', 'experience' => '', 'industry' => ''
         ];
 
         $lines = explode("\n", $description_content);
         $current_section = null;
         $description_parts = []; $requirements_parts = []; $benefits_parts = [];
+        $documents_parts = [];
 
         foreach ($lines as $line) {
             $trimmed_line = trim($line);
@@ -167,27 +177,37 @@ if (isset($_GET['edit'])) {
                 $current_section = 'description';
                 $content = trim(substr($trimmed_line, strlen('Mô tả công việc:')));
                 if (!empty($content)) $description_parts[] = $content;
-            } elseif (stripos($trimmed_line, 'Yêu cầu công việc:') === 0) {
+            } elseif (stripos($trimmed_line, 'Yêu cầu:') === 0 || stripos($trimmed_line, 'Yêu cầu công việc:') === 0) {
                 $current_section = 'requirements';
-                $content = trim(substr($trimmed_line, strlen('Yêu cầu công việc:')));
+                $content = trim(preg_replace('/^Yêu cầu( công việc)?:/i', '', $trimmed_line));
                 if (!empty($content)) $requirements_parts[] = $content;
-            } elseif (stripos($trimmed_line, 'Quyền lợi:') === 0) {
+            } elseif (stripos($trimmed_line, 'Phúc lợi:') === 0 || stripos($trimmed_line, 'Quyền lợi:') === 0) {
                 $current_section = 'benefits';
-                $content = trim(substr($trimmed_line, strlen('Quyền lợi:')));
+                $content = trim(preg_replace('/^(Phúc lợi|Quyền lợi):/i', '', $trimmed_line));
                 if (!empty($content)) $benefits_parts[] = $content;
+            } elseif (stripos($trimmed_line, 'Danh sách hồ sơ xin việc:') === 0 || stripos($trimmed_line, 'Danh sách hồ sơ:') === 0) {
+                $current_section = 'documents';
+                $content = trim(preg_replace('/^Danh sách hồ sơ( xin việc)?:/i', '', $trimmed_line));
+                if (!empty($content)) $documents_parts[] = $content;
             } elseif (stripos($trimmed_line, 'Nơi làm việc:') === 0) { $current_section = null;
             } elseif (stripos($trimmed_line, 'Mức lương:') === 0) { $current_section = null; $parsed_details['salary'] = trim(substr($trimmed_line, strlen('Mức lương:')));
             } elseif (stripos($trimmed_line, 'Số lượng:') === 0) { $current_section = null; $parsed_details['quantity'] = trim(substr($trimmed_line, strlen('Số lượng:')));
-            } elseif (stripos($trimmed_line, 'Hạn nộp hồ sơ:') === 0) { $current_section = null; $parsed_details['deadline'] = trim(substr($trimmed_line, strlen('Hạn nộp hồ sơ:')));
+            } elseif (stripos($trimmed_line, 'Hạn nộp hồ sơ:') === 0 || stripos($trimmed_line, 'Hạn chót nhận hồ sơ:') === 0) { $current_section = null; $parsed_details['deadline'] = trim(preg_replace('/^Hạn (chót nhận|nộp) hồ sơ:/i', '', $trimmed_line));
+            } elseif (stripos($trimmed_line, 'Cấp bậc:') === 0) { $current_section = null; $parsed_details['level'] = trim(substr($trimmed_line, strlen('Cấp bậc:')));
+            } elseif (stripos($trimmed_line, 'Hình thức:') === 0 || stripos($trimmed_line, 'Hình thức làm việc:') === 0) { $current_section = null; $parsed_details['type'] = trim(str_replace(['Hình thức làm việc:', 'Hình thức:'], '', $trimmed_line));
+            } elseif (stripos($trimmed_line, 'Kinh nghiệm:') === 0) { $current_section = null; $parsed_details['experience'] = trim(substr($trimmed_line, strlen('Kinh nghiệm:')));
+            } elseif (stripos($trimmed_line, 'Ngành nghề:') === 0) { $current_section = null; $parsed_details['industry'] = trim(substr($trimmed_line, strlen('Ngành nghề:')));
             } elseif ($current_section === 'description') { $description_parts[] = $trimmed_line;
             } elseif ($current_section === 'requirements') { $requirements_parts[] = $trimmed_line;
             } elseif ($current_section === 'benefits') { $benefits_parts[] = $trimmed_line;
+            } elseif ($current_section === 'documents') { $documents_parts[] = $trimmed_line;
             }
         }
 
         $parsed_details['description'] = implode("\n", $description_parts);
         $parsed_details['requirements'] = implode("\n", $requirements_parts);
         $parsed_details['benefits'] = implode("\n", $benefits_parts);
+        $parsed_details['documents'] = implode("\n", $documents_parts);
 
         if (empty($parsed_details['description']) && empty($parsed_details['requirements']) && empty($parsed_details['benefits'])) {
             $parsed_details['description'] = $description_content;
@@ -644,7 +664,7 @@ if (isset($_GET['edit'])) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST" enctype="multipart/form-data">
-                    <div class="modal-body">
+                    <div class="modal-body" style="max-height: 75vh; overflow-y: auto;">
                         <input type="hidden" name="action" value="<?php echo $edit_job ? 'edit' : 'add'; ?>">
                         <?php if ($edit_job): ?>
                             <input type="hidden" name="id" value="<?php echo $edit_job['id']; ?>">
@@ -655,46 +675,64 @@ if (isset($_GET['edit'])) {
                             <input type="text" class="form-control" name="title" value="<?php echo htmlspecialchars($edit_job['title'] ?? ''); ?>" required placeholder="VD: Nhân viên Marketing">
                         </div>
 
+                        <h6 class="mt-4 mb-3 text-primary border-bottom pb-2">Thông tin chung</h6>
                         <div class="row">
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Nơi làm việc (Chi nhánh)</label>
                                 <input type="text" class="form-control" name="work_location" value="<?php echo htmlspecialchars($edit_job['branch'] ?? ''); ?>" placeholder="VD: TP. Hồ Chí Minh">
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Mô tả ngắn (hiển thị ở danh sách)</label>
-                            <textarea class="form-control" name="excerpt" rows="3" placeholder="Trường này không còn sử dụng, mô tả sẽ được tự động tạo."><?php echo htmlspecialchars($edit_job['excerpt'] ?? ''); ?></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Mô tả công việc (chi tiết)</label>
-                            <textarea class="form-control" name="description" rows="5" placeholder="Mô tả chi tiết về công việc..."><?php echo htmlspecialchars($edit_job['parsed_details']['description'] ?? ''); ?></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Yêu cầu công việc</label>
-                            <textarea class="form-control" name="requirements" rows="5" placeholder="Các yêu cầu đối với ứng viên..."><?php echo htmlspecialchars($edit_job['parsed_details']['requirements'] ?? ''); ?></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Quyền lợi</label>
-                            <textarea class="form-control" name="benefits" rows="5" placeholder="Các quyền lợi được hưởng..."><?php echo htmlspecialchars($edit_job['parsed_details']['benefits'] ?? ''); ?></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Cấp bậc</label>
+                                <input type="text" class="form-control" name="level" value="<?php echo htmlspecialchars($edit_job['parsed_details']['level'] ?? ''); ?>" placeholder="VD: Nhân viên">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hình thức làm việc</label>
+                                <input type="text" class="form-control" name="type" value="<?php echo htmlspecialchars($edit_job['parsed_details']['type'] ?? ''); ?>" placeholder="VD: Toàn thời gian">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Kinh nghiệm</label>
+                                <input type="text" class="form-control" name="experience" value="<?php echo htmlspecialchars($edit_job['parsed_details']['experience'] ?? ''); ?>" placeholder="VD: 1 năm">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Ngành nghề</label>
+                                <input type="text" class="form-control" name="industry" value="<?php echo htmlspecialchars($edit_job['parsed_details']['industry'] ?? ''); ?>" placeholder="VD: Vận Tải, Kho Vận">
+                            </div>
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Mức lương</label>
                                 <input type="text" class="form-control" name="salary" value="<?php echo htmlspecialchars($edit_job['parsed_details']['salary'] ?? ''); ?>" placeholder="VD: 15 - 20 triệu hoặc Thỏa thuận">
                             </div>
-                            <div class="col-md-4 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label class="form-label">Số lượng</label>
                                 <input type="number" class="form-control" name="quantity" value="<?php echo htmlspecialchars($edit_job['parsed_details']['quantity'] ?? '1'); ?>" min="1">
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Hạn nộp hồ sơ</label>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Hạn chót nhận hồ sơ</label>
                                 <input type="date" class="form-control" name="deadline" value="<?php echo htmlspecialchars($edit_job['parsed_details']['deadline'] ?? ''); ?>">
                             </div>
                         </div>
 
+                        <h6 class="mt-4 mb-3 text-primary border-bottom pb-2">Nội dung chi tiết</h6>
+                        <?php
+                        $default_req = "- Tốt nghiệp THPT;\n\n- Biết sử dụng máy tính;\n\n- 18 – 40 tuổi;\n\n- Sức khỏe tốt;";
+                        $default_docs = "- Đơn xin việc;\n\n- Sơ yếu lý lịch;\n\n- Hình 3 x 4;\n\n- CMND/ CCCD/ Giấy Thông Báo Mã Định Danh Cá Nhân;\n\n- Bằng Cấp 3\n\n- Giấy Khám Sức Khoẻ;";
+                        ?>
+                        <div class="mb-3">
+                            <label class="form-label">Mô tả công việc (chi tiết)</label>
+                            <textarea class="form-control" name="description" rows="4" placeholder="- Gạch đầu dòng các mô tả..."><?php echo htmlspecialchars($edit_job['parsed_details']['description'] ?? ''); ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Yêu cầu công việc</label>
+                            <textarea class="form-control" name="requirements" rows="6"><?php echo htmlspecialchars($edit_job ? ($edit_job['parsed_details']['requirements'] ?? '') : $default_req); ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Quyền lợi</label>
+                            <textarea class="form-control" name="benefits" rows="4" placeholder="Mỗi dòng 1 quyền lợi (VD: Bảo hiểm theo quy định)"><?php echo htmlspecialchars($edit_job['parsed_details']['benefits'] ?? ''); ?></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Danh sách hồ sơ xin việc</label>
+                            <textarea class="form-control" name="documents" rows="8"><?php echo htmlspecialchars($edit_job ? ($edit_job['parsed_details']['documents'] ?? '') : $default_docs); ?></textarea>
+                        </div>
+                        
                         <div class="mb-3">
                             <label class="form-label">Trạng thái</label>
                             <select class="form-select" name="status">

@@ -1,0 +1,351 @@
+
+    .recruitment-detail-container {
+        padding-top: 2rem;
+        padding-bottom: 3rem;
+    }
+    .job-content-wrapper, .job-summary-card {
+        background: #fff;
+        padding: 2.5rem;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px rgba(0, 74, 173, 0.08);
+        margin-bottom: 2rem;
+        border: none;
+    }
+    .job-title-main {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #007bff; /* Màu đỏ FUTA */
+        margin-bottom: 0.5rem;
+        line-height: 1.3;
+    }
+    .job-post-date {
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+    .detail-subtitle {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #004aad;
+        margin-top: 2rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #eef2f7;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .detail-subtitle i {
+        color: #007bff;
+    }
+    .job-full-description {
+        line-height: 1.7;
+        color: #4a4a4a;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .job-summary-card {
+        position: sticky;
+        top: 20px;
+        background: #f8f9fa;
+        border: none;
+    }
+    
+    .summary-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #eef2f7;
+    }
+    
+    .summary-list li strong {
+        color: #004aad;
+        font-weight: 600;
+        min-width: 120px;
+        display: inline-block;
+    }
+    .btn-apply-now {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.1rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #004aad 0%, #007bff 100%);
+        border: none;
+        color: white;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 74, 173, 0.3);
+        margin-top: 1.5rem;
+        letter-spacing: 0.5px;
+    }
+    .btn-apply-now:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+    }
+    .recruitment-banner {
+        background: #f4f6f9;
+        padding: 3rem 0;
+        text-align: center;
+        margin-bottom: 0;
+    }
+    .recruitment-banner h1 {
+        color: #004aad;
+        font-weight: 800;
+        margin: 0;
+    }
+    /* Styles for Benefits Section */
+    .benefits-wrapper {
+        margin-top: 1rem;
+        padding-bottom: 10px;
+    }
+    .ico-ttd {
+        margin-right: 8px;
+        color: #004aad;
+    }
+    .pull-left {
+        float: left !important;
+    }
+    .section-title-benefits {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #004aad;
+        margin-top: 2rem;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #eef2f7;
+        display: flex;
+        align-items: center;
+    }
+    /* Icons and Section Styles */
+    .job-post-date i {
+        margin-right: 8px;
+    }
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #eef2f7;
+        margin-bottom: 1.5rem;
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .section-title i {
+        color: #004aad;
+        font-size: 1.2rem;
+    }
+    .contact-info p {
+        margin-bottom: 0.8rem;
+        align-items: flex-start;
+    }
+    .contact-info p i {
+        color: #004aad;
+        margin-right: 10px;
+        margin-top: 5px;
+        width: 20px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    /* New Summary Card Layout */
+    .summary-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    .summary-list li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 0;
+    }
+    .summary-list .ico-ttd {
+        margin-right: 12px;
+        margin-top: 3px;
+        font-size: 1.1rem;
+    }
+    .summary-item-content {
+        display: flex;
+        flex-direction: column;
+    }
+    .summary-item-content strong {
+        font-size: 0.85rem;
+        color: #6c757d;
+        font-weight: 500;
+        margin-bottom: 2px;
+    }
+    .summary-item-content span {
+        font-weight: 600;
+        color: #212529;
+        font-size: 0.95rem;
+    }
+    @media (max-width: 992px) {
+        .summary-list {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Modal Styles from recruitment.css */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: #fff;
+        padding: 40px;
+        border-radius: 16px;
+        max-width: 650px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+        box-shadow: 0px 10px 40px rgba(0,0,0,0.3);
+        position: relative;
+        animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    .modal-content h2 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        color: #004aad;
+        font-size: 26px;
+        font-weight: 800;
+        border-bottom: 2px solid #eef2f7;
+        padding-bottom: 15px;
+    }
+
+    .modal-content #applyJobTitle {
+        color: #007bff;
+        margin-bottom: 25px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .apply-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-content label {
+        display: block;
+        margin: 0 0 8px;
+        font-weight: 600;
+        color: #495057;
+        font-size: 14.5px;
+    }
+
+    .apply-form .form-control {
+        background-color: #f8f9fa;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        padding: 12px 15px;
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        font-size: 28px;
+        color: #999;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        background: #f1f1f1;
+        cursor: pointer;
+    }
+
+    .close-btn:hover {
+        background: #ffe5e5;
+        color: #dc3545;
+        transform: rotate(90deg);
+    }
+
+    /* Thông báo ứng tuyển */
+    .application-alert {
+        max-width: 800px; /* Điều chỉnh lại cho phù hợp hơn */
+        margin: 20px auto;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        animation: slideDown 0.3s ease-out;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        border-left-width: 5px;
+        border-left-style: solid;
+    }
+
+    .application-alert::before {
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900; /* For solid icons */
+        font-size: 1.2rem;
+    }
+
+    .application-alert.success {
+        background-color: #f0fff4;
+        color: #2f6f44;
+        border-color: #48bb78;
+    }
+    .application-alert.success::before {
+        content: "\f058"; /* fa-check-circle */
+        color: #48bb78;
+    }
+
+    .application-alert.error {
+        background-color: #fff5f5;
+        color: #c53030;
+        border-color: #f56565;
+    }
+    .application-alert.error::before {
+        content: "\f071"; /* fa-exclamation-triangle */
+        color: #f56565;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
