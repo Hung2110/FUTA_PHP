@@ -6,15 +6,15 @@ $message_type = '';
 
 // Cấu hình danh sách quyền hạn và màu sắc hiển thị
 $role_config = [
-    'user' => ['label' => 'Người dùng', 'color' => 'secondary'],
-    'admin' => ['label' => 'Quản trị viên', 'color' => 'danger'],
-    'user_manager' => ['label' => 'Quản lý người dùng', 'color' => 'dark'],
-    'project_manager' => ['label' => 'Quản lý dự án', 'color' => 'primary'],
-    'carousel_manager' => ['label' => 'Quản lý Carousel', 'color' => 'info'],
-    'news_manager' => ['label' => 'Quản lý Tin tức', 'color' => 'success'],
-    'recruitment_manager' => ['label' => 'Quản lý tuyển dụng', 'color' => 'warning'],
-    'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary'],
-    'chat_manager' => ['label' => 'Quản lý Chat', 'color' => 'primary']
+    'user' => ['label' => 'Người Dùng', 'color' => 'secondary'],
+    'admin' => ['label' => 'Quản Trị Viên', 'color' => 'danger'],
+    'user_manager' => ['label' => 'Quản Lý Người Dùng', 'color' => 'dark'],
+    'project_manager' => ['label' => 'Quản Lý Dự Án', 'color' => 'primary'],
+    'carousel_manager' => ['label' => 'Quản Lý Carousel', 'color' => 'info'],
+    'news_manager' => ['label' => 'Quản Lý Tin Tức', 'color' => 'success'],
+    'recruitment_manager' => ['label' => 'Quản Lý Tuyển Dụng', 'color' => 'warning'],
+    'contact_manager' => ['label' => 'Quản Lý Liên Hệ', 'color' => 'secondary'],
+    'chat_manager' => ['label' => 'Quản Lý Chat', 'color' => 'primary']
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -425,8 +425,8 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
 <div class="main-content">
     <div class="page-header">
         <div>
-            <h1><i class="fas fa-users me-2 text-primary"></i>Quản lý người dùng</h1>
-            <p class="mb-0">Quản lý tài khoản, quyền và trạng thái người dùng trong hệ thống.</p>
+            <h1><i class="fas fa-users me-2 text-primary"></i>Quản Lý Người Dùng</h1>
+            <p class="mb-0">Quản Lý Tài Khoản, Quyền và Trạng Thái Người Dùng trong Hệ Thống.</p>
         </div>
         <?php if ($show_form): ?>
             <a href="users.php" class="cta-button"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
@@ -536,7 +536,7 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
                 <div class="stat-trend text-success"><i class="fas fa-check-circle"></i>Trạng thái active</div>
             </div>
             <div class="stat-card">
-                <h6>Quản trị viên</h6>
+                <h6>Quản Trị Viên</h6>
                 <div class="stat-value text-danger"><?php echo number_format($stats['admin_users'] ?? 0); ?></div>
                 <div class="stat-trend text-danger"><i class="fas fa-shield-alt"></i>Vai trò admin</div>
             </div>

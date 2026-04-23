@@ -100,14 +100,14 @@ if (!$user) {
 }
 
 $roles = [
-    'user' => 'Người dùng',
-    'admin' => 'Quản trị viên',
-    'user_manager' => 'Quản lý người dùng',
-    'project_manager' => 'Quản lý dự án',
-    'carousel_manager' => 'Quản lý Carousel',
-    'news_manager' => 'Quản lý Tin tức',
-    'recruitment_manager' => 'Quản lý tuyển dụng',
-    'contact_manager' => 'Quản lý liên hệ'
+    'user' => 'Người Dùng',
+    'admin' => 'Quản Trị Viên',
+    'user_manager' => 'Quản Lý Người Dùng',
+    'project_manager' => 'Quản Lý Dự Án',
+    'carousel_manager' => 'Quản Lý Carousel',
+    'news_manager' => 'Quản Lý Tin Tức',
+    'recruitment_manager' => 'Quản Lý Tuyển Dụng',
+    'contact_manager' => 'Quản Lý Liên Hệ'
 ];
 $role_colors = [
     'user' => 'secondary', 'admin' => 'danger',

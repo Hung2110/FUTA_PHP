@@ -189,8 +189,8 @@ if (!$is_new_post) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body { background: #f7f9fc; }
-        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
-        .form-control, .form-select { border-radius: 8px; }
+        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; }
+        .card { border-radius: 12px; }
     </style>
 </head>
 <body>
@@ -212,79 +212,110 @@ if (!$is_new_post) {
         </div>
     <?php endif; ?>
 
-    <div class="card">
-        <div class="card-body p-4">
-            <form action="post-edit.php<?php echo !$is_new_post ? '?id=' . $post_id : ''; ?>" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($post['image'] ?? ''); ?>">
-                <?php if (!$is_new_post): ?>
-                    <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
-                <?php endif; ?>
+    <form action="post-edit.php<?php echo !$is_new_post ? '?id=' . $post_id : ''; ?>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($post['image'] ?? ''); ?>">
+        <?php if (!$is_new_post): ?>
+            <input type="hidden" name="post_id" value="<?php echo $post_id; ?>">
+        <?php endif; ?>
 
-                <div class="mb-3">
-                    <label for="title" class="form-label">Tiêu đề *</label>
-                    <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($post['title'] ?? ''); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="slug" class="form-label">Đường dẫn (slug)</label>
-                    <input type="text" class="form-control" id="slug" name="slug" value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" placeholder="Để trống để tạo tự động">
-                </div>
-                <div class="mb-3">
-                    <label for="excerpt" class="form-label">Mô tả ngắn (Excerpt)</label>
-                    <textarea class="form-control" id="excerpt" name="excerpt" rows="4"><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></textarea>
-                </div>
-
-                <div class="mb-3">
-                    <label for="content-editor" class="form-label">Nội dung chi tiết</label>
-                    <textarea class="form-control" id="content-editor" name="content" rows="15"><?php echo $post['content'] ?? ''; ?></textarea>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="image" class="form-label">Ảnh đại diện</label>
-                            <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(event)">
-                            <div class="mt-2">
-                                <p class="mb-1 small text-muted">Xem trước:</p>
-                                <img id="image-preview" src="<?php echo !empty($post['image']) ? '../' . htmlspecialchars($post['image']) : ''; ?>" alt="Xem trước ảnh" style="max-width: 200px; height: auto; display: <?php echo !empty($post['image']) ? 'block' : 'none'; ?>;">
+        <div class="row">
+            <!-- Cột trái (Nội dung chính) -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-info-circle text-primary me-2"></i>Thông tin cơ bản</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-semibold">Tiêu đề bài viết *</label>
+                            <input type="text" class="form-control form-control-lg fw-bold" id="title" name="title" value="<?php echo htmlspecialchars($post['title'] ?? ''); ?>" required placeholder="Nhập tiêu đề bài viết...">
+                        </div>
+                        <div class="mb-4">
+                            <label for="slug" class="form-label fw-semibold">Đường dẫn (Slug)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fas fa-link"></i></span>
+                                <input type="text" class="form-control bg-light" id="slug" name="slug" value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" placeholder="Để trống hệ thống sẽ tự động tạo từ tiêu đề">
                             </div>
-                                <div class="mt-2">
-                                </div>
+                        </div>
+                        <div class="mb-0">
+                            <label for="excerpt" class="form-label fw-semibold">Mô tả ngắn (Excerpt)</label>
+                            <textarea class="form-control" id="excerpt" name="excerpt" rows="3" placeholder="Tóm tắt nội dung bài viết (Tối đa 150-200 ký tự)..."><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></textarea>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Trạng thái</label>
-                            <select class="form-select" id="status" name="status">
-                                <option value="published" <?php echo ($post['status'] ?? '') === 'published' ? 'selected' : ''; ?>>Xuất bản</option>
-                                <option value="draft" <?php echo ($post['status'] ?? '') === 'draft' ? 'selected' : ''; ?>>Bản nháp</option>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-edit text-primary me-2"></i>Nội dung chi tiết</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <textarea class="form-control" id="content-editor" name="content" rows="20"><?php echo $post['content'] ?? ''; ?></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải (Cài đặt) -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-cog text-primary me-2"></i>Xuất bản</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label for="status" class="form-label fw-semibold">Trạng thái</label>
+                            <select class="form-select fw-semibold" id="status" name="status">
+                                <option value="published" <?php echo ($post['status'] ?? '') === 'published' ? 'selected' : ''; ?>>🟢 Đã xuất bản (Published)</option>
+                                <option value="draft" <?php echo ($post['status'] ?? '') === 'draft' ? 'selected' : ''; ?>>🟠 Bản nháp (Draft)</option>
                             </select>
                         </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 0.5px;">
+                            <i class="fas fa-save me-2"></i><?php echo $is_new_post ? 'Lưu bài viết' : 'Cập nhật bài viết'; ?>
+                        </button>
                     </div>
                 </div>
 
-                <div class="mb-3">
-                    <label for="tags" class="form-label">Thẻ (Tags)</label>
-                    <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($post['tags_str'] ?? ''); ?>" placeholder="Nhập các thẻ, cách nhau bằng dấu phẩy">
-                    <div class="form-text">Ví dụ: quảng cáo, marketing, futa</div>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-image text-primary me-2"></i>Ảnh đại diện</h5>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <img id="image-preview" src="<?php echo !empty($post['image']) ? '../' . htmlspecialchars($post['image']) : '../assets/img/placeholder.png'; ?>" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover; <?php echo empty($post['image']) ? 'opacity: 0.5;' : ''; ?>">
+                        </div>
+                        <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(event)">
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i> <?php echo $is_new_post ? 'Lưu bài viết' : 'Cập nhật bài viết'; ?>
-                </button>
-            </form>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-tags text-primary me-2"></i>Phân loại</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-0">
+                            <label for="tags" class="form-label fw-semibold">Từ khóa (Tags)</label>
+                            <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($post['tags_str'] ?? ''); ?>" placeholder="quangcao, futa, marketing...">
+                            <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i>Các từ khóa cách nhau bằng dấu phẩy.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById('image-preview');
-            output.src = reader.result;
-            output.style.display = 'block';
-        };
-        reader.readAsDataURL(event.target.files[0]);
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('image-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+                output.style.opacity = '1';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
     }
 </script>
 <!-- Place the first <script> tag in your HTML's <head> -->

@@ -144,8 +144,8 @@ if (!$is_new_project) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body { background: #f7f9fc; }
-        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
-        .form-control, .form-select { border-radius: 8px; }
+        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; }
+        .card { border-radius: 12px; }
     </style>
 </head>
 <body>
@@ -167,88 +167,124 @@ if (!$is_new_project) {
         </div>
     <?php endif; ?>
 
-    <div class="card">
-        <div class="card-body p-4">
-            <form action="project-edit.php<?php echo !$is_new_project ? '?id=' . $project_id : ''; ?>" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($project['preview_image'] ?? ''); ?>">
-                <input type="hidden" name="current_video" value="<?php echo htmlspecialchars($project['preview_video'] ?? ''); ?>">
-                <?php if (!$is_new_project): ?>
-                    <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
-                <?php endif; ?>
+    <form action="project-edit.php<?php echo !$is_new_project ? '?id=' . $project_id : ''; ?>" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="current_image" value="<?php echo htmlspecialchars($project['preview_image'] ?? ''); ?>">
+        <input type="hidden" name="current_video" value="<?php echo htmlspecialchars($project['preview_video'] ?? ''); ?>">
+        <?php if (!$is_new_project): ?>
+            <input type="hidden" name="project_id" value="<?php echo $project_id; ?>">
+        <?php endif; ?>
 
-                <div class="mb-3">
-                    <label for="title" class="form-label">Tiêu đề dự án *</label>
-                    <input type="text" class="form-control" id="title" name="title" value="<?php echo htmlspecialchars($project['title'] ?? ''); ?>" required>
-                </div>
-                <div class="mb-3">
-                    <label for="client" class="form-label">Mô tả ngắn *</label>
-                    <textarea class="form-control" id="client" name="client" rows="3" required><?php echo htmlspecialchars($project['client'] ?? ''); ?></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="description-editor" class="form-label">Mô tả chi tiết</label>
-                    <textarea class="form-control" id="description-editor" name="description" rows="15"><?php echo htmlspecialchars($project['description'] ?? ''); ?></textarea>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="preview_image" class="form-label">Ảnh đại diện</label>
-                            <input type="file" class="form-control" id="preview_image" name="preview_image" accept="image/*" onchange="previewImage(event, 'image-preview')">
-                            <div class="mt-2">
-                                <p class="mb-1 small text-muted">Xem trước:</p>
-                                <img id="image-preview" src="<?php echo !empty($project['preview_image']) ? '../' . htmlspecialchars($project['preview_image']) : ''; ?>" alt="Xem trước ảnh" style="max-width: 200px; height: auto; display: <?php echo !empty($project['preview_image']) ? 'block' : 'none'; ?>;">
-                            </div>
-                        </div>
+        <div class="row">
+            <!-- Cột trái (Nội dung chính) -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-info-circle text-primary me-2"></i>Thông tin dự án</h5>
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="preview_video" class="form-label">Video đại diện</label>
-                            <input type="file" class="form-control" id="preview_video" name="preview_video" accept="video/*" onchange="previewVideo(event, 'video-preview')">
-                            <div class="mt-2">
-                                <p class="mb-1 small text-muted">Xem trước:</p>
-                                <video id="video-preview" src="<?php echo !empty($project['preview_video']) ? '../' . htmlspecialchars($project['preview_video']) : ''; ?>" style="max-width: 200px; height: auto; display: <?php echo !empty($project['preview_video']) ? 'block' : 'none'; ?>;" controls></video>
-                            </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-semibold">Tiêu đề dự án *</label>
+                            <input type="text" class="form-control form-control-lg fw-bold" id="title" name="title" value="<?php echo htmlspecialchars($project['title'] ?? ''); ?>" required placeholder="Nhập tên dự án quảng cáo...">
+                        </div>
+                        <div class="mb-0">
+                            <label for="client" class="form-label fw-semibold">Mô tả ngắn (Khách hàng/Chiến dịch) *</label>
+                            <textarea class="form-control" id="client" name="client" rows="3" required placeholder="Ví dụ: Chiến dịch quảng cáo trên xe buýt cho nhãn hàng X..."><?php echo htmlspecialchars($project['client'] ?? ''); ?></textarea>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Trạng thái</label>
-                            <select class="form-select" id="status" name="status">
-                                <option value="published" <?php echo ($project['status'] ?? '') === 'published' ? 'selected' : ''; ?>>Xuất bản</option>
-                                <option value="draft" <?php echo ($project['status'] ?? 'draft') === 'draft' ? 'selected' : ''; ?>>Bản nháp</option>
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-edit text-primary me-2"></i>Mô tả chi tiết</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <textarea class="form-control" id="description-editor" name="description" rows="20"><?php echo htmlspecialchars($project['description'] ?? ''); ?></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cột phải (Cài đặt) -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-cog text-primary me-2"></i>Xuất bản</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label for="status" class="form-label fw-semibold">Trạng thái</label>
+                            <select class="form-select fw-semibold" id="status" name="status">
+                                <option value="published" <?php echo ($project['status'] ?? '') === 'published' ? 'selected' : ''; ?>>🟢 Đã xuất bản (Published)</option>
+                                <option value="draft" <?php echo ($project['status'] ?? 'draft') === 'draft' ? 'selected' : ''; ?>>🟠 Bản nháp (Draft)</option>
                             </select>
                         </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 0.5px;">
+                            <i class="fas fa-save me-2"></i> <?php echo $is_new_project ? 'Lưu dự án' : 'Cập nhật dự án'; ?>
+                        </button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i> <?php echo $is_new_project ? 'Lưu dự án' : 'Cập nhật dự án'; ?>
-                </button>
-            </form>
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-image text-primary me-2"></i>Ảnh đại diện</h5>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <img id="image-preview" src="<?php echo !empty($project['preview_image']) ? '../' . htmlspecialchars($project['preview_image']) : ''; ?>" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($project['preview_image']) ? 'block' : 'none'; ?>;">
+                            <div id="image-placeholder" class="text-muted p-4 border rounded bg-light" style="display: <?php echo empty($project['preview_image']) ? 'block' : 'none'; ?>;">
+                                <i class="fas fa-image fa-3x mb-2 opacity-25"></i><br>Chưa có ảnh đại diện
+                            </div>
+                        </div>
+                        <input type="file" class="form-control" id="preview_image" name="preview_image" accept="image/*" onchange="previewImage(event, 'image-preview')">
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-video text-primary me-2"></i>Video dự án (Tùy chọn)</h5>
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <div class="mb-3">
+                            <video id="video-preview" src="<?php echo !empty($project['preview_video']) ? '../' . htmlspecialchars($project['preview_video']) : ''; ?>" class="img-fluid rounded shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($project['preview_video']) ? 'block' : 'none'; ?>;" controls></video>
+                            <div id="video-placeholder" class="text-muted p-4 border rounded bg-light" style="display: <?php echo empty($project['preview_video']) ? 'block' : 'none'; ?>;">
+                                <i class="fas fa-film fa-3x mb-2 opacity-25"></i><br>Chưa có video
+                            </div>
+                        </div>
+                        <input type="file" class="form-control" id="preview_video" name="preview_video" accept="video/*" onchange="previewVideo(event, 'video-preview')">
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </form>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     function previewImage(event, previewId) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById(previewId);
-            output.src = reader.result;
-            output.style.display = 'block';
-        };
-        reader.readAsDataURL(event.target.files[0]);
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById(previewId);
+                output.src = reader.result;
+                output.style.display = 'block';
+                output.style.opacity = '1';
+                var placeholder = document.getElementById('image-placeholder');
+                if (placeholder) placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
     }
     function previewVideo(event, previewId) {
-        var reader = new FileReader();
-        reader.onload = function(){
-            var output = document.getElementById(previewId);
-            output.src = reader.result;
-            output.style.display = 'block';
-        };
-        reader.readAsDataURL(event.target.files[0]);
+        if (event.target.files && event.target.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById(previewId);
+                output.src = reader.result;
+                output.style.display = 'block';
+                var placeholder = document.getElementById('video-placeholder');
+                if (placeholder) placeholder.style.display = 'none';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
     }
 </script>
 <!-- TinyMCE -->

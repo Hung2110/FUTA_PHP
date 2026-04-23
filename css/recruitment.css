@@ -4,8 +4,6 @@ a {
   color: #007bff;
   transition: color 0.3s ease;
 }
-
-
 /* Banner */
 .recruitment-banner::before {
   content: '';
@@ -17,12 +15,8 @@ a {
   background: rgba(0, 0, 0, 0.4);
   z-index: 1;
 }
-
-
-
-
     /* Giao diện UI/UX mới cho trang tuyển dụng */
-    .recruitment-banner {
+.recruitment-banner {
   background: url("../assets/images/banners/747533.jpg") 
               center/cover no-repeat;
   color: #fff;
@@ -35,7 +29,7 @@ a {
   padding: 0 20px;
   position: relative;
 }
-    .recruitment-banner h1 {
+.recruitment-banner h1 {
   font-size: 40px;
   font-weight: bold;
   letter-spacing: 5px;
@@ -45,7 +39,7 @@ a {
   position: relative;
   z-index: 2;
 }
-    .recruitment-banner p {
+.recruitment-banner p {
   font-size: 18px;
   font-style: italic;
   max-width: 700px;
@@ -56,11 +50,11 @@ a {
   z-index: 2;
 }
 
-    .filter-container {
-        margin-top: -60px;
-        position: relative;
-        z-index: 10;
-    }
+.filter-container {
+  margin-top: -60px;
+  position: relative;
+  z-index: 10;
+}
     .job-card-item:hover {
         transform: translateY(-8px);
         box-shadow: 0 15px 35px rgba(0,74,173,0.1) !important;

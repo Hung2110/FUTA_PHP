@@ -1,154 +1,176 @@
-/* General Body & Container */
 
+    body {
+        background-color: #f4f7f6;
+    }
+    .project-detail-container {
+        padding-top: 40px;
+        padding-bottom: 60px;
+    }
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+    .breadcrumb-item a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .main-content-wrapper {
+        background: #fff;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    }
+    .project-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: #004aad;
+        margin-bottom: 20px;
+        line-height: 1.4;
+        letter-spacing: 0.5px;
+    }
+    .project-meta {
+        color: #6c757d;
+        font-size: 0.95rem;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #eaeaea;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .social-share {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+    .share-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+    .share-btn.facebook { background: #e8f0fe; color: #1877f2; }
+    .share-btn.facebook:hover { background: #1877f2; color: #fff; }
+    .share-btn.zalo { background: #e5f4ff; color: #008fe5; }
+    .share-btn.zalo:hover { background: #008fe5; color: #fff; }
+    .share-btn.zalo img { width: 16px; height: 16px; }
+    .share-btn.copy { background: #f3f4f6; color: #4b5563; }
+    .share-btn.copy:hover { background: #e5e7eb; color: #1f2937; }
 
-/* Breadcrumb */
-.breadcrumb {
-    background-color: transparent;
-    padding: 0;
-}
-.breadcrumb-item a {
-    text-decoration: none;
-    color: #007bff;
-}
-.breadcrumb-item.active {
-    color: #6c757d;
-}
+    .project-main-image {
+        width: 100%;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+    .project-description {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+    }
+    .project-description img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
 
-/* Main Post Wrapper */
-.news-post-wrapper {
-    background-color: #fff;
-    padding: 2rem 2.5rem;
-    border-radius: 15px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.07);
-}
-
-/* Post Title */
-.news-post-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #1f2937;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-}
-
-/* Post Meta */
-.news-post-meta {
-    font-size: 0.9rem;
-    color: #6b7280;
-    margin-bottom: 1.5rem;
-}
-.news-post-meta a {
-    color: #343a40;
-    text-decoration: none;
-    font-weight: 600;
-}
-.news-post-meta a:hover {
-    color: #007bff;
-}
-.news-post-meta i {
-    margin-right: 5px;
-    color: #007bff;
-}
-
-/* Share Buttons */
-.share-buttons {
-    margin-bottom: 1.5rem;
-    border-top: 1px solid #e9ecef;
-    border-bottom: 1px solid #e9ecef;
-    padding: 1rem 0;
-}
-.share-buttons .share-btn {
-    border-radius: 50rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-right: 0.5rem;
-    transition: all 0.2s ease;
-}
-.share-buttons .share-btn i {
-    margin-right: 5px;
-}
-.share-buttons .zalo img {
-    width: 1em;
-    height: 1em;
-    margin-right: 5px;
-    vertical-align: -0.125em;
-}
-.share-buttons .share-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-/* Post Image */
-.news-post-image {
-    width: 100%;
-    height: auto;
-    max-height: 450px;
-    object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-}
-
-/* Post Content */
-.news-post-content {
-    line-height: 1.7;
-    color: #374151;
-}
-.news-post-content h2, .news-post-content h3, .news-post-content h4 {
-    font-weight: 600;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-}
-.news-post-content p {
-    margin-bottom: 1.25rem;
-}
-.news-post-content ul, .news-post-content ol {
-    padding-left: 1.5rem;
-    margin-bottom: 1.25rem;
-}
-.news-post-content blockquote {
-    border-left: 4px solid #007bff;
-    padding-left: 1rem;
-    font-style: italic;
-    color: #6b7280;
-    margin: 1.5rem 0;
-}
-
-/* Author Box */
-.author-box {
-    margin-top: 3rem;
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
-}
-.author-box h5 {
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-}
-
-/* Sidebar (styles are from news.css for consistency) */
-.sidebar .widget, .sidebar .sidebar-widget {
-    background-color: #fff;
-    padding: 1.5rem;
-    border-radius: 10px;
-    margin-bottom: 2rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-.sidebar .widget-title, .sidebar .sidebar-widget .widget-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #0d6efd;
-    padding-bottom: 0.5rem;
-    display: inline-block;
-}
-/* ... (Các phần sidebar khác giữ nguyên hoặc cập nhật nếu cần) ... */
-
-/* Related Posts */
-.related-posts-section h2 {
-    font-weight: 700;
-    margin-bottom: 2rem;
-    border-bottom: 2px solid #e9ecef;
-    padding-bottom: 1rem;
-}
+    /* Sidebar styling */
+    .sidebar {
+        position: sticky;
+        top: 100px;
+    }
+    .sidebar-widget {
+        background: #fff;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        margin-bottom: 30px;
+    }
+    .widget-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #1a1a1a;
+        position: relative;
+        padding-bottom: 10px;
+    }
+    .widget-title::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 3px;
+        background: #007bff;
+        border-radius: 3px;
+    }
+    .latest-posts-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .latest-posts-list li {
+        margin-bottom: 15px;
+    }
+    .latest-posts-list li:last-child {
+        margin-bottom: 0;
+    }
+    .latest-posts-list a {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        text-decoration: none;
+        color: #333;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    .latest-posts-list a:hover {
+        color: #007bff;
+    }
+    .latest-posts-list img {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+    .search-form {
+        position: relative;
+    }
+    .search-form input {
+        width: 100%;
+        padding: 12px 45px 12px 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s;
+        background-color: #f9f9f9;
+    }
+    .search-form input:focus {
+        border-color: #007bff;
+        background-color: #fff;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
+    .search-form button {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #666;
+        cursor: pointer;
+        transition: color 0.3s;
+    }
+    .search-form button:hover {
+        color: #007bff;
+    }

@@ -1,6 +1,6 @@
 <?php
 require_once 'auth_check.php';
-$pageTitle = "Quản lý Dự án";
+$pageTitle = "Quản Lý Dự Án";
 
 $message = '';
 $message_type = '';
@@ -125,7 +125,7 @@ $projects = $stmt_projects->get_result();
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1><i class="fas fa-project-diagram text-primary"></i> Quản lý Dự Án</h1>
+            <h1><i class="fas fa-project-diagram text-primary"></i> Quản Lý Dự Án</h1>
              <div class="d-flex gap-2">
             <a href="import.php?type=project" class="btn btn-outline-primary"><i class="fas fa-file-import"></i> Import từ file</a>
             <a href="project-edit.php" class="btn btn-primary">

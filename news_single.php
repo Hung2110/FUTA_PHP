@@ -1,6 +1,6 @@
 <?php 
 require_once 'db.php';
-
+$pageStyles = ['css/project-detail.css'];
 // Kiểm tra xem Slug có được cung cấp không
 if (!isset($_GET['slug']) || empty($_GET['slug'])) {
     header('Location: news.php');
@@ -51,7 +51,6 @@ include 'includes/header.php';
     const currentUrl = window.location.href;
     const projectTitle = "<?php echo htmlspecialchars($post['title'], ENT_QUOTES); ?>";
 </script>
-
 <!-- Sử dụng class project-detail-container để kế thừa CSS của trang dự án -->
 <div class="project-detail-container">
     <div class="container">
@@ -83,7 +82,7 @@ include 'includes/header.php';
                         <a id="share-facebook" href="#" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i> <span data-i18n="news.share">Chia sẻ</span></a>
                         <a id="share-zalo" href="#" target="_blank" class="share-btn zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo"> <span data-i18n="news.share">Chia sẻ</span></a>
                         <button id="copy-link" class="share-btn copy"><i class="fas fa-link"></i> <span data-i18n="news.copy">Sao chép</span></button>
-                        <span id="copy-success" style="display:none; margin-left: 10px; color: green;" data-i18n="news.copied">Đã sao chép!</span>
+                        <span id="copy-success" style="display:none; margin-left: 10px; color: #28a745; align-items: center; font-weight: 500;" data-i18n="news.copied"><i class="fas fa-check-circle me-1"></i> Đã sao chép!</span>
                     </div>
 
                     <div class="project-content-body">

@@ -222,7 +222,7 @@ if (isset($_GET['edit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản lý Tuyển Dụng</title>
+    <title>Quản Lý Tuyển Dụng</title>
     <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
@@ -543,7 +543,7 @@ if (isset($_GET['edit'])) {
     <div class="main-content">
         <div class="page-header">
             <div>
-                <h1><i class="fas fa-briefcase me-2 text-primary"></i>Quản lý Tuyển dụng</h1>
+                <h1><i class="fas fa-briefcase me-2 text-primary"></i>Quản Lý Tuyển Dụng</h1>
                 <p class="mb-0">Kiểm soát toàn bộ tin đăng và hồ sơ ứng viên trên một giao diện duy nhất.</p>
             </div>
             <button class="cta-button" data-bs-toggle="modal" data-bs-target="#jobModal">

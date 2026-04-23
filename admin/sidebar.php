@@ -41,15 +41,15 @@ global $role_config;
 // Fallback: Nếu $role_config chưa tồn tại (do include order), tự định nghĩa lại để tránh lỗi hiển thị
 if (!isset($role_config) || empty($role_config)) {
     $role_config = [
-        'user' => ['label' => 'Người dùng', 'color' => 'secondary'],
-        'admin' => ['label' => 'Quản trị viên', 'color' => 'danger'],
-        'user_manager' => ['label' => 'Quản lý người dùng', 'color' => 'dark'],
-        'project_manager' => ['label' => 'Quản lý dự án', 'color' => 'primary'],
-        'carousel_manager' => ['label' => 'Quản lý Carousel', 'color' => 'info'],
-        'news_manager' => ['label' => 'Quản lý Tin tức', 'color' => 'success'],
-        'recruitment_manager' => ['label' => 'Quản lý tuyển dụng', 'color' => 'warning'],
-        'contact_manager' => ['label' => 'Quản lý liên hệ', 'color' => 'secondary'],
-        'chat_manager' => ['label' => 'Quản lý Chat', 'color' => 'primary']
+        'user' => ['label' => 'Người Dùng', 'color' => 'secondary'],
+        'admin' => ['label' => 'Quản Trị Viên', 'color' => 'danger'],
+        'user_manager' => ['label' => 'Quản Lý Người Dùng', 'color' => 'dark'],
+        'project_manager' => ['label' => 'Quản Lý Dự Án', 'color' => 'primary'],
+        'carousel_manager' => ['label' => 'Quản Lý Carousel', 'color' => 'info'],
+        'news_manager' => ['label' => 'Quản Lý Tin Tức', 'color' => 'success'],
+        'recruitment_manager' => ['label' => 'Quản Lý Tuyển Dụng', 'color' => 'warning'],
+        'contact_manager' => ['label' => 'Quản Lý Liên Hệ', 'color' => 'secondary'],
+        'chat_manager' => ['label' => 'Quản Lý Chat', 'color' => 'primary']
     ];
 }
 
@@ -179,19 +179,19 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
     <ul class="sidebar-menu">
         <li><a href="dashboard.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'dashboard.php' ? 'active' : ''; ?>"><i class="fas fa-home"></i> Dashboard</a></li>
         <?php if (!empty(array_intersect(['admin', 'user_manager'], $user_roles))): ?>
-        <li><a href="users.php" class="<?php echo in_array(basename($_SERVER['PHP_SELF']), ['users.php', 'view_user.php']) ? 'active' : ''; ?>"><i class="fas fa-users"></i> Quản lý người dùng</a></li>
+        <li><a href="users.php" class="<?php echo in_array(basename($_SERVER['PHP_SELF']), ['users.php', 'view_user.php']) ? 'active' : ''; ?>"><i class="fas fa-users"></i> Quản Lý Người Dùng</a></li>
         <?php endif; ?>
 
         <?php if (!empty(array_intersect(['admin', 'project_manager'], $user_roles))): ?>
-        <li><a href="projects.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'projects.php' ? 'active' : ''; ?>"><i class="fas fa-project-diagram"></i> Quản lý dự án</a></li>
+        <li><a href="projects.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'projects.php' ? 'active' : ''; ?>"><i class="fas fa-project-diagram"></i> Quản Lý Dự Án</a></li>
         <?php endif; ?>
 
         <?php if (!empty(array_intersect(['admin', 'news_manager'], $user_roles))): ?>
-        <li><a href="news.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'news.php' ? 'active' : ''; ?>"><i class="fas fa-newspaper"></i> Quản lý Tin tức</a></li>
+        <li><a href="news.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'news.php' ? 'active' : ''; ?>"><i class="fas fa-newspaper"></i> Quản Lý Tin Tức</a></li>
         <?php endif; ?>
         
         <?php if (!empty(array_intersect(['admin', 'carousel_manager'], $user_roles))): ?>
-        <li><a href="carousel_slides.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'carousel_slides.php' ? 'active' : ''; ?>"><i class="fas fa-images"></i> Quản lý Carousel</a></li>
+        <li><a href="carousel_slides.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'carousel_slides.php' ? 'active' : ''; ?>"><i class="fas fa-images"></i> Quản Lý Carousel</a></li>
         <?php endif; ?>
         
         
@@ -201,7 +201,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         ?>
         <li class="sidebar-dropdown">
             <a href="#recruitmentSubmenu" data-bs-toggle="collapse" aria-expanded="<?php echo $isRecruitmentActive ? 'true' : 'false'; ?>" class="dropdown-toggle <?php echo $isRecruitmentActive ? 'active' : ''; ?>">
-                <i class="fas fa-briefcase"></i> Quản lý Tuyển dụng
+                <i class="fas fa-briefcase"></i> Quản Lý Tuyển Dụng
             </a>
             <ul class="collapse list-unstyled sidebar-submenu <?php echo $isRecruitmentActive ? 'show' : ''; ?>" id="recruitmentSubmenu">
                 <li><a href="recruitments.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'recruitments.php' ? 'active' : ''; ?>"><i class="fas fa-list"></i> Danh sách tin</a></li>
@@ -211,7 +211,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         <?php endif; ?>
 
         <?php if (in_array('admin', $user_roles)): ?>
-        <li><a href="activity_logs.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>"><i class="fas fa-history"></i> Nhật ký hoạt động</a></li>
+        <li><a href="activity_logs.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'activity_logs.php' ? 'active' : ''; ?>"><i class="fas fa-history"></i> Nhật Ký Hoạt Động</a></li>
         <?php endif; ?>
 
         <?php if (!empty(array_intersect(['admin', 'project_manager', 'news_manager'], $user_roles))): ?>
@@ -223,7 +223,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         <?php endif; ?>
         
         <?php if (!empty(array_intersect(['admin', 'chat_manager'], $user_roles))): ?>
-        <li><a href="chat.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : ''; ?>"><i class="fas fa-comments"></i> Quản lý Chat</a></li>
+        <li><a href="chat.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'chat.php' ? 'active' : ''; ?>"><i class="fas fa-comments"></i> Quản Lý Chat</a></li>
         <?php endif; ?>
     </ul>
 </div>
