@@ -1,5 +1,6 @@
 <?php
 require_once 'auth_check.php';
+$pageTitle = 'Quản Lý Tuyển Dụng';
 
 function create_slug($string) {
     $string = mb_strtolower($string, 'UTF-8');
@@ -222,7 +223,7 @@ if (isset($_GET['edit'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Tuyển Dụng</title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA ADVERTISING' : 'FUTA ADVERTISING'; ?></title>
     <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">

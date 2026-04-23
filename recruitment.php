@@ -1,4 +1,5 @@
 <?php
+$pageTitle = 'Tuyển Dụng';
 $pageStyles = ['css/recruitment.css'];
 $bodyClass = 'recruitment-page';
 include 'includes/header.php';

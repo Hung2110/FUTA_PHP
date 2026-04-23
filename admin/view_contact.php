@@ -1,5 +1,6 @@
 <?php
 require_once 'auth_check.php';
+$pageTitle = 'Chi Tiết Liên Hệ';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     header('Location: contacts.php');
@@ -29,7 +30,7 @@ $status_colors = ['pending' => 'secondary', 'done' => 'success'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi Tiết Liên Hệ</title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA ADVERTISING' : 'FUTA ADVERTISING'; ?></title>
     <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">

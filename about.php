@@ -1,4 +1,5 @@
 <?php 
+$pageTitle = 'Giới Thiệu';
 $pageStyles = ['css/about.css'];
 include 'includes/header.php'; 
 ?>

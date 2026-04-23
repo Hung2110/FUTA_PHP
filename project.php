@@ -1,5 +1,6 @@
 <?php 
 require_once 'db.php';
+$pageTitle = 'Dự Án';
 $pageStyles = ['css/project.css'];
 include 'includes/header.php'; 
 

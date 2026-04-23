@@ -1,4 +1,5 @@
 <?php 
+$pageTitle = 'Quảng Cáo Kỹ Thuật Số';
 $pageStyles = ['css/QC-KTS.css'];
 include 'includes/header.php'; 
 ?>

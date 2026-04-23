@@ -1,5 +1,6 @@
 <?php
 require_once 'auth_check.php';
+$pageTitle = 'Quản Lý Carousel';
 
 // Hàm ghi log hoạt động (tái sử dụng từ các file admin khác)
 function log_activity($conn, $action, $module) {
@@ -170,7 +171,7 @@ if (isset($post_message)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Carousel</title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA ADVERTISING' : 'FUTA ADVERTISING'; ?></title>
     <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
      <!-- Favicon (Logo trên tab trình duyệt) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

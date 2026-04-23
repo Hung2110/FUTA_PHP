@@ -86,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$pageTitle = 'Liên Hệ';
 $pageStyles = ['css/contact.css'];
 $bodyClass = 'contact-page';
 include 'includes/header.php';

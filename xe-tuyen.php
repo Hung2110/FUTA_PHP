@@ -1,4 +1,5 @@
 <?php 
+$pageTitle = 'Xe Tuyến Liên Tỉnh';
 $pageStyles = ['css/xe-tuyen.css'];
 include 'includes/header.php'; 
 ?>

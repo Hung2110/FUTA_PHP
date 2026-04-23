@@ -48,6 +48,7 @@ $post = null;
 $message = '';
 $message_type = '';
 $is_new_post = ($post_id === null);
+$pageTitle = $is_new_post ? 'Thêm bài viết mới' : 'Chỉnh sửa bài viết';
 
 // Xử lý khi form được gửi đi (POST request)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -183,14 +184,14 @@ if (!$is_new_post) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $is_new_post ? 'Thêm bài viết mới' : 'Chỉnh sửa bài viết'; ?></title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA Advertising' : 'FUTA Advertising'; ?></title>
     <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body { background: #f7f9fc; }
         .form-control, .form-select { border-radius: 8px; padding: 10px 15px; }
-        .card { border-radius: 12px; }
+         rd { border-radius: 12px; }
     </style>
 </head>
 <body>

@@ -1,4 +1,7 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+$pageTitle = 'Quảng Cáo Trên Xe';
+include 'includes/header.php'; 
+?>
 <!---->
 <link rel="stylesheet" href="css/ads-car.css">
 <section class="img-section">

@@ -77,7 +77,7 @@ $projects = $stmt_projects->get_result();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Dự Án</title>
+    <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA ADVERTISING' : 'FUTA ADVERTISING'; ?></title>
     <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
      <!-- Favicon (Logo trên tab trình duyệt) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">

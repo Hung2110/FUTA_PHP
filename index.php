@@ -1,4 +1,5 @@
 <?php
+$pageTitle = 'Trang Chủ';
 $pageStyles = ['css/home.css'];
 require_once 'db.php'; // Đảm bảo đã kết nối CSDL
 include 'includes/header.php';

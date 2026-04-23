@@ -134,6 +134,7 @@ if (empty($details['description']) && empty($details['requirements']) && empty($
     $details['description'] = $description_content;
 }
 
+$pageTitle = htmlspecialchars($job['title']);
 $pageStyles = ['css/recruitment-detail.css'];
 $bodyClass = 'recruitment-detail-page';
 include 'includes/header.php';

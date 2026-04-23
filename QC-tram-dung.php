@@ -1,4 +1,7 @@
-<?php include 'includes/header.php'; ?>
+<?php 
+$pageTitle = 'Quảng Cáo Trạm Dừng';
+include 'includes/header.php'; 
+?>
 <link rel="stylesheet" href="css/QC-TD.css">
 <section class="img-section">
     <img src="assets/images/slideshow/QC_TD.png" alt="Quảng Cáo Kỹ Thuật Số" class="img-background">
