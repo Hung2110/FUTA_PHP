@@ -182,6 +182,8 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
                         <div>
                             <h5 class="mb-0 fw-bold" id="headerName">Khách hàng</h5>
                             <div class="text-muted small">
+                                <span id="headerStatus"></span>
+                                <span class="mx-2">|</span>
                                 <i class="fas fa-phone-alt me-1"></i><span id="headerPhone">---</span>
                                 <span class="mx-2">|</span>
                                 <i class="fas fa-envelope me-1"></i><span id="headerEmail">---</span>
@@ -278,12 +280,18 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
                         if (s.id == currentSessionId) {
                             readTimestamps[s.id] = s.last_message_time;
                             localStorage.setItem('futa_admin_chat_read', JSON.stringify(readTimestamps));
+
+                            // Cập nhật trạng thái header liên tục nếu đang mở phiên chat này
+                            const statusHtml = s.is_online 
+                                ? '<span class="text-success"><i class="fas fa-circle" style="font-size: 10px;"></i> Đang hoạt động</span>' 
+                                : `<span class="text-muted"><i class="far fa-clock" style="font-size: 10px;"></i> ${s.offline_text}</span>`;
+                            $('#headerStatus').html(statusHtml);
                         }
                         const isUnread = (s.last_sender === 'customer' && readTimestamps[s.id] !== s.last_message_time);
                         const fw = isUnread ? 'fw-bold text-dark' : '';
 
                         const html = `
-                            <div class="session-item ${isActive}" data-id="${s.id}" data-name="${s.name}" data-phone="${s.phone}" data-email="${s.email || ''}" data-last-time="${s.last_message_time}">
+                            <div class="session-item ${isActive}" data-id="${s.id}" data-name="${s.name}" data-phone="${s.phone}" data-email="${s.email || ''}" data-last-time="${s.last_message_time}" data-online="${s.is_online ? 1 : 0}" data-offlinetext="${s.offline_text}">
                                 <div class="session-avatar">${avatarChar}</div>
                                 <div class="session-info">
                                     <p class="session-name">${s.name} ${returningBadge}</p>
@@ -310,6 +318,14 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
             $('#headerPhone').text($(this).data('phone'));
             $('#headerEmail').text($(this).data('email') || 'Không có email');
             $('#headerAvatar').text($(this).data('name').charAt(0).toUpperCase());
+            
+            // Render trạng thái khi click vào người dùng
+            const isOnline = $(this).data('online') == 1;
+            const offlineText = $(this).data('offlinetext');
+            const statusHtml = isOnline 
+                ? '<span class="text-success"><i class="fas fa-circle" style="font-size: 10px;"></i> Đang hoạt động</span>' 
+                : `<span class="text-muted"><i class="far fa-clock" style="font-size: 10px;"></i> ${offlineText}</span>`;
+            $('#headerStatus').html(statusHtml);
             
             $(this).find('.session-meta').removeClass('fw-bold text-dark');
             readTimestamps[currentSessionId] = $(this).data('last-time');

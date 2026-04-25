@@ -12,6 +12,12 @@ if ($check_col && $check_col->num_rows == 0) {
     $conn->query("ALTER TABLE chat_messages ADD COLUMN admin_name VARCHAR(255) NULL AFTER sender");
 }
 
+// Tự động thêm cột last_active_time vào bảng chat_sessions nếu chưa có
+$check_col_active = $conn->query("SHOW COLUMNS FROM chat_sessions LIKE 'last_active_time'");
+if ($check_col_active && $check_col_active->num_rows == 0) {
+    $conn->query("ALTER TABLE chat_sessions ADD COLUMN last_active_time DATETIME NULL AFTER last_message_time");
+}
+
 switch ($action) {
     case 'start_session':
     $name = trim($_POST['name'] ?? '');
@@ -32,7 +38,7 @@ switch ($action) {
     if ($row = $result->fetch_assoc()) {
         // Nếu là khách cũ, tái sử dụng session_id và cập nhật thời gian, tên, email mới nhất
         $session_id = $row['id'];
-        $update_stmt = $conn->prepare("UPDATE chat_sessions SET name = ?, email = ?, last_message_time = NOW(), last_sender = 'customer' WHERE id = ?");
+        $update_stmt = $conn->prepare("UPDATE chat_sessions SET name = ?, email = ?, last_message_time = NOW(), last_active_time = NOW(), last_sender = 'customer' WHERE id = ?");
         $update_stmt->bind_param("ssi", $name, $email, $session_id);
         $update_stmt->execute();
         $update_stmt->close();
@@ -40,7 +46,7 @@ switch ($action) {
         echo json_encode(['success' => true, 'session_id' => $session_id]);
     } else {
         // Khách mới, tạo phiên chat hoàn toàn mới
-        $insert_stmt = $conn->prepare("INSERT INTO chat_sessions (name, phone, email, last_message_time, last_sender) VALUES (?, ?, ?, NOW(), 'customer')");
+        $insert_stmt = $conn->prepare("INSERT INTO chat_sessions (name, phone, email, last_message_time, last_active_time, last_sender) VALUES (?, ?, ?, NOW(), NOW(), 'customer')");
         $insert_stmt->bind_param("sss", $name, $phone, $email);
         
         if ($insert_stmt->execute()) {
@@ -108,7 +114,11 @@ if ($action === 'send_message') {
         $stmt1->close();
 
         // Cập nhật thời gian và người gửi cuối cùng trong phiên chat
-        $stmt2 = $conn->prepare("UPDATE chat_sessions SET last_message_time = NOW(), last_sender = ? WHERE id = ?");
+        if ($sender === 'customer') {
+            $stmt2 = $conn->prepare("UPDATE chat_sessions SET last_message_time = NOW(), last_active_time = NOW(), last_sender = ? WHERE id = ?");
+        } else {
+            $stmt2 = $conn->prepare("UPDATE chat_sessions SET last_message_time = NOW(), last_sender = ? WHERE id = ?");
+        }
         $stmt2->bind_param("si", $sender, $session_id);
         $stmt2->execute();
         $stmt2->close();
@@ -122,13 +132,29 @@ if ($action === 'send_message') {
     exit;
 }
 
-// 3. Admin lấy danh sách các phiên chat
+// 3. Khách hàng gửi ping để báo đang online
+if ($action === 'ping') {
+    $session_id = intval($_POST['session_id'] ?? 0);
+    if ($session_id > 0) {
+        $stmt = $conn->prepare("UPDATE chat_sessions SET last_active_time = NOW() WHERE id = ?");
+        $stmt->bind_param("i", $session_id);
+        $stmt->execute();
+        $stmt->close();
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Dữ liệu không hợp lệ']);
+    }
+    exit;
+}
+
+// 4. Admin lấy danh sách các phiên chat
 if ($action === 'get_sessions') {
     $sessions = [];
     $result = $conn->query("
         SELECT cs.*, 
                (SELECT COUNT(*) FROM chat_sessions cs2 WHERE cs2.phone = cs.phone) as phone_count,
-               (SELECT MIN(created_at) FROM chat_messages cm WHERE cm.session_id = cs.id) as first_msg_time
+               (SELECT MIN(created_at) FROM chat_messages cm WHERE cm.session_id = cs.id) as first_msg_time,
+               TIMESTAMPDIFF(SECOND, IFNULL(cs.last_active_time, cs.last_message_time), NOW()) as offline_seconds
         FROM chat_sessions cs 
         ORDER BY cs.last_message_time DESC
     ");
@@ -140,6 +166,25 @@ if ($action === 'get_sessions') {
                 $is_returning = true;
             }
             $row['is_returning'] = $is_returning;
+
+            // Kiểm tra trạng thái online/offline
+            $offline_seconds = (int)$row['offline_seconds'];
+            if ($offline_seconds < 60) { // Nếu có hoạt động (ping hoặc nhắn) trong 60 giây
+                $row['is_online'] = true;
+                $row['offline_text'] = "Đang hoạt động";
+            } else {
+                $row['is_online'] = false;
+                if ($offline_seconds < 3600) {
+                    $minutes = floor($offline_seconds / 60);
+                    $row['offline_text'] = "Hoạt động $minutes phút trước";
+                } elseif ($offline_seconds < 86400) {
+                    $hours = floor($offline_seconds / 3600);
+                    $row['offline_text'] = "Hoạt động $hours giờ trước";
+                } else {
+                    $days = floor($offline_seconds / 86400);
+                    $row['offline_text'] = "Hoạt động $days ngày trước";
+                }
+            }
             $sessions[] = $row;
         }
     }
@@ -147,7 +192,7 @@ if ($action === 'get_sessions') {
     exit;
 }
 
-// 4. Lấy nội dung tin nhắn của một phiên chat cụ thể
+// 5. Lấy nội dung tin nhắn của một phiên chat cụ thể
 if ($action === 'get_messages') {
     $session_id = intval($_GET['session_id'] ?? 0);
     $last_id = intval($_GET['last_id'] ?? 0); // Chỉ lấy những tin nhắn mới hơn ID này
