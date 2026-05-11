@@ -252,7 +252,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let ws = null;
     let isWsConnected = false;
     function connectWebSocket() {
-        ws = new WebSocket('ws://localhost:8080');
+        // Tự động nhận diện giao thức (HTTP -> ws://, HTTPS -> wss:// qua Nginx proxy)
+        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const wsUrl = window.location.protocol === 'https:' 
+            ? `${wsProtocol}//${window.location.host}/chat/` 
+            : `${wsProtocol}//${window.location.hostname}:8080`;
+        ws = new WebSocket(wsUrl);
         ws.onopen = () => { isWsConnected = true; };
         ws.onmessage = (e) => {
             const data = JSON.parse(e.data);

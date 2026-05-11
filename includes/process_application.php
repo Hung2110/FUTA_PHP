@@ -78,8 +78,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                         $notify_stmt->close();
                     }
 
-                    // --- Chỉ gửi email thông báo cho địa chỉ cố định ---
-                    $adminEmails = ['hung.nguyen@futa.vn'];
+                // --- Đọc email admin từ Biến môi trường (nếu có), nếu không dùng mặc định ---
+                $envEmails = getenv('ADMIN_EMAILS');
+                $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
 
                     // --- Gửi email thông báo qua PHPMailer kèm CV đính kèm ---
                     require_once __DIR__ . '/../vendor/autoload.php'; // Đường dẫn chính xác từ thư mục includes
@@ -88,8 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                         $mail->isSMTP();
                         $mail->Host       = 'smtp.gmail.com';
                         $mail->SMTPAuth   = true;
-                        $mail->Username   = 'nguyenquochung0509@gmail.com'; // Email gửi đi
-                        $mail->Password   = 'omxuvvzaacrmnkyf'; // Mật khẩu ứng dụng (đã tạo)
+                        
+                        $mail->Username   = getenv('SMTP_USER') ?: 'nguyenquochung0509@gmail.com'; // Email gửi đi
+                        $mail->Password   = getenv('SMTP_PASS') ?: 'omxuvvzaacrmnkyf'; // Nên dời vào biến môi trường
+                        
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                         $mail->Port       = 587;
                         $mail->CharSet    = 'UTF-8';

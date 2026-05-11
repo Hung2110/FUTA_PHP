@@ -1,29 +1,30 @@
-# Hướng dẫn Triển khai (Deployment Guide) - FUTA Advertising
+# Hướng dẫn Triển khai - FUTA Advertising (Windows Server / IIS)
 
-Tài liệu này cung cấp các bước chi tiết để triển khai dự án FUTA Advertising lên môi trường Server (Production/Staging).
+Tài liệu này cung cấp các bước chi tiết để DevOps triển khai dự án lên môi trường **Windows Server**, sử dụng **IIS** và **MySQL**.
 
 ---
 
-## 1. Yêu cầu Hệ thống (System Requirements)
-- **OS:** Linux (Ubuntu 20.04/22.04 hoặc CentOS/RHEL) / Windows Server (IIS).
-- **Web Server:** Apache 2.4+ hoặc Nginx.
-- **PHP:** Phiên bản **7.4** hoặc **8.x**.
-- **Database:** MySQL 5.7+ hoặc MariaDB 10.3+.
-- **Tools:** [Composer](https://getcomposer.org/) (Để cài đặt các package PHP).
+## 🛠 1. Yêu cầu Hệ thống (System Requirements)
 
-### Các PHP Extensions bắt buộc:
-- `mysqli` (Kết nối Database)
-- `mbstring` (Xử lý chuỗi đa ngôn ngữ)
-- `fileinfo` (Kiểm tra định dạng file khi upload CV/Ảnh)
-- `json` (Xử lý API)
-- `openssl` (Hỗ trợ PHPMailer gửi mail)
+Đảm bảo Server đã cài đặt các thành phần sau trước khi bắt đầu:
 
-### Cấu hình `php.ini` bắt buộc:
-Do hệ thống có tính năng gửi file qua Chat (Video lên tới 30MB) và Upload CV/Ảnh, cần cấu hình các thông số sau trong `php.ini`:
+*   **OS:** Windows Server (2016, 2019 hoặc 2022).
+*   **Web Server:** IIS với tính năng **CGI (FastCGI)** đã được bật.
+*   **IIS Modules (Bắt buộc phải cài thêm):** 
+    *   URL Rewrite 2.1 (Để hỗ trợ Friendly URL định tuyến tự động).
+    *   Application Request Routing (ARR) 3.0 (Để làm Reverse Proxy cho dịch vụ WebSocket).
+*   **PHP:** Từ `8.1` trở lên (Khuyến nghị bản **Non-Thread Safe - NTS** cho IIS). Sử dụng PHP Manager cho IIS để dễ cấu hình.
+*   **Database:** MySQL Server 5.7+ hoặc MariaDB.
+*   **Công cụ:** `Composer` dành cho Windows.
+
+**Cấu hình `php.ini` (Bắt buộc):**
+Bật các extension: `mysqli`, `mbstring`, `fileinfo`, `openssl`, `curl`.
+Cập nhật các thông số sau để hỗ trợ tính năng upload CV, Ảnh và Video Chat (hỗ trợ tối đa lên tới 50MB):
 ```ini
 upload_max_filesize = 50M
 post_max_size = 50M
 max_execution_time = 120
+extension_dir = "ext"
 ```
 
 ---

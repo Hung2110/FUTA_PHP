@@ -45,6 +45,9 @@
     <!-- Custom JS -->
     <script src="js/main.js"></script>
 
+    <!-- Security JS (Chặn click chuột phải, F12, xem source) -->
+    <script src="js/security.js"></script>
+
     <!-- Tích hợp Chat Widget dùng chung cho toàn trang -->
     <?php include 'chat_widget.php'; ?>
 </body>

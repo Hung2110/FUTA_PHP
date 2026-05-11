@@ -1,0 +1,10 @@
+DirectoryIndex login.php
+
+# Deny access to sensitive files
+<Files "auth_check.php">
+    Require all denied
+</Files>
+
+<Files "sidebar.php">
+    Require all denied
+</Files>

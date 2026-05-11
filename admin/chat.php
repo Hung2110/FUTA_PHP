@@ -228,7 +228,12 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
 
         // 1. KẾT NỐI WEBSOCKET
         function connectWS() {
-            ws = new WebSocket('ws://localhost:8080'); // Đổi thành wss://domain.com/chat/ nếu chạy thực tế
+            // Tự động nhận diện giao thức cho Production/Local
+            const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = window.location.protocol === 'https:' 
+                ? `${wsProtocol}//${window.location.host}/chat/` 
+                : `${wsProtocol}//${window.location.hostname}:8080`;
+            ws = new WebSocket(wsUrl);
             
             ws.onmessage = function(e) {
                 const data = JSON.parse(e.data);

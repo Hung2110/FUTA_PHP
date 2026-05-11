@@ -39,8 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // --- Kết thúc tạo thông báo ---
         }
         
-        // --- Chỉ gửi email thông báo cho địa chỉ cố định ---
-        $adminEmails = ['hung.nguyen@futa.vn'];
+        // --- Đọc email admin từ Biến môi trường (nếu có), nếu không dùng mặc định ---
+        $envEmails = getenv('ADMIN_EMAILS');
+        $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
         
         $mailSubject = "[FUTA ADVERTISING] Liên hệ mới từ $name";
         $mailBody = "<h3>Bạn nhận được một liên hệ mới từ website FUTA:</h3>" .

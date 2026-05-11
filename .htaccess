@@ -1,0 +1,35 @@
+DirectoryIndex index.php recruitment.php Default.htm index.htm
+
+# Security: Deny access to sensitive files/directories
+<Files "db.php">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|inc|bak)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Deny access to includes, vendor, .git
+RedirectMatch 404 ^/includes/
+RedirectMatch 404 ^/vendor/
+RedirectMatch 404 ^/\.git/
+
+# URL Rewriting
+RewriteEngine On
+
+# Blog List
+RewriteRule ^blog/?$ blog.php [L]
+
+# Blog Single - catch slugs that are not files/directories and not specific pages
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^/FUTA_PHP/tuyen-dung/
+RewriteCond %{REQUEST_URI} !^/(FUTA_PHP/)?(index|about|contact|project|projects|recruitment|blog|api|map|xe-tuyen|xe-buyt|xe-trung-chuyen|QC-ky-thuat-so|QC-tram-dung|animation|buyt-noi-o)(\.php)?/?$
+RewriteRule ^([a-zA-Z0-9-]+)/?$ blog_single.php?slug=$1 [QSA,L]
+
+# Limit upload size (though better in php.ini)
+php_value upload_max_filesize 50M
+php_value post_max_size 50M
+php_value max_execution_time 120
