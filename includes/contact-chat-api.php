@@ -5,21 +5,6 @@ require_once '../db.php';
 header('Content-Type: application/json; charset=utf-8');
 
 $action = $_REQUEST['action'] ?? '';
-
-/* KHUYẾN NGHỊ: Dời các câu lệnh ALTER TABLE này sang file cài đặt hệ thống
- * Việc để ở đây sẽ làm chậm hệ thống do phải quét cấu trúc DB mỗi khi người dùng chat.
- * 
- * $check_col = $conn->query("SHOW COLUMNS FROM chat_messages LIKE 'admin_name'");
- * if ($check_col && $check_col->num_rows == 0) {
- *     $conn->query("ALTER TABLE chat_messages ADD COLUMN admin_name VARCHAR(255) NULL AFTER sender");
- * }
- * 
- * $check_col_active = $conn->query("SHOW COLUMNS FROM chat_sessions LIKE 'last_active_time'");
- * if ($check_col_active && $check_col_active->num_rows == 0) {
- *     $conn->query("ALTER TABLE chat_sessions ADD COLUMN last_active_time DATETIME NULL AFTER last_message_time");
- * }
- */
-
 switch ($action) {
     case 'start_session':
     $name = trim($_POST['name'] ?? '');
@@ -88,6 +73,14 @@ if ($action === 'send_message') {
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
         
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+
+        // Bảo mật: Chặn các đuôi file thực thi nguy hiểm
+        $forbidden_exts = ['php', 'php3', 'php4', 'php5', 'phtml', 'exe', 'sh', 'bat', 'js', 'cgi'];
+        if (in_array($ext, $forbidden_exts, true) || empty($ext)) {
+            echo json_encode(['success' => false, 'error' => 'Định dạng file không được phép tải lên!']);
+            exit;
+        }
+
         $filename = time() . '_' . rand(1000, 9999) . '.' . $ext;
         $dest = $uploadDir . $filename;
         
