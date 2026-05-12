@@ -28,18 +28,49 @@ h1, h2, h3, h4, h5, h6,
     font-family: 'Roboto', sans-serif;
 }
 
-/* Tiêu đề thẻ Tin tức / Dự án ở dạng Grid/Slider */
-.news-card-title {
-    font-family: 'Roboto', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 600;
+/* Tùy chỉnh Tiêu đề trang chi tiết (Tin tức / Dự án) */
+.project-title {
+    font-size: 2.5rem; /* Tăng kích thước để nổi bật hơn */
+    font-weight: 800;
     color: var(--primary-color);
     line-height: 1.4;
+    margin-bottom: 1rem;
+}
+
+/* Tiêu đề thẻ Tin tức / Dự án ở dạng Grid/Slider */
+.news-card-title, .card-title {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--dark-color);
+    line-height: 1.5;
     margin-bottom: 12px;
+    transition: color 0.3s ease;
+}
+
+.news-card-title {
     display: -webkit-box;
     -webkit-line-clamp: 2; /* Cắt chữ thành 2 dòng để các thẻ luôn cao bằng nhau */
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+.news-card-link:hover .news-card-title,
+.post-card-link:hover .card-title {
+    color: var(--primary-color) !important;
+}
+
+/* Chỉnh lại khoảng cách dòng và kích thước chữ cho nội dung văn bản */
+.project-description, .project-content-body {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+.card-text, .news-card-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
 }
 
 /* Tiêu đề bài viết mới nhất ở thanh bên (Sidebar) */
