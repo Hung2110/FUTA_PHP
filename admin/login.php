@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #3674ff;
@@ -75,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-sizing: border-box;
         }
         body {
-            font-family: 'Inter', 'Segoe UI', sans-serif;
+            font-family: 'Arial', 'Helvetica', sans-serif;
             background: var(--bg);
             min-height: 100vh;
             margin: 0;

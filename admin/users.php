@@ -200,7 +200,6 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
 
         body {
             background: #f7f9fc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #1f2a37;
         }
 

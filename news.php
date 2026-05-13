@@ -2,7 +2,7 @@
 require_once 'db.php';
 
 $pageStyles = ['css/news.css'];
-$pageTitle = "Tin Tức & Dự án";
+$pageTitle = "Tin Tức & Dự Án";
 include 'includes/header.php'; 
 $type = isset($_GET['type']) ? $_GET['type'] : 'all';
 
@@ -36,7 +36,7 @@ if ($result) {
 
 <div class="news-banner">
     <div class="container">
-        <h1 data-i18n="news.page_title">Tin Tức & Dự án</h1>
+        <h1 data-i18n="news.page_title">Tin Tức & Dự Án</h1>
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb justify-content-center mb-0">
                 <li class="breadcrumb-item"><a href="news.php" class="text-white" data-i18n="news.breadcrumb_home">Trang chủ</a></li>

@@ -240,8 +240,8 @@ if (isset($_GET['edit'])) {
 
         body {
             background: #f7f9fc;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #1f2a37;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .page-header {
