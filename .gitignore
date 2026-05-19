@@ -1,9 +1,0 @@
-# Bỏ qua thư mục chứa dữ liệu upload của người dùng
-uploads/
-
-# Bỏ qua các file hệ thống hệ điều hành
-.DS_Store
-Thumbs.db
-
-# Bỏ qua file cấu hình môi trường chứa mật khẩu (nếu bạn sử dụng sau này)
-.env

@@ -93,6 +93,7 @@ if ($result && $result->num_rows > 0) {
                         <option>Content Marketing</option>
                         <option>Thiết kế</option>
                         <option>Kinh doanh</option>
+                        <option>Giám sát thi công</option>
                     </select>
                 </div>
             </div>
@@ -115,8 +116,6 @@ if ($result && $result->num_rows > 0) {
                     <select id="chinhanh" class="form-select border-start-0 bg-light">
                         <option value="">Tất cả</option>
                         <option>Hồ Chí Minh</option>
-                        <option>Hà Nội</option>
-                        <option>Đà Nẵng</option>
                     </select>
                 </div>
             </div>

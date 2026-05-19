@@ -86,13 +86,12 @@
 
 .transit-stats {
   background-color: #ffffff;
-  padding: 110px 20px;
+  padding: 40px 20px;
   text-align: center;
 }
 
 .transit-stats h2 {
   font-size: 2.5em;
-  margin-top: 40px;
   font-weight: bold;
   color: #333;
 }

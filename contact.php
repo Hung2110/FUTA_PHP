@@ -13,15 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone'] ?? '');
     $subject = trim($_POST['subject'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    if ($name && $email && $phone && $subject && $content) {
+    if ($name && $email && $phone && $content) { // subject is now optional
         $stmt = $conn->prepare("INSERT INTO contact (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param('sssss', $name, $email, $phone, $subject, $content);
         if ($stmt->execute()) {
             $contact_id = $conn->insert_id; // Lấy ID của liên hệ vừa tạo
             $stmt->close();
 
+            $adminEmails = [];
             // --- Tạo thông báo cho admin/contact_manager ---
-            $admin_users_query = $conn->query("SELECT id FROM users WHERE (FIND_IN_SET('admin', role) > 0 OR FIND_IN_SET('contact_manager', role) > 0) AND status = 'active'");
+            $admin_users_query = $conn->query("SELECT id, email FROM users WHERE (FIND_IN_SET('admin', role) > 0 OR FIND_IN_SET('contact_manager', role) > 0) AND status = 'active'");
             if ($admin_users_query && $admin_users_query->num_rows > 0) {
                 $notification_message = "Có liên hệ mới từ: " . htmlspecialchars($name);
                 $notification_link = "view_contact.php?id=" . $contact_id;
@@ -29,6 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $notify_stmt = $conn->prepare("INSERT INTO notifications (user_id, type, message, link) VALUES (?, ?, ?, ?)");
                 while ($admin_user = $admin_users_query->fetch_assoc()) {
+                    if (!empty($admin_user['email'])) {
+                        $adminEmails[] = $admin_user['email'];
+                    }
                     if (isset($admin_user['id'])) {
                         $notify_stmt->bind_param("isss", $admin_user['id'], $notification_type, $notification_message, $notification_link);
                         $notify_stmt->execute();
@@ -39,9 +43,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // --- Kết thúc tạo thông báo ---
         }
         
-        // --- Đọc email admin từ Biến môi trường (nếu có), nếu không dùng mặc định ---
-        $envEmails = getenv('ADMIN_EMAILS');
-        $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
+        // Nếu không có user nào trong DB có quyền này, dùng fallback mặc định
+        if (empty($adminEmails)) {
+            $envEmails = getenv('ADMIN_EMAILS');
+            $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
+        }
         
         $mailSubject = "[FUTA ADVERTISING] Liên hệ mới từ $name";
         $mailBody = "<h3>Bạn nhận được một liên hệ mới từ website FUTA:</h3>" .
@@ -57,12 +63,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; // Thay bằng SMTP server của bạn (VD: smtp.gmail.com)
             $mail->SMTPAuth   = true;
-            $mail->Username   = 'nguyenquochung0509@gmail.com'; // Thay bằng email gửi đi của bạn
+            $mail->Username   = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn'; // Thay bằng email gửi đi của bạn
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Password   = 'pqbxhhjdkrhqwhux';    // Mật khẩu ứng dụng viết liền không khoảng trắng
+            $mail->Password   = getenv('SMTP_PASS') ?: 'cwsauhhbyzpjnspa';    // Mật khẩu ứng dụng viết liền không khoảng trắng
             $mail->Port       = 587; // Sử dụng cổng 587 cho STARTTLS của Gmail
             $mail->CharSet    = 'UTF-8'; // Bổ sung để hỗ trợ tiếng Việt không bị lỗi font
-            $mail->setFrom('nguyenquochung0509@gmail.com', 'FUTA Website');
+            
+            // Fix lỗi không gửi được mail trên localhost / XAMPP do thiếu chứng chỉ SSL
+            $mail->SMTPOptions = array(
+                'ssl' => array(
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true
+                )
+            );
+            
+            $mail->setFrom(getenv('SMTP_USER') ?: 'futaadvertising@futa.vn', 'FUTA Advertising');
             $mail->addReplyTo($email, $name);
             $mail->isHTML(true);
             $mail->Subject = $mailSubject;
@@ -160,7 +176,7 @@ include 'includes/header.php';
                         <input type="tel" id="phone" name="phone" placeholder="Điện thoại *" data-i18n-placeholder="contact.form_phone" required value="<?php echo htmlspecialchars($_POST['phone'] ?? ''); ?>">
                     </div>
                     <div class="form-group">
-                        <input type="text" id="subject" name="subject" placeholder="Website *" data-i18n-placeholder="contact.form_subject" required value="<?php echo htmlspecialchars($_POST['subject'] ?? ''); ?>">
+                        <input type="text" id="subject" name="subject" placeholder="Website" data-i18n-placeholder="contact.form_subject" value="<?php echo htmlspecialchars($_POST['subject'] ?? ''); ?>">
                     </div>
                     <div class="form-group">
                         <textarea id="content" name="content" placeholder="Nội Dung *" data-i18n-placeholder="contact.form_content" required><?php echo htmlspecialchars($_POST['content'] ?? ''); ?></textarea>

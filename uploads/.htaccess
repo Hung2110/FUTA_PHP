@@ -1,0 +1,4 @@
+# Ngăn chặn thực thi các file mã nguồn độc hại trong thư mục chứa file upload
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|htm|html|shtml|sh|cgi)$">
+    SetHandler None
+</FilesMatch>

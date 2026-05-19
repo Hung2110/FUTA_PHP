@@ -63,8 +63,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                     $applicationMessage = 'Ứng tuyển thành công! Chúng tôi sẽ liên hệ với bạn sớm.';
                     $applicationType = 'success';
 
+                    $adminEmails = [];
                     // Thông báo admin
-                    $admin_users_query = $conn->query("SELECT id FROM users WHERE role IN ('admin', 'manager', 'recruitment_manager')");
+                    $admin_users_query = $conn->query("SELECT id, email FROM users WHERE (FIND_IN_SET('admin', role) > 0 OR FIND_IN_SET('recruitment_manager', role) > 0) AND status = 'active'");
                     if ($admin_users_query && $admin_users_query->num_rows > 0) {
                         $notification_message = "Đơn ứng tuyển mới: " . htmlspecialchars($position) . " từ " . htmlspecialchars($fullname);
                         $notification_link = "view_application.php?id=" . $application_id;
@@ -72,15 +73,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
 
                         $notify_stmt = $conn->prepare("INSERT INTO notifications (user_id, type, message, link) VALUES (?, ?, ?, ?)");
                         while ($admin_user = $admin_users_query->fetch_assoc()) {
+                            if (!empty($admin_user['email'])) {
+                                $adminEmails[] = $admin_user['email'];
+                            }
                             $notify_stmt->bind_param("isss", $admin_user['id'], $notification_type, $notification_message, $notification_link);
                             $notify_stmt->execute();
                         }
                         $notify_stmt->close();
                     }
 
-                // --- Đọc email admin từ Biến môi trường (nếu có), nếu không dùng mặc định ---
-                $envEmails = getenv('ADMIN_EMAILS');
-                $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
+                    // Nếu không có user nào trong DB có quyền này, dùng fallback mặc định
+                    if (empty($adminEmails)) {
+                        $envEmails = getenv('ADMIN_EMAILS');
+                        $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
+                    }
 
                     // --- Gửi email thông báo qua PHPMailer kèm CV đính kèm ---
                     require_once __DIR__ . '/../vendor/autoload.php'; // Đường dẫn chính xác từ thư mục includes
@@ -91,11 +97,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                         $mail->SMTPAuth   = true;
                         
                         $mail->Username   = getenv('SMTP_USER') ?: 'nguyenquochung0509@gmail.com'; // Email gửi đi
-                        $mail->Password   = getenv('SMTP_PASS') ?: 'omxuvvzaacrmnkyf'; // Nên dời vào biến môi trường
+                        $mail->Password   = getenv('SMTP_PASS') ?: 'bvbxiwoxnrrveqod'; // Nên dời vào biến môi trường
                         
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                         $mail->Port       = 587;
                         $mail->CharSet    = 'UTF-8';
+
+                        // Fix lỗi không gửi được mail trên localhost / XAMPP do thiếu chứng chỉ SSL
+                        $mail->SMTPOptions = array(
+                            'ssl' => array(
+                                'verify_peer' => false,
+                                'verify_peer_name' => false,
+                                'allow_self_signed' => true
+                            )
+                        );
 
                         $mail->setFrom('nguyenquochung0509@gmail.com', 'FUTA Tuyển Dụng');
                         

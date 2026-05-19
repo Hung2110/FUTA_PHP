@@ -89,7 +89,7 @@ const translations = {
       chat_send: "Gửi"
     },
     contact: {
-      title: "Liên Hệ FUTA ADVERTISING",
+      title: "Liên Hệ FUTA Advertising",
       headquarters: "Trụ sở chính",
       hotline: "Tổng đài",
       email_website: "Email & Website",
@@ -98,7 +98,7 @@ const translations = {
       form_phone: "Điện thoại *",
       form_email: "Email *",
       form_address: "Địa chỉ *",
-      form_subject: "Website *",
+      form_subject: "Website", // Updated for optional input
       form_content: "Nội Dung *",
       form_submit: "Nhận tư vấn",
       
@@ -356,7 +356,7 @@ const translations = {
       chat_send: "Send"
     },
     contact: {
-      title: "Contact FUTA ADVERTISING",
+      title: "Contact FUTA Advertising",
       headquarters: "Headquarters",
       hotline: "Hotline",
       email_website: "Email & Website",
@@ -365,7 +365,7 @@ const translations = {
       form_phone: "Phone *",
       form_email: "Email *",
       form_address: "Address *",
-      form_subject: "Website *",
+      form_subject: "Website", // Updated for optional input
       form_content: "Content *",
       form_submit: "Get Consultation",
      
@@ -623,7 +623,7 @@ const translations = {
       chat_send: "发送"
     },
     contact: {
-      title: "联系FUTA ADVERTISING",
+      title: "联系FUTA Advertising",
       headquarters: "总部",
       hotline: "热线",
       email_website: "电子邮件和网站",
@@ -632,7 +632,7 @@ const translations = {
       form_phone: "电话 *",
       form_email: "电子邮件 *",
       form_address: "地址 *",
-      form_subject: "网站 *",
+      form_subject: "网站", // Updated for optional input
       form_content: "内容 *",
       form_submit: "获取咨询",
     },

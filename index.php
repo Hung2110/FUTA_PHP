@@ -1,8 +1,8 @@
 <?php
 // Bật hiển thị lỗi PHP để debug (nên xóa đi khi chạy thực tế)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// ini_set('display_startup_errors', 1);
+// error_reporting(E_ALL);
 
 $pageTitle = 'Trang Chủ';
 $pageStyles = ['css/home.css'];

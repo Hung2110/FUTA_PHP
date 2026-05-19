@@ -14,6 +14,7 @@ services:
       - DB_NAME=futa_advertising
     volumes:
       - ./:/var/www/html  # Mount code để có thể sửa live không cần build lại
+      - /var/www/html/vendor # Giữ lại vendor từ Image để không bị mất khi mount
     depends_on:
       - db
 
@@ -31,6 +32,7 @@ services:
       - DB_NAME=futa_advertising
     volumes:
       - ./:/var/www/html
+      - /var/www/html/vendor
     depends_on:
       - db
 
