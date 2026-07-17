@@ -5,17 +5,18 @@
 .img-section {
   position: relative;
   width: 100%;
-  height: 85vh;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  height: auto;
 }
 
 .img-section img.img-background {
   width: 100%;
-  height: 90%;
+  height: auto;
   object-fit: cover;
+  margin-bottom: -50px; /* Cắt phần mép dưới ảnh */
 }
 
 /* =========================================== */
@@ -332,8 +333,11 @@ stroke-width: 4px;
 /* mỗi block */
 .ads-accessory {
   position: relative;
-  width: 100vw;
-  height: 65vh;
+  width: 100%;
+  min-height: 65vh;
+  height: auto; /* Đảm bảo khung tự giãn khi nội dung chữ dài ra */
+  display: flex;
+  flex-direction: column;
   background: no-repeat center;
   background-size: cover;
 }
@@ -342,14 +346,15 @@ stroke-width: 4px;
 .ads-accessory .overlay {
   position: absolute;
   top: 0;
-  height: 100%;
+  min-height: 100%;
+  height: auto; /* Cho phép overlay tự giãn để không cắt mất chữ */
   width: 45%;
   display: flex;
   background: rgba(255, 250, 250, 0.1); /* lớp mờ đen */
   justify-content: center;   /* căn giữa ngang */
   align-items: center;       /* căn giữa dọc */
   text-align: center;        /* căn chữ giữa trong content */
-  
+  padding: 40px 20px; /* Thêm padding để chữ không bị dính lề */
 }
 
 .ads-accessory .overlay.right { right: 0; }
@@ -412,19 +417,15 @@ stroke-width: 4px;
   }
 
   .ads-accessory {
-    height: 55vh;
+    min-height: 55vh;
   }
 
   .ads-accessory .overlay {
-    width: 50%;
+    width: 60%;
   }
 }
 
 @media (max-width: 768px) {
-  .img-section {
-    height: 50vh;
-  }
-
   .map-box-section {
     padding: 60px 20px;
   }
@@ -438,9 +439,19 @@ stroke-width: 4px;
   }
 
   .ads-accessory {
-    height: 50vh;
+    min-height: 50vh;
+    height: auto; /* Cho phép nội dung đẩy chiều cao nếu quá dài */
   }
 
+  .ads-accessory .overlay {
+    position: relative; /* Bỏ absolute để overlay có thể đẩy chiều cao thẻ cha */
+    width: 100%;
+    height: auto;
+    flex-grow: 1; /* Phủ kín chiều cao tối thiểu */
+    background: rgba(255, 255, 255, 0.01); /* Giảm độ đục nền trắng để nhìn xuyên thấy ảnh nền ở Mobile */
+    backdrop-filter: blur(4px); /* Hiệu ứng kính mờ giúp chữ dễ đọc hơn */
+    -webkit-backdrop-filter: blur(4px);
+  }
   
   .ads-accessory h3 {
     font-size: 24px;
@@ -449,13 +460,14 @@ stroke-width: 4px;
   .ads-accessory p {
     font-size: 16px;
   }
+
+  .ads-accessory .btn {
+    background: #004aad; /* Nổi bật nút bấm trên nền trắng */
+    color: #fff;
+  }
 }
 
 @media (max-width: 480px) {
-  .img-section {
-    height: 40vh;
-  }
-
   .map-box-section {
     padding: 40px 15px;
   }
@@ -469,7 +481,7 @@ stroke-width: 4px;
   }
 
   .ads-accessory {
-    height: 45vh;
+    min-height: 45vh;
   }
 
   .ads-accessory h3 {

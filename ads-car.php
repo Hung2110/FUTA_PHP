@@ -7,7 +7,8 @@ include 'includes/header.php';
 <section class="img-section">
     <img src="assets/images/slideshow/QC_Xe.png"
          alt="Quảng Cáo Trên Xe"
-         class="img-background">
+         class="img-background"
+         width="1920" height="600" fetchpriority="high" decoding="async">
 </section>
   <!-- Section Quảng Cáo Trên Xe -->
 <section class="intercity-features">
@@ -57,23 +58,23 @@ include 'includes/header.php';
         </div>
       </div>
       <div class="image-content">
-        <img src="assets/images/service/Xe tuyến.jpg" alt="Xe Tuyến Liên Tỉnh">
+        <img src="assets/images/service/Xe tuyến.jpg" alt="Xe Tuyến Liên Tỉnh" width="600" height="400" decoding="async">
       </div>
     </div>
     </div>
 <!-- Item 2 -->
 <div class="intercity-section">
    <div class="section-title" onclick="window.location.href='xe-buyt.php'">
-      Xe Buýt Nội Ô
+      <span data-i18n="nav.xe_buyt">Xe Buýt Nội Ô</span>
   </div>
-     <p class="intercity-desc">
-      Các chuyến xe di chuyển khắp các tuyến đường trung tâm, đông dân cư, giúp thương hiệu của bạn được nhìn thấy thường xuyên và ghi dấu ấn mạnh mẽ với khách hàng. 
+     <p class="intercity-desc" data-i18n="ads_car.section_buyt_desc">
+      Các chuyến xe di chuyển khắp các tuyến đường trung tâm, đông dân cư, giúp thương hiệu của bạn được nhìn thấy thường xuyên và ghi dấu ấn mạnh mẽ với khách hàng.
       <br><span>Tiếp cận hàng triệu lượt người mỗi ngày ngay tại khu vực đông đúc nhất.</span></p>
   <div class="intercity-wrapper-2">
     
     <!-- Ảnh -->
     <div class="image-content-2">
-      <img src="assets/images/service/Xe buýt.jpg" alt="Xe Buýt Nội Ô">
+      <img src="assets/images/service/Xe buýt.jpg" alt="Xe Buýt Nội Ô" width="600" height="400" decoding="async">
     </div>
     
     <!-- Nội dung -->
@@ -81,32 +82,32 @@ include 'includes/header.php';
       <div class="intercity-feature-2">
         <i class="fas fa-city"></i>
         <div>
-          <p>Phủ sóng nội thành</p>
-          <span>Tiếp cận lượng lớn hành khách và người đi đường trong đô thị sầm uất.</span>
+          <p data-i18n="ads_car.feature5_title">Phủ sóng nội thành</p>
+          <span data-i18n="ads_car.feature5_desc">Tiếp cận lượng lớn hành khách và người đi đường trong đô thị sầm uất.</span>
         </div>
       </div>
 
       <div class="intercity-feature-2">
         <i class="fas fa-clock"></i>
         <div>
-          <p>Tần suất dày đặc</p>
-          <span>Quảng cáo được nhìn thấy nhiều lần mỗi ngày nhờ lịch trình chạy liên tục.</span>
+          <p data-i18n="ads_car.feature6_title">Tần suất dày đặc</p>
+          <span data-i18n="ads_car.feature6_desc">Quảng cáo được nhìn thấy nhiều lần mỗi ngày nhờ lịch trình chạy liên tục.</span>
         </div>
       </div>
 
       <div class="intercity-feature-2">
         <i class="fa-solid fa-map"></i>
         <div>
-          <p>Tiếp cận đa điểm</p>
-          <span>Phủ khắp nhiều tuyến đường chính trong nội thành.</span>
+          <p data-i18n="ads_car.feature7_title">Tiếp cận đa điểm</p>
+          <span data-i18n="ads_car.feature7_desc">Phủ khắp nhiều tuyến đường chính trong nội thành.</span>
         </div>
       </div>
 
       <div class="intercity-feature-2">
         <i class="fa-solid fa-font-awesome"></i>
         <div>
-          <p>Nhận diện thương hiệu</p>
-          <span>Tạo dấu ấn mạnh mẽ trong tâm trí người dân thành phố.</span>
+          <p data-i18n="ads_car.feature8_title">Nhận diện thương hiệu</p>
+          <span data-i18n="ads_car.feature8_desc">Tạo dấu ấn mạnh mẽ trong tâm trí người dân thành phố.</span>
         </div>
       </div>
     </div>
@@ -114,47 +115,52 @@ include 'includes/header.php';
 </div>
  <!--Item 3-->
 <div class="intercity-section">
-    <div class="section-title" onclick="window.location.href='xe-trung-chuyen.php'">
-      Xe Trung Chuyển
+    <div class="section-title" onclick="window.location.href='xe-trung-chuyen.php'" data-i18n="nav.xe_trung_chuyen">
+      Xe Trung Chuyển 
     </div>
-     <p class="intercity-desc">
-      Mỗi chuyến xe liên tỉnh là một hành trình giúp thương hiệu của bạn <span>lan tỏa rộng khắp</span>, tiếp cận hàng triệu khách hàng mỗi ngày.</p>
+     <p class="intercity-desc" data-i18n="ads_car.section_trungchuyen_desc">
+      Mỗi chuyến xe liên tỉnh là một hành trình giúp thương hiệu của bạn <span>lan tỏa rộng khắp</span>, tiếp cận hàng triệu khách hàng mỗi ngày.
+     </p>
     <div class="intercity-wrapper">
       <div class="text-content">
         <div class="intercity-feature">
           <i class="fas fa-road"></i>
           <div>
-            <p>Lộ trình di chuyển</p>
-            <span>Quảng cáo xuất hiện đều đặn trên các tuyến đường huyết mạch, đảm bảo tầm nhìn tối đa.</span>
+            <p data-i18n="ads_car.feature9_title">Lộ trình di chuyển</p>
+            <span data-i18n="ads_car.feature9_desc">Quảng cáo xuất hiện đều đặn trên các tuyến đường huyết mạch, đảm bảo tầm nhìn tối đa.</span>
           </div>
         </div>
         <div class="intercity-feature">
           <i class="fas fa-sync-alt"></i>
           <div>
-            <p>Tần suất xe</p>
-            <span>Tạo ấn tượng mạnh mẽ với khách hàng nhờ số lần tiếp cận lặp lại thường xuyên.</span>
+            <p data-i18n="ads_car.feature10_title">Tần suất xe</p>
+            <span data-i18n="ads_car.feature10_desc">Tạo ấn tượng mạnh mẽ với khách hàng nhờ số lần tiếp cận lặp lại thường xuyên.</span>
           </div>
         </div>
         <div class="intercity-feature">
           <i class="fas fa-users"></i>
           <div>
-            <p>Tệp khách hàng </p>
-            <span>Tiếp cận nhiều nhóm khách hàng khác nhau, từ dân văn phòng đến khách du lịch.</span>
+            <p data-i18n="ads_car.feature11_title">Tệp khách hàng </p>
+            <span data-i18n="ads_car.feature11_desc">Tiếp cận nhiều nhóm khách hàng khác nhau, từ dân văn phòng đến khách du lịch.</span>
           </div>
         </div>
         <div class="intercity-feature">
           <i class="fas fa-bullhorn"></i>
           <div>
-            <p>Tối ưu hóa chi phí</p>
-            <span>Giúp thương hiệu lan tỏa rộng khắp và ghi dấu ấn mạnh mẽ trong tâm trí khách hàng.</span>
+            <p data-i18n="ads_car.feature12_title">Tối ưu hóa chi phí</p>
+            <span data-i18n="ads_car.feature12_desc">Giúp thương hiệu lan tỏa rộng khắp và ghi dấu ấn mạnh mẽ trong tâm trí khách hàng.</span>
           </div>
         </div>
       </div>
       <div class="image-content">
-        <img src="assets/images/service/xe trung chuyển.jpg" alt="Xe Tuyến Liên Tỉnh">
+        <img src="assets/images/service/xe trung chuyển.jpg" alt="Xe Tuyến Liên Tỉnh" width="600" height="400" decoding="async">
       </div>
     </div>
 </div>
 </section>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="about.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="xe-tuyen.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
 
 <?php include 'includes/footer.php'; ?>

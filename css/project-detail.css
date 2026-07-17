@@ -23,12 +23,12 @@
         box-shadow: 0 10px 30px rgba(0,0,0,0.05);
     }
     .project-title {
-        font-size: 2.5rem;
-        font-weight: 800;
+        font-size: 1.25rem;
+        font-weight: 700;
         color: #004aad;
         margin-bottom: 20px;
-        line-height: 1.4;
-        letter-spacing: 0.5px;
+        line-height: 1.25;
+        letter-spacing: 0;
     }
     .project-meta {
         color: #6c757d;
@@ -120,28 +120,55 @@
         margin: 0;
     }
     .latest-posts-list li {
-        margin-bottom: 15px;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        border-bottom: 1px solid #f0f0f0;
     }
     .latest-posts-list li:last-child {
-        margin-bottom: 0;
+        border-bottom: none;
     }
     .latest-posts-list a {
         display: flex;
-        align-items: center;
-        gap: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
         text-decoration: none;
         color: #333;
-        font-weight: 500;
-        transition: color 0.2s;
+        transition: all 0.3s ease;
+        padding: 15px 0;
+        border-radius: 0;
     }
-    .latest-posts-list a:hover {
-        color: #007bff;
+    .latest-posts-list a:hover .latest-post-title,
+    .latest-posts-list a:hover span {
+        color: #004aad;
     }
     .latest-posts-list img {
-        width: 80px;
-        height: 60px;
+        width: 100%;
+        height: 180px;
         object-fit: cover;
         border-radius: 6px;
+        flex-shrink: 0;
+    }
+    .latest-post-info {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    .latest-posts-list span, .latest-post-title {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        font-weight: 600;
+        line-height: 1.4;
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+    }
+    .latest-post-date {
+        font-size: 0.8rem !important;
+        color: #777 !important;
+        font-weight: 400 !important;
+        -webkit-line-clamp: unset !important;
     }
     .search-form {
         position: relative;
@@ -206,3 +233,76 @@
         margin-right: 8px;
         color: #007bff;
     }
+
+/* =========================================
+   RESPONSIVE ADJUSTMENTS
+   ========================================= */
+@media (max-width: 992px) {
+    .main-content-wrapper {
+        padding: 30px;
+    }
+    
+    /* Sử dụng display contents để phá vỡ cấu trúc cột, sắp xếp lại khối */
+    .project-detail-container .row {
+        display: flex;
+        flex-direction: column;
+    }
+    .project-detail-container .col-lg-4,
+    .sidebar {
+        display: contents; 
+    }
+    .project-detail-container .col-lg-8 {
+        order: 0; /* Nội dung chính ở giữa */
+    }
+    .sidebar-widget {
+        order: 1; /* Các widget khác (bài viết mới nhất) nằm dưới bài viết */
+        margin-left: calc(var(--bs-gutter-x, 1.5rem) * 0.5);
+        margin-right: calc(var(--bs-gutter-x, 1.5rem) * 0.5);
+    }
+    .sidebar-widget:first-child {
+        order: -1; /* Đưa phần tìm kiếm lên đầu trang */
+    }
+}
+
+@media (max-width: 768px) {
+    .project-title {
+        font-size: 1.5rem;
+    }
+    .main-content-wrapper {
+        padding: 20px;
+    }
+    .project-description {
+        font-size: 1rem;
+    }
+    .project-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 576px) {
+    .project-title {
+        font-size: 1.5rem;
+    }
+    .main-content-wrapper {
+        padding: 15px;
+    }
+    .sidebar-widget {
+        padding: 20px;
+    }
+    .social-share {
+        flex-wrap: wrap; /* Cho phép rớt dòng các nút share nếu quá dài */
+    }
+    .share-btn {
+        padding: 6px 12px;
+        font-size: 0.8rem;
+    }
+
+    /* Hủy giới hạn chữ, cho phép hiển thị đủ tên bài trên điện thoại */
+    .latest-posts-list span, .latest-post-title {
+        display: block;
+        -webkit-line-clamp: unset;
+        overflow: visible;
+    }
+}

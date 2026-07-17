@@ -39,9 +39,12 @@ $posts = $stmt_posts->get_result();
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA Advertising' : 'FUTA Advertising'; ?></title>
-    <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
+    <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- Quill.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+
     <style>
         body { background: #f7f9fc; }
         .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
@@ -191,7 +194,7 @@ $posts = $stmt_posts->get_result();
                         <span id="viewAuthor"></span> — <span id="viewCreatedAt"></span>
                     </p>
                     <img id="viewImage" src="" alt="Post Image" class="img-fluid rounded mb-4" style="max-height: 400px; width: 100%; object-fit: cover;">
-                    <div id="viewContent"></div>
+                    <div id="viewContent" class="ql-editor" style="min-height: 300px; padding: 0;"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
@@ -204,6 +207,8 @@ $posts = $stmt_posts->get_result();
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const viewPostModal = document.getElementById('viewPostModal');
+    const viewContentDiv = document.getElementById('viewContent');
+
     viewPostModal.addEventListener('show.bs.modal', function(event) {
         const button = event.relatedTarget;
 
@@ -211,11 +216,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('viewAuthor').textContent = 'Tác giả: ' + button.dataset.author;
         document.getElementById('viewCreatedAt').textContent = button.dataset.created_at;
         document.getElementById('viewImage').src = button.dataset.image;
-
-        // Decode HTML entities from the data-content attribute before rendering
-        const tempTextarea = document.createElement('textarea');
-        tempTextarea.innerHTML = button.dataset.content;
-        document.getElementById('viewContent').innerHTML = tempTextarea.value;
+        
+        // Set content for the div
+        viewContentDiv.innerHTML = button.dataset.content || '<p class="text-muted">Không có nội dung chi tiết.</p>';
     });
 });
 </script>

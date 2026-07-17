@@ -2,7 +2,7 @@
 <footer class="main-footer">
     <div class="footer-container">
         <div class="footer-column">
-         <img src="assets/images/logo/Advertising.png">
+         <img src="assets/images/logo/Advertising.png" alt="FUTA Advertising Logo" width="250" height="65" loading="lazy" decoding="async">
             <h3 data-i18n="footer.company_name">CÔNG TY CP QUẢNG CÁO FUTA PHƯƠNG TRANG VIỆT NAM</h3>
             <h3 data-i18n="footer.contact_title">LIÊN HỆ VỚI CHÚNG TÔI</h3>
             <div class="contact-details">
@@ -15,7 +15,7 @@
           <a href="index.php" target="_blank" data-i18n="footer.website_link">Truy Cập Website</a>
           </li>
           <li><span class="icon"><i class="fas fa-map-marker-alt"></i></span> 
-              <span data-i18n="footer.address"> 218 Đề Thám,Phường Bến Thành,TP.Hồ Chí Minh</span>
+              <span data-i18n="footer.address">218 Đề Thám, Phường Bến Thành, TP. Hồ Chí Minh</span>
           </li> 
           </ul>
             </div>
@@ -28,7 +28,7 @@
                 <a href="https://www.youtube.com/@futaadvertisingofficial3494"><i class="bi bi-youtube"></i></a>
                 <a href="https://www.linkedin.com/company/futa-advertising/"><i class="bi bi-linkedin"></i></a>
                 <a href="#" class="zalo">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo"></a>
+                <img src="assets/images/icon/zalo.png" alt="Zalo" width="40" height="40" loading="lazy" decoding="async"></a>
             </div>
         </div>
         <div class="footer-column">
@@ -41,12 +41,16 @@
     </div>
     </footer>
     <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+    
+    <!-- i18n JS (Đa ngôn ngữ) -->
+    <script src="js/i18n.js?v=1.0.0" defer></script>
+
     <!-- Custom JS -->
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=1.0.0" defer></script>
 
     <!-- Security JS (Chặn click chuột phải, F12, xem source) -->
-    <script src="js/security.js"></script>
+    <script src="js/security.js?v=1.0.0" defer></script>
 
     <!-- Tích hợp Chat Widget dùng chung cho toàn trang -->
     <?php include 'chat_widget.php'; ?>

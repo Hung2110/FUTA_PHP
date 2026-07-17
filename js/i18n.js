@@ -27,7 +27,7 @@ const translations = {
       wifi: "Wifi Marketing"
     },
     home: {
-      stats_title: "DẪN ĐẦU LĨNH VỰC TRANSIT ADVERTISING",
+      stats_title: "TIÊN PHONG TRONG LĨNH VỰC TRANSIT ADVERTISING",
       stats_subtitle: "HỆ SINH THÁI ƯU THẾ CỦA CHÚNG TÔI",
       stat1_desc: "Hơn 3.000 đầu xe các loại bao gồm: xe tuyến liên tỉnh, xe buýt nội bộ, xe trung chuyển... vận hành liên tục với 6.500 chuyến/ngày giúp thương hiệu của bạn phủ sóng 39 tỉnh thành trên toàn quốc.",
       stat2_desc: "Tiếp cận hơn 110 nghìn khách/ngày, phục vụ hơn 40 triệu khách/năm giúp gia tăng nhận diện thương hiệu.",
@@ -76,15 +76,16 @@ const translations = {
       value4_desc: "Luôn lắng nghe và thấu hiểu để mang lại sự hài lòng cho khách hàng.",
       approach_subtitle: "Tất cả các giải pháp của chúng tôi đều hướng đến một mục tiêu: giúp thương hiệu của bạn",
       approach_title: "TIẾP CẬN ĐÚNG ĐỐI TƯỢNG, ĐÚNG THỜI ĐIỂM VỚI CÁCH TIẾP CẬN HIỆU QUẢ NHẤT",
-      chat_now: "CHAT NOW",
-      chat_title: "Trò chuyện với chúng tôi",
-      chat_welcome: "Xin chào! Chúng tôi là Công ty FUTA Advertising. Tôi có thể giúp gì cho bạn?",
-      chat_form_title: "Vui lòng để lại thông tin để chúng tôi hỗ trợ tốt nhất!",
-      chat_name_placeholder: "Họ và tên",
+      chat_title: "FUTA Advertising",
+      chat_subtitle: "Chúng tôi sẽ trả lời sớm nhất có thể",
+      chat_welcome: "Để được FUTA Advertising hỗ trợ nhanh nhất, bạn vui lòng để lại thông tin bên dưới nhé.",
+      chat_form_title: "",
+      chat_name_placeholder: "Họ và tên*",
       chat_email_placeholder: "Email",
-      chat_phone_placeholder: "Số điện thoại",
-      chat_submit: "Gửi thông tin",
-      chat_clear: "Xóa cuộc trò chuyện",
+      chat_phone_placeholder: "Số điện thoại*",
+      chat_initial_message_placeholder: "Nội dung cần tư vấn...",
+      chat_submit: "Bắt đầu trò chuyện",
+      chat_clear: "Bắt đầu lại",
       chat_input_placeholder: "Nhập tin nhắn...",
       chat_send: "Gửi"
     },
@@ -98,26 +99,40 @@ const translations = {
       form_phone: "Điện thoại *",
       form_email: "Email *",
       form_address: "Địa chỉ *",
-      form_subject: "Website", // Updated for optional input
+      form_subject: "Website",
       form_content: "Nội Dung *",
-      form_submit: "Nhận tư vấn",
-      
+      form_submit: "Nhận tư vấn"
     },
     recruitment: {
-      banner_title: "WELCOME TO FUTA ADVERTISING",
+      banner_title: "CHÀO MỪNG ĐẾN VỚI FUTA ADVERTISING",
       banner_desc: "Nơi cơ hội nghề nghiệp đang chờ đợi bạn!",
       filter_title: "Tìm kiếm công việc",
       filter_industry: "Ngành nghề",
       filter_position: "Vị trí",
       filter_branch: "Chi nhánh",
       filter_search: "Tìm kiếm",
+      filter_placeholder_title: "Nhập chức danh...",
+      filter_option_all_industry: "Tất cả ngành nghề",
+      filter_option_content: "Content Marketing",
+      filter_option_design: "Thiết kế",
+      filter_option_business: "Kinh doanh",
+      filter_option_supervisor: "Giám sát thi công",
+      filter_option_all: "Tất cả",
+      filter_option_staff: "Nhân viên",
+      filter_option_leader: "Trưởng nhóm",
+      filter_option_manager: "Quản lý",
+      filter_option_hcm: "Hồ Chí Minh",
       apply_btn: "Ứng tuyển",
+      view_detail_btn: "Xem chi tiết",
       no_result: "Không tìm thấy công việc phù hợp",
       modal_title: "Đơn ứng tuyển",
       modal_name: "Họ và tên *",
       modal_phone: "Số điện thoại *",
       modal_email: "Email *",
+      modal_message: "Thông điệp",
+      modal_message_placeholder: "Chia sẻ thêm về bản thân...",
       modal_cv: "CV/Resume",
+      modal_cv_placeholder: "Đính kèm CV/Resume (PDF, DOC, DOCX)",
       modal_submit: "Gửi đơn"
     },
     project: {
@@ -136,7 +151,25 @@ const translations = {
       feature3_title: "Tiếp cận đa dạng",
       feature3_desc: "Tiếp cận nhiều nhóm khách hàng khác nhau, từ dân văn phòng đến khách du lịch.",
       feature4_title: "Lan tỏa thương hiệu",
-      feature4_desc: "Giúp thương hiệu lan tỏa rộng khắp và ghi dấu ấn mạnh mẽ trong tâm trí khách hàng."
+      feature4_desc: "Giúp thương hiệu lan tỏa rộng khắp và ghi dấu ấn mạnh mẽ trong tâm trí khách hàng.",
+      section_buyt_desc: "Các chuyến xe di chuyển khắp các tuyến đường trung tâm, đông dân cư, giúp thương hiệu của bạn được nhìn thấy thường xuyên và ghi dấu ấn mạnh mẽ với khách hàng.<br><span>Tiếp cận hàng triệu lượt người mỗi ngày ngay tại khu vực đông đúc nhất.</span>",
+      feature5_title: "Phủ sóng nội thành",
+      feature5_desc: "Tiếp cận lượng lớn hành khách và người đi đường trong đô thị sầm uất.",
+      feature6_title: "Tần suất dày đặc",
+      feature6_desc: "Quảng cáo được nhìn thấy nhiều lần mỗi ngày nhờ lịch trình chạy liên tục.",
+      feature7_title: "Tiếp cận đa điểm",
+      feature7_desc: "Phủ khắp nhiều tuyến đường chính trong nội thành.",
+      feature8_title: "Nhận diện thương hiệu",
+      feature8_desc: "Tạo dấu ấn mạnh mẽ trong tâm trí người dân thành phố.",
+      section_trungchuyen_desc: "Mỗi chuyến xe liên tỉnh là một hành trình giúp thương hiệu của bạn <span>lan tỏa rộng khắp</span>, tiếp cận hàng triệu khách hàng mỗi ngày.",
+      feature9_title: "Lộ trình di chuyển",
+      feature9_desc: "Quảng cáo xuất hiện đều đặn trên các tuyến đường huyết mạch, đảm bảo tầm nhìn tối đa.",
+      feature10_title: "Tần suất xe",
+      feature10_desc: "Tạo ấn tượng mạnh mẽ với khách hàng nhờ số lần tiếp cận lặp lại thường xuyên.",
+      feature11_title: "Tệp khách hàng",
+      feature11_desc: "Tiếp cận nhiều nhóm khách hàng khác nhau, từ dân văn phòng đến khách du lịch.",
+      feature12_title: "Tối ưu hóa chi phí",
+      feature12_desc: "Giúp thương hiệu lan tỏa rộng khắp và ghi dấu ấn mạnh mẽ trong tâm trí khách hàng."
     },
     xe_trung_chuyen: {
       desc: "<strong>Quảng cáo trên xe trung chuyển</strong> là giải pháp truyền thông linh hoạt và hiệu quả, giúp thương hiệu của bạn xuất hiện liên tục trên các tuyến đường nội thành và nhiều tỉnh thành khác nhau. Với tần suất di chuyển cao, quảng cáo trên xe trung chuyển mang lại khả năng tiếp cận khách hàng rộng khắp và gia tăng độ nhận diện thương hiệu một cách tự nhiên.",
@@ -150,7 +183,7 @@ const translations = {
       stat1_label: "Tần suất",
       stat1_value: "+1.000 chuyến trên toàn quốc",
       stat2_label: "Phủ Sóng",
-      stat2_value: "39 tỉnh thành",
+      stat2_value: "34 tỉnh thành",
       stat3_label: "Vận Hành",
       stat3_value: "Hơn +6.500 chuyến trong 1 ngày",
       stat4_label: "Hiển Thị",
@@ -217,6 +250,7 @@ const translations = {
     news: {
       breadcrumb_home: "Trang chủ",
       breadcrumb_news: "Tin Tức",
+      breadcrumb_project: "Dự án",
       post_date: "Ngày đăng:",
       author: "Tác giả:",
       share: "Chia sẻ",
@@ -225,6 +259,7 @@ const translations = {
       search: "Tìm kiếm",
       search_placeholder: "Nhập từ khóa...",
       latest_posts: "Bài viết mới nhất",
+      latest_projects: "Dự án mới nhất",
       not_found_desc: "Bài viết không tồn tại hoặc đã bị xóa.",
       back_to_news: "Quay lại trang Tin Tức",
       page_title: "Tin Tức & Dự án",
@@ -233,15 +268,24 @@ const translations = {
       filter_project: "Dự án",
       empty_content: "Chưa có nội dung nào.",
       read_more: "Xem chi tiết",
-      recently_updated: "Mới cập nhật"
+      recently_updated: "Mới cập nhật",
+      not_found_title: "Không tìm thấy bài viết",
+      not_found_desc: "Bài viết không tồn tại hoặc đã bị xóa.",
+      back_to_news: "Quay lại trang Tin Tức",
+      project_not_found: "Dự án không tồn tại hoặc chưa được xuất bản.",
+      back_to_projects: "Quay lại danh sách dự án"
     },
     recruitment_detail: {
       title: "Chi Tiết Tin Tuyển Dụng",
-      post_date: "Ngày đăng:",
+      views: "Lượt xem:",
+      updated_date: "Ngày cập nhật:",
       job_detail: "Chi tiết công việc",
       job_desc: "Mô tả công việc",
       job_req: "Yêu cầu công việc",
       benefits: "Phúc lợi:",
+      documents: "Danh sách hồ sơ xin việc",
+      contact_info: "Thông tin liên hệ",
+      notes: "Ghi chú",
       contact_apply: "Thông tin liên hệ & Ứng tuyển",
       contact_desc1: "Để ứng tuyển, vui lòng gửi CV và các giấy tờ liên quan về địa chỉ email:",
       contact_desc2: "Tiêu đề email ghi rõ:",
@@ -259,12 +303,18 @@ const translations = {
       summary_industry: "Ngành nghề",
       summary_deadline: "Hạn chót"
     },
+    project_detail: {
+      video_title: "Video dự án",
+      search: "Tìm kiếm",
+      latest_projects: "Dự án mới nhất",
+      categories: "Danh mục"
+    },
     footer: {
       company_name: "CÔNG TY CỔ PHẦN QUẢNG CÁO FUTA PHƯƠNG TRANG VIỆT NAM",
       contact_title: "LIÊN HỆ VỚI CHÚNG TÔI",
       email_link: "Email liên hệ",
       website_link: "Truy Cập Website",
-      address: "218 Đề Thám, Phường Bến Thành, TP.Hồ Chí Minh",
+      address: "218 Đề Thám, P.Bến Thành, TP.Hồ Chí Minh",
       connect_title: "KẾT NỐI VỚI CHÚNG TÔI",
       map_title: "BẢN ĐỒ",
       copyright: "© 2025 FUTA Advertising - All Rights Reserved"
@@ -294,7 +344,7 @@ const translations = {
       wifi: "Wifi Marketing"
     },
     home: {
-      stats_title: "LEADING TRANSIT ADVERTISING",
+      stats_title: "A PIONEER IN TRANSIT ADVERTISING",
       stats_subtitle: "OUR ADVANTAGEOUS ECOSYSTEM",
       stat1_desc: "More than 3,000 vehicles of all types including intercity buses, city buses, shuttle buses... operating continuously with 6,500 trips/day helping your brand reach 39 provinces nationwide.",
       stat2_desc: "Reaching more than 110,000 passengers/day, serving more than 40 million passengers/year helping to increase brand recognition.",
@@ -314,12 +364,12 @@ const translations = {
       service2: "STATION ADVERTISING",
       service3: "DIGITAL ADVERTISING",
       projects_title: "OUR PROJECTS",
-      projects_desc: "Our projects have written the story of an emotional journey connecting brands with customers.<br>With the most outstanding forms of advertising, we connect your brand",
-      projects_highlight: "REACH EVERYWHERE - TOUCH EVERY EMOTION",
+      projects_desc: "Our projects have written the story of an emotional journey connecting brands with customers.<br>With the most outstanding forms of advertising, we connect your brand.",
+      projects_highlight: "REACH EVERYWHERE - TOUCH EVERY EMOTION.",
       partners_title: "PARTNERS / CUSTOMERS",
       banner_subtitle: "LET US CREATE",
       banner_title: "YOUR COMMUNICATION CAMPAIGN",
-      banner_btn: "REGISTER FOR CONSULTATION",
+      banner_btn: "GET A CONSULTATION",
       news_title: "NEWS & EVENTS",
       news_desc: "Update the latest news and events from FUTA ADS"
     },
@@ -343,15 +393,16 @@ const translations = {
       value4_desc: "Always listening and understanding to bring satisfaction to customers.",
       approach_subtitle: "All our solutions aim at one goal: helping your brand",
       approach_title: "REACH THE RIGHT AUDIENCE, AT THE RIGHT TIME WITH THE MOST EFFECTIVE APPROACH",
-      chat_now: "CHAT NOW",
-      chat_title: "Chat with us",
-      chat_welcome: "Hello! We are FUTA Advertising Company. How can I help you?",
-      chat_form_title: "Please leave your information so we can best support you!",
-      chat_name_placeholder: "Full name",
+      chat_title: "FUTA Advertising",
+      chat_subtitle: "We will reply as soon as possible",
+      chat_welcome: "For the fastest support from FUTA Advertising, please leave your information below.",
+      chat_form_title: "",
+      chat_name_placeholder: "Full name*",
       chat_email_placeholder: "Email",
-      chat_phone_placeholder: "Phone number",
-      chat_submit: "Submit information",
-      chat_clear: "Clear conversation",
+      chat_phone_placeholder: "Phone number*",
+      chat_initial_message_placeholder: "Your message...",
+      chat_submit: "Start Chat",
+      chat_clear: "Start Over",
       chat_input_placeholder: "Type a message...",
       chat_send: "Send"
     },
@@ -367,7 +418,7 @@ const translations = {
       form_address: "Address *",
       form_subject: "Website", // Updated for optional input
       form_content: "Content *",
-      form_submit: "Get Consultation",
+      form_submit: "Get Consultation"
      
     },
     recruitment: {
@@ -378,13 +429,28 @@ const translations = {
       filter_position: "Position",
       filter_branch: "Branch",
       filter_search: "Search",
+      filter_placeholder_title: "Enter job title...",
+      filter_option_all_industry: "All industries",
+      filter_option_content: "Content Marketing",
+      filter_option_design: "Design",
+      filter_option_business: "Business",
+      filter_option_supervisor: "Construction Supervisor",
+      filter_option_all: "All",
+      filter_option_staff: "Staff",
+      filter_option_leader: "Team Leader",
+      filter_option_manager: "Manager",
+      filter_option_hcm: "Ho Chi Minh",
       apply_btn: "Apply",
-      no_result: "No suitable jobs found",
+      view_detail_btn: "View Details",
+      no_result: "No suitable jobs found.",
       modal_title: "Job Application",
       modal_name: "Full name *",
       modal_phone: "Phone number *",
       modal_email: "Email *",
-      modal_cv: "CV/Resume",
+      modal_message: "Message",
+      modal_message_placeholder: "Share more about yourself...",
+      modal_cv: "CV/Resume *",
+      modal_cv_placeholder: "Attach CV/Resume (PDF, DOC, DOCX)",
       modal_submit: "Submit Application"
     },
     project: {
@@ -403,7 +469,25 @@ const translations = {
       feature3_title: "Diverse reach",
       feature3_desc: "Reach many different customer groups, from office workers to tourists.",
       feature4_title: "Brand spread",
-      feature4_desc: "Help brands spread widely and make a strong impression in customers' minds."
+      feature4_desc: "Help brands spread widely and make a strong impression in customers' minds.",
+      section_buyt_desc: "Buses travel throughout central, densely populated routes, helping your brand be seen frequently and make a strong impression on customers.<br><span>Reach millions of people every day in the busiest areas.</span>",
+      feature5_title: "Inner-city coverage",
+      feature5_desc: "Reach a large number of passengers and pedestrians in bustling urban areas.",
+      feature6_title: "High frequency",
+      feature6_desc: "Advertisements are seen multiple times a day thanks to a continuous running schedule.",
+      feature7_title: "Multi-point access",
+      feature7_desc: "Covering many main routes in the inner city.",
+      feature8_title: "Brand recognition",
+      feature8_desc: "Create a strong impression in the minds of city residents.",
+      section_trungchuyen_desc: "Each intercity bus trip is a journey that helps your brand <span>spread widely</span>, reaching millions of customers every day.",
+      feature9_title: "Travel route",
+      feature9_desc: "Ads appear regularly on major routes, ensuring maximum visibility.",
+      feature10_title: "Vehicle frequency",
+      feature10_desc: "Create a strong impression on customers with frequent repeated exposure.",
+      feature11_title: "Customer segment",
+      feature11_desc: "Reach various customer groups, from office workers to tourists.",
+      feature12_title: "Cost optimization",
+      feature12_desc: "Help the brand spread widely and make a strong impression in customers' minds."
     },
     xe_trung_chuyen: {
       desc: "<strong>Shuttle bus advertising</strong> is a flexible and effective communication solution, helping your brand appear continuously on inner-city routes and various provinces. With high movement frequency, shuttle bus advertising brings widespread customer reach and naturally increases brand awareness.",
@@ -417,7 +501,7 @@ const translations = {
       stat1_label: "Frequency",
       stat1_value: "+1,000 trips nationwide",
       stat2_label: "Coverage",
-      stat2_value: "39 provinces and cities",
+      stat2_value: "34 provinces and cities",
       stat3_label: "Operation",
       stat3_value: "Over +6,500 trips per day",
       stat4_label: "Display",
@@ -484,6 +568,7 @@ const translations = {
     news: {
       breadcrumb_home: "Home",
       breadcrumb_news: "News",
+      breadcrumb_project: "Projects",
       post_date: "Posted on:",
       author: "Author:",
       share: "Share",
@@ -492,6 +577,7 @@ const translations = {
       search: "Search",
       search_placeholder: "Enter keywords...",
       latest_posts: "Latest Posts",
+      latest_projects: "Latest Projects",
       not_found_desc: "The post does not exist or has been deleted.",
       back_to_news: "Back to News",
       page_title: "News & Projects",
@@ -500,20 +586,29 @@ const translations = {
       filter_project: "Projects",
       empty_content: "No content available yet.",
       read_more: "Read more",
-      recently_updated: "Recently Updated"
+      recently_updated: "Recently Updated",
+      not_found_title: "Post Not Found",
+      not_found_desc: "The post does not exist or has been deleted.",
+      back_to_news: "Back to News",
+      project_not_found: "Project does not exist or has not been published.",
+      back_to_projects: "Back to project list"
     },
     recruitment_detail: {
       title: "Job Details",
-      post_date: "Posted on:",
+      views: "Views:",
+      updated_date: "Updated date:",
       job_detail: "Job Details",
       job_desc: "Job Description",
       job_req: "Job Requirements",
       benefits: "Benefits:",
+      documents: "Application Documents",
+      contact_info: "Contact Information",
+      notes: "Notes",
       contact_apply: "Contact & Application Info",
-      contact_desc1: "To apply, please send your CV and related documents to the email address:",
-      contact_desc2: "Email subject clearly states:",
-      contact_desc3: "Or contact via phone number:",
-      contact_desc4: "for guidance.",
+      contact_desc1: "To apply, please send your CV and related documents to the email address: ",
+      contact_desc2: "Email subject should clearly state: ",
+      contact_desc3: "Or contact us via phone number: ",
+      contact_desc4: " for guidance.",
       general_info: "General Information",
       apply_now: "Apply Now",
       modal_title: "Submit Application",
@@ -526,12 +621,18 @@ const translations = {
       summary_industry: "Industry",
       summary_deadline: "Deadline"
     },
+    project_detail: {
+      video_title: "Project Video",
+      search: "Search",
+      latest_projects: "Latest Projects",
+      categories: "Categories"
+    },
     footer: {
       company_name: "FUTA PHUONG TRANG VIETNAM ADVERTISING JOINT STOCK COMPANY",
       contact_title: "CONTACT US",
       email_link: "Contact Email",
       website_link: "Visit Website",
-      address: "218 De Tham, Ben Thanh Ward, Ho Chi Minh City",
+      address: "218 De Tham Street, Ben Thanh Ward, Ho Chi Minh City",
       connect_title: "CONNECT WITH US",
       map_title: "MAP",
       copyright: "© 2025 FUTA Advertising - All Rights Reserved"
@@ -561,12 +662,12 @@ const translations = {
       wifi: "WiFi营销"
     },
     home: {
-      stats_title: "领先的交通广告",
+      stats_title: "交通广告领域的先驱",
       stats_subtitle: "我们的优势生态系统",
       stat1_desc: "超过3,000辆各类车辆，包括城际巴士、城市巴士、穿梭巴士...每天连续运营6,500班次，帮助您的品牌覆盖全国39个省份。",
       stat2_desc: "每天接触超过11万乘客，每年服务超过4000万乘客，帮助提高品牌认知度。",
       stat3_desc: "全国超过250个售票处系统。",
-      stat4_desc: "我们已经与100多个合作伙伴合作。帮助品牌接触目标客户。",
+      stat4_desc: "我们已经与100多个合作伙伴合作，帮助品牌接触目标客户。",
       mission_title: "以使命",
       mission_quote: "让品牌无处不在",
       mission_subtitle: "我们为您的品牌带来",
@@ -581,12 +682,12 @@ const translations = {
       service2: "车站广告",
       service3: "数字广告",
       projects_title: "我们的项目",
-      projects_desc: "我们的项目已经书写了品牌与客户之间情感连接的故事。<br>通过最突出的广告形式，我们连接您的品牌",
-      projects_highlight: "触及每个地方 - 触动每种情感",
+      projects_desc: "我们的项目书写了品牌与客户之间情感连接的旅程故事。<br>通过最杰出的广告形式，我们连接您的品牌。",
+      projects_highlight: "触及每个地方 - 触动每种情感。",
       partners_title: "合作伙伴 / 客户",
       banner_subtitle: "让我们为您创建",
       banner_title: "您的传播活动",
-      banner_btn: "注册咨询",
+      banner_btn: "获取咨询",
       news_title: "新闻与活动",
       news_desc: "更新 FUTA ADS 的最新新闻和活动"
     },
@@ -595,7 +696,7 @@ const translations = {
       intro_text: "<strong>FUTA ADS</strong> – 一家帮助您的品牌在全国范围内传播的广告公司。我们提供有效和全面的广告解决方案。特别是，我们是方庄集团整个生态系统的独家广告单位，包括：<span class='highlight'>FUTA Bus Line</span>、<span class='highlight'>FUTA City Bus</span>、<span class='highlight'>FUTA Express</span>、售票处、候车室、休息站。",
       subtitle: "我们遍布全国",
       vision_mission_title: "愿景与使命",
-      vision_title: "愿景",
+      vision_title: "愿景 (Vision)",
       vision_desc: "FUTA Advertising 致力于发展成为越南领先的广告公司，不断创新和创造，为合作伙伴和客户提供完美服务。",
       mission_title: "使命",
       mission_desc: "基于方庄集团生态系统的真实价值和无限创造力，我们承诺提供最佳解决方案，为合作伙伴和客户提升品牌和商业利益。",
@@ -610,15 +711,16 @@ const translations = {
       value4_desc: "始终倾听和理解，为客户带来满意。",
       approach_subtitle: "我们所有的解决方案都指向一个目标：帮助您的品牌",
       approach_title: "在正确的时间以最有效的方式接触正确的对象",
-      chat_now: "立即聊天",
-      chat_title: "与我们聊天",
-      chat_welcome: "您好！我们是FUTA Advertising公司。我能为您做什么？",
-      chat_form_title: "请留下您的信息，以便我们为您提供最佳支持！",
-      chat_name_placeholder: "姓名",
+      chat_title: "FUTA Advertising",
+      chat_subtitle: "我们会尽快回复",
+      chat_welcome: "您好！为获得FUTA Advertising最快的支持，请在下方留下您的信息。",
+      chat_form_title: "",
+      chat_name_placeholder: "姓名*",
       chat_email_placeholder: "电子邮件",
-      chat_phone_placeholder: "电话号码",
-      chat_submit: "提交信息",
-      chat_clear: "清除对话",
+      chat_phone_placeholder: "电话号码*",
+      chat_initial_message_placeholder: "请输入您想咨询的内容...",
+      chat_submit: "开始聊天",
+      chat_clear: "重新开始",
       chat_input_placeholder: "输入消息...",
       chat_send: "发送"
     },
@@ -634,7 +736,7 @@ const translations = {
       form_address: "地址 *",
       form_subject: "网站", // Updated for optional input
       form_content: "内容 *",
-      form_submit: "获取咨询",
+      form_submit: "获取咨询"
     },
     recruitment: {
       banner_title: "欢迎来到FUTA Advertising",
@@ -644,13 +746,28 @@ const translations = {
       filter_position: "职位",
       filter_branch: "分公司",
       filter_search: "搜索",
+      filter_placeholder_title: "输入职位名称...",
+      filter_option_all_industry: "所有行业",
+      filter_option_content: "内容营销",
+      filter_option_design: "设计",
+      filter_option_business: "业务",
+      filter_option_supervisor: "施工监理",
+      filter_option_all: "全部",
+      filter_option_staff: "员工",
+      filter_option_leader: "组长",
+      filter_option_manager: "经理",
+      filter_option_hcm: "胡志明市",
       apply_btn: "申请",
-      no_result: "未找到合适的工作",
+      view_detail_btn: "查看详情",
+      no_result: "未找到合适的工作。",
       modal_title: "工作申请",
       modal_name: "姓名 *",
       modal_phone: "电话号码 *",
       modal_email: "电子邮件 *",
-      modal_cv: "简历",
+      modal_message: "留言",
+      modal_message_placeholder: "分享更多关于您自己的信息...",
+      modal_cv: "简历 *",
+      modal_cv_placeholder: "附上简历 (PDF, DOC, DOCX)",
       modal_submit: "提交申请"
     },
     project: {
@@ -668,8 +785,26 @@ const translations = {
       feature2_desc: "通过频繁重复接触为客户创造强烈印象。",
       feature3_title: "多样化接触",
       feature3_desc: "接触许多不同的客户群体，从上班族到游客。",
-      feature4_title: "品牌传播",
-      feature4_desc: "帮助品牌广泛传播并在客户心中留下强烈印象。"
+      feature4_title: "品牌扩散",
+      feature4_desc: "帮助品牌广泛传播并在客户心中留下强烈印象。",
+      section_buyt_desc: "公交车穿梭于市中心、人口密集的路线，帮助您的品牌频繁出现，给客户留下深刻印象。<br><span>每天在最繁忙的地区接触数百万人。</span>",
+      feature5_title: "覆盖市中心",
+      feature5_desc: "在繁华的市区接触大量乘客和行人。",
+      feature6_title: "高频率",
+      feature6_desc: "由于连续的运行时间表，广告每天被看到多次。",
+      feature7_title: "多点接触",
+      feature7_desc: "覆盖市中心的多条主要路线。",
+      feature8_title: "品牌认知",
+      feature8_desc: "在市民心中留下深刻印象。",
+      section_trungchuyen_desc: "每一次城际巴士旅行都是帮助您的品牌<span>广泛传播</span>的旅程，每天接触数百万客户。",
+      feature9_title: "行驶路线",
+      feature9_desc: "广告定期出现在主要路线上，确保最大可见度。",
+      feature10_title: "车辆频率",
+      feature10_desc: "通过频繁的重复接触给客户留下深刻印象。",
+      feature11_title: "客户群体",
+      feature11_desc: "接触从上班族到游客的各种客户群体。",
+      feature12_title: "成本优化",
+      feature12_desc: "帮助品牌广泛传播并在客户心中留下深刻印象。"
     },
     xe_trung_chuyen: {
       desc: "<strong>穿梭巴士广告</strong> 是一种灵活有效的传播解决方案，帮助您的品牌持续出现在市内路线和各个省份。凭借高移动频率，穿梭巴士广告带来了广泛的客户覆盖范围，并自然地提高了品牌知名度。",
@@ -678,16 +813,16 @@ const translations = {
       line3: "对的时间 - 对的人"
     },
     xe_tuyen: {
-      title: "<span class='adsroute-line'></span> 城际巴士广告",
+      title: "<span class='adsroute-line'></span> 城际公交广告",
       desc: "频繁穿梭于多个省份的城际巴士，帮助广告接触大量客户并提高品牌知名度。",
       stat1_label: "频率",
       stat1_value: "全国超过1,000次行程",
       stat2_label: "覆盖范围",
-      stat2_value: "39个省市",
+      stat2_value: "34个省市",
       stat3_label: "运营",
       stat3_value: "每天超过6,500次行程",
       stat4_label: "展示",
-      stat4_value: "24/7 创造印象并吸引客户",
+      stat4_value: "24/7 全天候创造印象并吸引客户",
       outcar_title: "<span>车外</span> 广告",
       outcar_desc: "伴随城际巴士系统，车外广告帮助您的品牌在主要道路上突出显示——每天在许多目标区域接触数百万客户。",
       outcar_feat1: "覆盖全城",
@@ -716,11 +851,11 @@ const translations = {
     },
     qc_tram_dung: {
       map_title: "休息站系统",
-      billboard_title: "广告牌广告 (Billboard)",
+      billboard_title: "广告牌广告",
       billboard_desc: "广告牌是一种突出的户外广告形式，凭借其巨大的尺寸、引人注目的图像以及在主要路线上的位置，能够强烈吸引注意力。",
-      pano_title: "大型看版广告 (Pano)",
+      pano_title: "大型看板广告",
       pano_desc: "Pano是一种大型户外广告形式，通常放置在主要道路、住宅区、购物中心等拥挤区域，帮助品牌有效地接触客户。",
-      lightbox_title: "灯箱广告 (Light-Box)",
+      lightbox_title: "灯箱广告",
       lightbox_desc: "灯箱广告借助灯光效果脱颖而出，通常放置在购物中心、机场、公交车站或拥挤的公共区域。",
       contact_btn: "立即联系 →"
     },
@@ -735,7 +870,7 @@ const translations = {
       led_info3_val: "生动高频显示",
       led_info4_label: "接触",
       led_info4_val: "多样化客户",
-      lcd_title: "LCD 显示屏",
+      lcd_title: "LCD 屏幕",
       lcd_desc: "立式LCD屏幕，高分辨率，生动的图像和视频显示。放置在大堂、公交车站或休息站，帮助品牌脱颖而出，第一眼就吸引客户。",
       lcd_li1: "📌 尺寸：65 英寸",
       lcd_li2: "📌 分辨率：4K 超高清",
@@ -750,6 +885,7 @@ const translations = {
     news: {
       breadcrumb_home: "首页",
       breadcrumb_news: "新闻",
+      breadcrumb_project: "项目",
       post_date: "发布日期：",
       author: "作者：",
       share: "分享",
@@ -758,6 +894,7 @@ const translations = {
       search: "搜索",
       search_placeholder: "输入关键字...",
       latest_posts: "最新文章",
+      latest_projects: "最新项目",
       not_found_desc: "该文章不存在或已被删除。",
       back_to_news: "返回新闻页",
       page_title: "新闻与项目",
@@ -766,20 +903,29 @@ const translations = {
       filter_project: "项目",
       empty_content: "暂无内容。",
       read_more: "查看详情",
-      recently_updated: "最新更新"
+      recently_updated: "最新更新",
+      not_found_title: "未找到文章",
+      not_found_desc: "该文章不存在或已被删除。",
+      back_to_news: "返回新闻页",
+      project_not_found: "项目不存在或未发布。",
+      back_to_projects: "返回项目列表"
     },
     recruitment_detail: {
       title: "职位详情",
-      post_date: "发布日期：",
+      views: "浏览次数:",
+      updated_date: "更新日期:",
       job_detail: "职位详情",
       job_desc: "职位描述",
       job_req: "职位要求",
       benefits: "福利：",
+      documents: "申请材料清单",
+      contact_info: "联系方式",
+      notes: "备注",
       contact_apply: "联系与申请信息",
-      contact_desc1: "要申请，请将您的简历及相关文件发送至邮箱：",
-      contact_desc2: "邮件主题注明：",
-      contact_desc3: "或通过电话联系：",
-      contact_desc4: "获取指导。",
+      contact_desc1: "要申请，请将您的简历及相关文件发送至邮箱： ",
+      contact_desc2: "邮件主题注明： ",
+      contact_desc3: "或通过电话联系： ",
+      contact_desc4: " 获取指导。",
       general_info: "一般信息",
       apply_now: "立即申请",
       modal_title: "提交申请",
@@ -791,6 +937,12 @@ const translations = {
       summary_experience: "经验",
       summary_industry: "行业",
       summary_deadline: "截止日期"
+    },
+    project_detail: {
+      video_title: "项目视频",
+      search: "搜索",
+      latest_projects: "最新项目",
+      categories: "类别"
     },
     footer: {
       company_name: "FUTA 芳庄越南广告股份公司",
@@ -808,57 +960,141 @@ const translations = {
 // Get current language from localStorage or default to 'vi'
 let currentLang = localStorage.getItem('language') || 'vi';
 
-// Function to set language
-function setLanguage(lang) {
+/**
+ * Dịch một chuỗi văn bản sử dụng Google Translate API (miễn phí)
+ * @param {string} text - Văn bản cần dịch
+ * @param {string} sourceLang - Ngôn ngữ nguồn (ví dụ: 'vi')
+ * @param {string} targetLang - Ngôn ngữ đích (ví dụ: 'en')
+ * @returns {Promise<string>} - Văn bản đã được dịch
+ */
+async function googleTranslate(text, sourceLang, targetLang) {
+    if (!text || sourceLang === targetLang) return text;
+
+    // Google Translate API sử dụng 'zh' hoặc 'zh-CN' cho tiếng Trung. 'zh' phổ biến và an toàn hơn.
+    const apiTargetLang = (targetLang === 'cn') ? 'zh' : targetLang;
+
+    // Sử dụng client=webapp để có kết quả ổn định hơn cho các khối văn bản lớn
+    const url = `https://translate.googleapis.com/translate_a/single?client=webapp&sl=${sourceLang}&tl=${apiTargetLang}&hl=en&dt=t&dt=bd&dj=1&pc=1&tk=null&q=${encodeURIComponent(text)}`;
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        
+        // Trích xuất văn bản đã dịch từ cấu trúc JSON mới
+        if (data && data.sentences) {
+            return data.sentences.map(s => s.trans).join('');
+        }
+        // Fallback cho cấu trúc cũ nếu cần
+        return data[0].map(item => item[0]).join('');
+    } catch (error) {
+        console.error("Lỗi dịch tự động:", error);
+        return text; // Trả về văn bản gốc nếu có lỗi
+    }
+}
+
+/**
+ * Dịch các phần tử động (từ CSDL) có thuộc tính data-i18n-key
+ * @param {NodeListOf<Element>|Element[]} elements - Các phần tử cần dịch
+ * @param {string} lang - Mã ngôn ngữ đích
+ */
+async function translateDynamicElements(elements, lang, isContentBlock = false) {
+    // This function is now specifically for plain text elements.
+    // HTML content is handled by translateHtmlContent.
+    if (isContentBlock) return;
+
+    const translationCache = JSON.parse(sessionStorage.getItem(`translation_cache_${lang}`)) || {};
+    const elementsToTranslate = [];
+    const textMap = new Map(); // key -> original text
+
+    elements.forEach(element => {
+        const key = element.getAttribute('data-i18n-key');
+        if (!key) return;
+
+        // Store original text if not already stored
+        if (!element.hasAttribute('data-i18n-text')) {
+            element.setAttribute('data-i18n-text', element.textContent);
+        }
+        const originalText = element.getAttribute('data-i18n-text');
+
+        if (lang === 'vi') {
+            element.textContent = originalText;
+        } else {
+            if (translationCache[key]) {
+                element.textContent = translationCache[key];
+            } else {
+                elementsToTranslate.push(element);
+                if (originalText && !textMap.has(key)) {
+                    textMap.set(key, originalText);
+                }
+            }
+        }
+    });
+
+    if (elementsToTranslate.length > 0 && lang !== 'vi') {
+        for (const element of elementsToTranslate) {
+            const key = element.getAttribute('data-i18n-key');
+            const originalText = textMap.get(key);
+            if (originalText) {
+                const translatedText = await googleTranslate(originalText, 'vi', lang);
+                element.textContent = translatedText;
+                translationCache[key] = translatedText;
+            }
+        }
+    }
+    sessionStorage.setItem(`translation_cache_${lang}`, JSON.stringify(translationCache));
+}
+
+/**
+ * Dịch các phần tử tĩnh (từ file JSON) có thuộc tính data-i18n
+ * @param {NodeListOf<Element>|Element[]} elements - Các phần tử cần dịch
+ * @param {string} lang - Mã ngôn ngữ
+ */
+function translateStaticElements(elements, lang) {
+    elements.forEach(element => {
+        const key = element.getAttribute('data-i18n') || element.getAttribute('data-i18n-placeholder');
+        if (!key) return;
+
+        const keys = key.split('.');
+        let value = translations[lang];
+        for (const k of keys) {
+            value = value?.[k];
+        }
+
+        if (value) {
+            if (element.hasAttribute('data-i18n-placeholder')) {
+                element.placeholder = value;
+            } else if (typeof value === 'string' && (value.includes('<b') || value.includes('<br') || value.includes('<span') || value.includes('<strong'))) {
+                element.innerHTML = value;
+            } else {
+                const icon = element.querySelector('i');
+                const span = element.querySelector('span');
+                if (icon && span) {
+                    span.textContent = value;
+                } else if (icon) {
+                    element.innerHTML = `<i class="${icon.className}"></i> ${value}`;
+                } else {
+                    element.textContent = value;
+                }
+            }
+        }
+    });
+}
+
+/**
+ * Thiết lập ngôn ngữ và dịch toàn bộ trang.
+ * @param {string} lang - Mã ngôn ngữ (vi, en, cn).
+ */
+async function setLanguage(lang) {
   if (!translations[lang]) return;
   
   currentLang = lang;
   localStorage.setItem('language', lang);
   
-  // Update all elements with data-i18n attribute
-  document.querySelectorAll('[data-i18n]').forEach(element => {
-    const key = element.getAttribute('data-i18n');
-    const keys = key.split('.');
-    let value = translations[lang];
-    
-    for (const k of keys) {
-      value = value?.[k];
-    }
-    
-    if (value) {
-      // Handle HTML content (with <b>, <br>, etc.)
-      if (typeof value === 'string' && (value.includes('<b') || value.includes('<br') || value.includes('<span'))) {
-        element.innerHTML = value;
-      } else {
-        // Keep icon if exists
-        const icon = element.querySelector('i');
-        const span = element.querySelector('span');
-        if (icon && span) {
-          span.textContent = value;
-        } else if (icon) {
-          element.innerHTML = `<i class="${icon.className}"></i> ${value}`;
-        } else {
-          element.textContent = value;
-        }
-      }
-    }
-  });
-  
-  // Update all elements with data-i18n-placeholder attribute
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
-    const key = element.getAttribute('data-i18n-placeholder');
-    const keys = key.split('.');
-    let value = translations[lang];
-    
-    for (const k of keys) {
-      value = value?.[k];
-    }
-    
-    if (value) {
-      element.placeholder = value;
-    }
-  });
-  
+    // 1. Dịch các phần tử tĩnh từ file JSON
+    const staticElements = document.querySelectorAll('[data-i18n], [data-i18n-placeholder]');
+    translateStaticElements(staticElements, lang);
+
   // Update active language button (all types)
   document.querySelectorAll('.lang-btn, .lang-btn-nav, .lang-btn-mobile').forEach(btn => {
     btn.classList.remove('active');
@@ -866,45 +1102,36 @@ function setLanguage(lang) {
       btn.classList.add('active');
     }
   });
-  
+
   // Trigger custom event for other scripts
   document.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang } }));
 }
 
 // Initialize language on page load
-document.addEventListener('DOMContentLoaded', () => {
-  setLanguage(currentLang);
+document.addEventListener('DOMContentLoaded', async () => {
+    await setLanguage(currentLang);
 
   // Language button click handlers (all types)
   document.querySelectorAll('.lang-btn, .lang-btn-nav, .lang-btn-mobile').forEach(btn => {
     btn.addEventListener('click', () => {
       const lang = btn.getAttribute('data-lang');
-      setLanguage(lang);
+      setLanguage(lang); // This is now an async function
     });
   });
 
   // MutationObserver để tự động dịch các phần tử mới thêm vào DOM
   const observer = new MutationObserver(mutations => {
-    let needUpdate = false;
     for (const mutation of mutations) {
-      if (mutation.type === 'childList' && (mutation.addedNodes.length > 0)) {
-        mutation.addedNodes.forEach(node => {
-          if (node.nodeType === 1) { // element
-            if (node.hasAttribute && (node.hasAttribute('data-i18n') || node.hasAttribute('data-i18n-placeholder'))) {
-              needUpdate = true;
-            }
-            // kiểm tra các phần tử con
-            if (node.querySelectorAll) {
-              if (node.querySelectorAll('[data-i18n], [data-i18n-placeholder]').length > 0) {
-                needUpdate = true;
-              }
-            }
-          }
-        });
-      }
-    }
-    if (needUpdate) {
-      setLanguage(currentLang);
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+            mutation.addedNodes.forEach(node => {
+                // Chỉ xử lý các node là Element
+                if (node.nodeType === 1) {
+                    // Dịch các phần tử tĩnh mới
+                    const staticNodes = node.querySelectorAll('[data-i18n], [data-i18n-placeholder]');
+                    if (staticNodes.length > 0) translateStaticElements(staticNodes, currentLang);
+                }
+            });
+        }
     }
   });
   observer.observe(document.body, { childList: true, subtree: true });
@@ -913,6 +1140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Export for use in other scripts
 window.i18n = {
   setLanguage,
+  googleTranslate, // Export hàm dịch để các file khác có thể dùng
   getLanguage: () => currentLang,
   t: (key) => {
     const keys = key.split('.');

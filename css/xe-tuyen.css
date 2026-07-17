@@ -4,6 +4,7 @@
 /* Hero Section */
 .img-section {
   width: 100%;
+  overflow: hidden;
 }
 
 .img-section .img-background {
@@ -11,6 +12,7 @@
   height: auto;
   display: block;
   object-fit: cover;
+  margin-bottom: -50px;
 }
 /* =========================================== */
 /* ADS ROUTE SECTION */
@@ -306,14 +308,22 @@
 .banner-wrapper {
     position: relative;
     width: 100%;
-    height: 230px;
+    min-height: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
     overflow: hidden;
 }
 
 .banner-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 0;
 }
 
 .banner-wrapper::after {
@@ -325,28 +335,25 @@
 
 /* ===== Vùng chữ ===== */
 .banner-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 2;
     text-align: center;
     color: white;
-    padding: 0 20px;
+    width: 96%;
+    max-width: 1600px;
 }
 
-/* ===== KHÔNG CHO XUỐNG DÒNG ===== */
 .banner-text p {
-    white-space: nowrap;      /* Giữ 1 dòng */
-    overflow: hidden;         /* Ẩn tràn nếu quá dài */
-    text-overflow: ellipsis;  /* Thêm ... nếu quá dài */
+    white-space: nowrap;      /* Ép chữ nằm trên 1 dòng ở PC */
     margin: 6px 0;
+    line-height: 1.5;
 }
 
 /* ===== TÙY CHỈNH KÍCH THƯỚC CHỮ ===== */
-.line-1 { font-size: 28px; }
-.line-2 { font-size: 28px; }
-.line-3 { font-size:30px; font-weight: 700; }
+/* Sử dụng clamp để chữ tự động co giãn theo màn hình PC mà không bị tràn */
+.line-1 { font-size: clamp(16px, 1.6vw, 28px); }
+.line-2 { font-size: clamp(16px, 1.6vw, 28px); }
+.line-3 { font-size: clamp(18px, 1.8vw, 30px); font-weight: 700; }
 
 /* ===== EFFECT CHUYỂN ĐỘNG ===== */
 .line { opacity: 0; }
@@ -375,13 +382,11 @@
 @media (max-width: 768px) {
     .line-1, .line-2 { font-size: 16px; }
     .line-3 { font-size: 19px; }
-    .banner-wrapper { height: 200px; }
 }
 
 @media (max-width: 480px) {
     .line-1, .line-2 { font-size: 14px; }
     .line-3 { font-size: 17px; }
-    .banner-wrapper { height: 180px; }
 }
 
 /* =========================================== */
@@ -426,6 +431,12 @@
   .adscompartment-number .index {
     font-size: 70px;
   }
+
+  .banner-text p {
+    white-space: normal; /* Cho phép rớt dòng tự nhiên trên Tablet */
+  }
+  .line-1, .line-2 { font-size: 20px; }
+  .line-3 { font-size: 24px; }
 }
 
 @media (max-width: 768px) {
@@ -491,4 +502,3 @@
     font-size: 50px;
   }
 }
-

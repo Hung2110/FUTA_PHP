@@ -3,7 +3,7 @@
     <!-- Logo -->
     <div class="logo">
       <a href="index.php">
-        <img src="assets/images/logo/Advertising.png" alt="FUTA Logo">
+        <img src="assets/images/logo/Advertising.png" alt="FUTA Logo" width="225" height="60" fetchpriority="high" decoding="async">
       </a>
     </div>
 
@@ -46,9 +46,7 @@
         </ul>
       </li>
 
-      <li class="has-dropdown">
-        <a href="news.php" data-i18n="nav.news">Tin Tức</a>
-      </li>
+     <li><a href="news.php" data-i18n="nav.news">Tin Tức</a></li>
       <li><a href="recruitment.php" data-i18n="nav.recruitment">Tuyển Dụng</a></li>
       <li><a href="contact.php" data-i18n="nav.contact">Liên Hệ</a></li>
     </ul>
@@ -71,7 +69,7 @@
 <aside class="mobile-sidebar" id="mobileSidebar">
   <div class="mobile-sidebar-header">
     <div class="mobile-sidebar-logo">
-      <img src="assets/images/logo/Advertising.png" alt="FUTA Logo">
+      <img src="assets/images/logo/Advertising.png" alt="FUTA Logo" width="168" height="45" decoding="async">
     </div>
     <button class="mobile-sidebar-close" id="closeMobileSidebar">
       <i class="bi bi-x-lg"></i>
@@ -123,9 +121,7 @@
         </ul>
       </li>
 
-      <li class="has-submenu-mobile">
-        <a href="news.php" data-i18n="nav.news">Tin Tức</a>
-      </li>
+      <li><a href="news.php" data-i18n="nav.news">Tin Tức</a></li>
       <li><a href="recruitment.php" data-i18n="nav.recruitment">Tuyển Dụng</a></li>
       <li><a href="contact.php" data-i18n="nav.contact">Liên Hệ</a></li>
     </ul>
@@ -142,31 +138,3 @@
 
 <!-- Overlay khi mobile sidebar mở -->
 <div class="mobile-sidebar-overlay" id="mobileSidebarOverlay"></div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý đóng mở Sidebar Mobile (Menu chính)
-    const menuToggle = document.getElementById('mobileMenuToggle');
-    const sidebar = document.getElementById('mobileSidebar');
-    const closeBtn = document.getElementById('closeMobileSidebar');
-    const overlay = document.getElementById('mobileSidebarOverlay');
-
-    function toggleSidebar() {
-        sidebar.classList.toggle('active');
-        overlay.classList.toggle('active');
-    }
-
-    if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
-    if (closeBtn) closeBtn.addEventListener('click', toggleSidebar);
-    if (overlay) overlay.addEventListener('click', toggleSidebar);
-
-    // Xử lý dropdown (sổ xuống) cho các menu con
-    const submenuToggles = document.querySelectorAll('.submenu-toggle');
-    submenuToggles.forEach(toggle => {
-        toggle.addEventListener('click', function(e) {
-            e.preventDefault(); // Ngăn chặn chuyển trang khi nhấn vào toggle
-            this.parentElement.classList.toggle('open'); // Thêm/bỏ class open để hiện/ẩn menu con
-        });
-    });
-});
-</script>

@@ -4,6 +4,7 @@
 
 .img-section {
   width: 100%;
+  overflow: hidden; /* Cắt bỏ phần bị tràn ra ngoài khung */
 }
 
 .img-section .img-background {
@@ -11,6 +12,7 @@
   height: auto;
   display: block;
   object-fit: cover;
+  margin-bottom: -50px; /* Đẩy phần dưới của ảnh (nơi chứa logo AI) ra khỏi khung nhìn */
 }
 /* Coming Soon Section */
 .coming-soon-section {
@@ -55,14 +57,22 @@
 .banner-wrapper {
     position: relative;
     width: 100%;
-    height: 230px;
+    min-height: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
     overflow: hidden;
 }
 
 .banner-img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    z-index: 0;
 }
 
 .banner-wrapper::after {
@@ -74,28 +84,25 @@
 
 /* ===== Vùng chữ ===== */
 .banner-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     z-index: 2;
     text-align: center;
     color: white;
-    padding: 0 20px;
+    width: 96%;
+    max-width: 1600px; /* Tăng max-width để chữ có đủ không gian trên PC */
 }
 
-/* ===== KHÔNG CHO XUỐNG DÒNG ===== */
 .banner-text p {
-    white-space: nowrap;      /* Giữ 1 dòng */
-    overflow: hidden;         /* Ẩn tràn nếu quá dài */
-    text-overflow: ellipsis;  /* Thêm ... nếu quá dài */
+    white-space: nowrap;      /* Ép chữ nằm trên 1 dòng ở PC */
     margin: 6px 0;
+    line-height: 1.5;
 }
 
 /* ===== TÙY CHỈNH KÍCH THƯỚC CHỮ ===== */
-.line-1 { font-size: 28px; }
-.line-2 { font-size: 28px; }
-.line-3 { font-size:30px; font-weight: 700; }
+/* Sử dụng clamp để chữ tự động co giãn theo màn hình PC mà không bị tràn */
+.line-1 { font-size: clamp(16px, 1.6vw, 28px); }
+.line-2 { font-size: clamp(16px, 1.6vw, 28px); }
+.line-3 { font-size: clamp(18px, 1.8vw, 30px); font-weight: 700; }
 
 /* ===== EFFECT CHUYỂN ĐỘNG ===== */
 .line { opacity: 0; }
@@ -130,7 +137,7 @@
 
 .hoarding-text strong {
     color: #004aad; /* Màu xanh thương hiệu */
-    font-size: 20px;
+    font-size: 30px;
 }
 
 /* Phần hình ảnh */
@@ -158,11 +165,6 @@
     object-fit: cover;
     transition: transform 0.4s ease;
 }
-
-.hoarding-images .img-item:hover img {
-    transform: scale(1.05); /* Hiệu ứng phóng to nhẹ khi hover */
-}
-
 /* ===== Keyframes ===== */
 @keyframes slideLeft {
     0% { transform: translateX(-40px); opacity: 0; }
@@ -219,6 +221,12 @@
     .hoarding-text strong {
         font-size: 18px;
     }
+
+    .banner-text p {
+        white-space: normal; /* Cho phép rớt dòng tự nhiên trên Tablet */
+    }
+    .line-1, .line-2 { font-size: 20px; }
+    .line-3 { font-size: 24px; }
 }
 
 /* Mobile */

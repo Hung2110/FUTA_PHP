@@ -6,7 +6,8 @@ include 'includes/header.php';
 <section class="img-section">
     <img src="assets/images/slideshow/QC_Xe.png"
          alt="Quảng Cáo Trên Xe"
-         class="img-background">
+         class="img-background"
+         width="1920" height="600" fetchpriority="high" decoding="async">
 </section>
 </section>
 <section class="adsbus-intro-section">
@@ -32,7 +33,7 @@ include 'includes/header.php';
       <a href="#contact" class="adsbus-intro-cta" data-i18n="xe_buyt.contact_btn">Liên hệ tư vấn ngay</a>
     </div>
     <div class="adsbus-intro-image">
-      <img src="assets/images/service/Xe buýt.jpg" alt="Quảng cáo xe buýt nội ô">
+      <img src="assets/images/service/Xe buýt.jpg" alt="Quảng cáo xe buýt nội ô" width="600" height="400" decoding="async">
     </div>
   </div>
 </section>
@@ -51,19 +52,19 @@ include 'includes/header.php';
     <!-- Danh sách ảnh -->
     <div class="bus-ads-gallery">
       <div class="ads-item">
-        <img src="assets/images/service/sau-ghế.jpg" alt="Dán Sau Ghế ">
+        <img src="assets/images/service/sau-ghế.jpg" alt="Dán Sau Ghế" width="400" height="300" decoding="async">
         <div class="overlay">
           <p data-i18n="xe_buyt.img1_desc">Quảng cáo sau ghế xe buýt – vị trí vàng ngay tầm mắt hành khách, tăng nhận diện thương hiệu mỗi ngày</p>
         </div>
       </div>
       <div class="ads-item">
-        <img src="assets/images/service/post 2-01.png" alt="LCD Trong Xe">
+        <img src="assets/images/service/post 2-01.png" alt="LCD Trong Xe" width="400" height="300" decoding="async">
         <div class="overlay">
           <p data-i18n="xe_buyt.img2_desc">Quảng cáo trên màn hình trong xe buýt – nội dung hiển thị sinh động, tiếp cận hành khách liên tục trong suốt chuyến đi</p>
         </div>
       </div>
       <div class="ads-item">
-        <img src="assets/images/service/tay-nam.jpg" alt="Dán Trên Tay Nắm">
+        <img src="assets/images/service/tay-nam.jpg" alt="Dán Trên Tay Nắm" width="400" height="300" decoding="async">
         <div class="overlay">
           <p data-i18n="xe_buyt.img3_desc">Quảng cáo trên tay nắm xe buýt – vị trí nhỏ nhưng hiệu quả lớn, giúp thương hiệu tiếp cận hành khách mỗi ngày.</p>
         </div>
@@ -73,7 +74,7 @@ include 'includes/header.php';
 </section>
 <section class="banner-intro">
     <div class="banner-wrapper">
-        <img src="assets/images/banners/BCR.jpg" class="banner-img" alt="Banner Intro">
+        <img src="assets/images/banners/BCR.jpg" class="banner-img" alt="Banner Intro" width="1920" height="600" loading="lazy" decoding="async">
 
         <div class="banner-text">
             <p class="line line-1" data-i18n="xe_trung_chuyen.line1">
@@ -88,4 +89,9 @@ include 'includes/header.php';
         </div>
     </div>
 </section>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="xe-tuyen.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="xe-trung-chuyen.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
+
 <?php include 'includes/footer.php'; ?>

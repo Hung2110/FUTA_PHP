@@ -6,7 +6,7 @@ include 'includes/header.php';
 
 
 <section class="img-section">
-    <img src="assets/images/slideshow/QC-KTS.png" alt="Quảng Cáo Kỹ Thuật Số" class="img-background">
+    <img src="assets/images/slideshow/QC-KTS.jpg" alt="Quảng Cáo Kỹ Thuật Số" class="img-background" width="1920" height="600" fetchpriority="high" decoding="async">
 </section>
 <section class="led-section" id="led">
   <!-- Phần giới thiệu -->
@@ -21,7 +21,7 @@ include 'includes/header.php';
     <!-- Cột màn hình LED ngang (nằm trên) -->
     <div class="led-frame">
       <div class="screen">
-        <video autoplay muted loop>
+        <video autoplay muted loop playsinline preload="metadata">
           <source src="assets/images/clip/LED.mp4" type="video/mp4">
         </video>
       </div>
@@ -72,7 +72,7 @@ include 'includes/header.php';
 
   <!-- Khung LCD bên phải -->
   <div class="lcd-frame">
-    <video autoplay muted loop class="lcd-screen">
+    <video autoplay muted loop playsinline preload="metadata" class="lcd-screen">
       <source src="assets/images/clip/LCD STANDEE.mp4" type="video/mp4">
       Trình duyệt của bạn không hỗ trợ video.
     </video>
@@ -82,7 +82,7 @@ include 'includes/header.php';
   <!-- Khung iPhone bên trái -->
   <div class="wifimkt-frame">
     <div class="wifimkt-notch"></div>
-    <video autoplay muted loop class="wifimkt-screen">
+    <video autoplay muted loop playsinline preload="metadata" class="wifimkt-screen">
       <source src="assets/images/clip/wifi.mp4" type="video/mp4">
       Trình duyệt không hỗ trợ video.
     </video>
@@ -101,4 +101,9 @@ include 'includes/header.php';
     </ul>
   </div>
 </section>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="QC-tram-dung.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="news.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
+
 <?php include 'includes/footer.php'; ?>

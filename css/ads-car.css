@@ -180,7 +180,7 @@
     }
 
     .text-content {
-      min-width: 300px;
+      min-width: 250px;
       display: flex;
       flex-direction: column;
       gap: 20px;
@@ -229,12 +229,12 @@
 
     .intercity-feature:hover span {
       opacity: 1;
-      max-height: 200px;
+  max-height: 600px; /* Tăng giới hạn để trên mobile chữ rớt dòng dài ra không bị ẩn đi */
     }
 
     .image-content {
       flex: 1;
-      min-width: 320px;
+      min-width: 250px;
       position: relative;
     }
 
@@ -254,7 +254,7 @@
 }
 
 .text-content-2 {
-  min-width: 300px;
+  min-width: 250px;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -303,12 +303,12 @@
 
 .intercity-feature-2:hover span {
   opacity: 1;
-  max-height: 200px;
+  max-height: 600px; /* Tăng giới hạn để trên mobile chữ rớt dòng dài ra không bị ẩn đi */
 }
 
 .image-content-2 {
   flex: 1;
-  min-width: 320px;
+  min-width: 250px;
   position: relative;
 }
 

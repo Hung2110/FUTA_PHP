@@ -69,12 +69,12 @@ body.contact-page {
 
 .contact-info {
   flex: 1;
-  min-width: 300px;
+  min-width: 250px;
 }
 
 .contact-form {
   flex: 2;
-  min-width: 400px;
+  min-width: 250px;
 }
 
 .info-group {
@@ -84,7 +84,7 @@ body.contact-page {
 .info-group h4 {
   color: var(--primary-color);
   margin: 0 0 10px;
-  font-size: clamp(1.5rem, 2.5vw, 1.25rem); /* Kích thước chữ linh hoạt */
+  font-size: clamp(1.3rem, 2.5vw, 1.25rem); /* Kích thước chữ linh hoạt */
 }
 
 .info-group p {
@@ -93,7 +93,7 @@ body.contact-page {
   display: flex; /* Căn chỉnh icon và text */
   align-items: center;
   gap: 5px; /* Khoảng cách giữa icon và text */
-  font-size: clamp(1.25rem, 2.5vw, 1rem); /* Kích thước chữ linh hoạt */
+  font-size: clamp(1.15rem, 2.5vw, 1rem); /* Kích thước chữ linh hoạt */
 }
 
 .social-icons a {
@@ -131,6 +131,7 @@ body.contact-page {
 
 .form-row {
   display: flex;
+  flex-wrap: wrap; /* Cho phép các input rớt dòng trên Mobile */
   gap: 20px;
 }
 
@@ -169,6 +170,12 @@ body.contact-page {
 @media (max-width: 768px) {
   .contact-content {
     flex-direction: column;
+    width: 100%;
+  }
+  
+  .form-row .form-group {
+    flex: 1 1 100%; /* Buộc các input trong hàng phải chiếm 100% chiều rộng trên Mobile */
+    width: 100%;
   }
 }
 

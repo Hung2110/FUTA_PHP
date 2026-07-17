@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                     // Nếu không có user nào trong DB có quyền này, dùng fallback mặc định
                     if (empty($adminEmails)) {
                         $envEmails = getenv('ADMIN_EMAILS');
-                        $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
+                        $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['futaadvertising@futa.vn'];
                     }
 
                     // --- Gửi email thông báo qua PHPMailer kèm CV đính kèm ---
@@ -96,8 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                         $mail->Host       = 'smtp.gmail.com';
                         $mail->SMTPAuth   = true;
                         
-                        $mail->Username   = getenv('SMTP_USER') ?: 'nguyenquochung0509@gmail.com'; // Email gửi đi
-                        $mail->Password   = getenv('SMTP_PASS') ?: 'bvbxiwoxnrrveqod'; // Nên dời vào biến môi trường
+                        $mail->Username   = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn'; // Email gửi đi
+                        $mail->Password   = getenv('SMTP_PASS') ?: ''; // Nên dời vào biến môi trường
                         
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                         $mail->Port       = 587;
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                             )
                         );
 
-                        $mail->setFrom('nguyenquochung0509@gmail.com', 'FUTA Tuyển Dụng');
+                        $mail->setFrom(getenv('SMTP_USER') ?: 'futaadvertising@futa.vn', 'FUTA Tuyển Dụng');
                         
                         // Gửi cho tất cả quản trị viên tìm được
                         foreach ($adminEmails as $adminEmail) {

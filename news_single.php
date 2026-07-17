@@ -1,5 +1,6 @@
 <?php 
 require_once 'db.php';
+$current_lang = isset($_COOKIE['language']) ? $_COOKIE['language'] : 'vi';
 $pageStyles = ['css/project-detail.css'];
 // Kiểm tra xem Slug có được cung cấp không
 if (!isset($_GET['slug']) || empty($_GET['slug'])) {
@@ -29,8 +30,23 @@ if ($result->num_rows === 0) {
 $post = $result->fetch_assoc();
 $stmt->close();
 
+// Xử lý nội dung đa ngôn ngữ
+$display_title = $post['title'];
+$display_excerpt = $post['excerpt'];
+$display_content = $post['content'];
+
+if ($current_lang === 'en' && !empty($post['title_en'])) {
+    $display_title = $post['title_en'];
+    $display_excerpt = !empty($post['excerpt_en']) ? $post['excerpt_en'] : $post['excerpt'];
+    $display_content = !empty($post['content_en']) ? $post['content_en'] : $post['content'];
+} elseif ($current_lang === 'cn' && !empty($post['title_cn'])) {
+    $display_title = $post['title_cn'];
+    $display_excerpt = !empty($post['excerpt_cn']) ? $post['excerpt_cn'] : $post['excerpt'];
+    $display_content = !empty($post['content_cn']) ? $post['content_cn'] : $post['content'];
+}
+
 // Lấy các bài viết mới nhất cho Sidebar (trừ bài hiện tại)
-$recent_posts_stmt = $conn->prepare("SELECT title, slug, image, created_at FROM posts WHERE slug != ? AND status = 'published' ORDER BY created_at DESC LIMIT 5");
+$recent_posts_stmt = $conn->prepare("SELECT id, title, slug, image, created_at FROM posts WHERE slug != ? AND status = 'published' ORDER BY created_at DESC LIMIT 5");
 $recent_posts_stmt->bind_param("s", $slug);
 $recent_posts_stmt->execute();
 $recent_posts_result = $recent_posts_stmt->get_result();
@@ -41,7 +57,7 @@ while($row = $recent_posts_result->fetch_assoc()) {
 $recent_posts_stmt->close();
 
 // Thiết lập tiêu đề trang và file CSS (Tái sử dụng CSS của project-detail để giống giao diện)
-$pageTitle = htmlspecialchars($post['title']);
+$pageTitle = htmlspecialchars($display_title);
 $pageStyles = ['css/project-detail.css']; 
 include 'includes/header.php'; 
 ?>
@@ -49,7 +65,7 @@ include 'includes/header.php';
 <script>
     // Lấy URL hiện tại cho các nút chia sẻ
     const currentUrl = window.location.href;
-    const projectTitle = "<?php echo htmlspecialchars($post['title'], ENT_QUOTES); ?>";
+    const projectTitle = "<?php echo htmlspecialchars($display_title, ENT_QUOTES); ?>";
 </script>
 <!-- Sử dụng class project-detail-container để kế thừa CSS của trang dự án -->
 <div class="project-detail-container">
@@ -59,7 +75,7 @@ include 'includes/header.php';
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.php" data-i18n="news.breadcrumb_home">Trang chủ</a></li>
                 <li class="breadcrumb-item"><a href="news.php" data-i18n="news.breadcrumb_news">Tin Tức</a></li>
-                <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($post['title']); ?></li>
+                <li class="breadcrumb-item active" aria-current="page"><?php echo htmlspecialchars($display_title); ?></li>
             </ol>
         </nav>
 
@@ -67,36 +83,33 @@ include 'includes/header.php';
             <!-- Main Content Column -->
             <div class="col-lg-8">
                 <div class="main-content-wrapper">
-                    <h1 class="project-title"><?php echo htmlspecialchars($post['title']); ?></h1>
+                    <h1 class="project-title"><?php echo htmlspecialchars($display_title); ?></h1>
                     
                     <div class="project-meta">
                         <!-- Ẩn phần Khách hàng vì đây là Tin Tức, chỉ hiện ngày tháng -->
                         <span><i class="fas fa-calendar-alt"></i> <strong data-i18n="news.post_date">Ngày đăng:</strong> <?php echo date('d/m/Y', strtotime($post['created_at'])); ?></span>
                         <?php if(!empty($post['author'])): ?>
-                            <span class="ms-3"><i class="fas fa-user"></i> <strong data-i18n="news.author">Tác giả:</strong> <?php echo htmlspecialchars($post['author']); ?></span>
+                            <span class="ms-3"><i class="fas fa-user"></i> <strong data-i18n="news.author">Tác giả:</strong> 
+                                <span><?php echo htmlspecialchars($post['author']); ?></span>
+                            </span>
                         <?php endif; ?>
                     </div>
 
                     <!-- Social Share Buttons -->
                     <div class="social-share">
                         <a id="share-facebook" href="#" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i> <span data-i18n="news.share">Chia sẻ</span></a>
-                        <a id="share-zalo" href="#" target="_blank" class="share-btn zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo"> <span data-i18n="news.share">Chia sẻ</span></a>
+                        <a id="share-zalo" href="#" target="_blank" class="share-btn zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" loading="lazy" decoding="async"> <span data-i18n="news.share">Chia sẻ</span></a>
                         <button id="copy-link" class="share-btn copy"><i class="fas fa-link"></i> <span data-i18n="news.copy">Sao chép</span></button>
                         <span id="copy-success" style="display:none; margin-left: 10px; color: #28a745; align-items: center; font-weight: 500;" data-i18n="news.copied"><i class="fas fa-check-circle me-1"></i> Đã sao chép!</span>
                     </div>
 
                     <div class="project-content-body">
                         <?php if (!empty($post['image'])): ?>
-                            <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="<?php echo htmlspecialchars($post['title']); ?>" class="img-fluid rounded project-main-image mb-4">
+                            <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="" class="img-fluid rounded project-main-image mb-4" width="800" height="450" fetchpriority="high" decoding="async">
                         <?php endif; ?>
                         
                         <div class="project-description">
-                            <?php 
-                            // Hiển thị nội dung bài viết. 
-                            // Nếu nội dung trong DB là HTML (từ CKEditor/Summernote), hãy dùng echo trực tiếp.
-                            // Nếu là text thuần, hãy dùng nl2br(). Dưới đây giả định là HTML hoặc Text có xuống dòng.
-                            echo $post['content'] ?? nl2br(htmlspecialchars($post['excerpt'] ?? '')); 
-                            ?>
+                            <?php echo $display_content; ?>
                         </div>
                     </div>
                 </div>
@@ -120,10 +133,15 @@ include 'includes/header.php';
                         <h3 class="widget-title" data-i18n="news.latest_posts">Bài viết mới nhất</h3>
                         <ul class="latest-posts-list">
                             <?php foreach($recent_posts as $item): ?>
+                            <?php if (empty($item['image'])) continue; // Bỏ qua nếu không có ảnh ?>
                             <li>
                                 <a href="news_single.php?slug=<?php echo htmlspecialchars($item['slug']); ?>">
-                                    <img src="<?php echo htmlspecialchars(!empty($item['image']) ? $item['image'] : 'assets/img/placeholder.png'); ?>" alt="<?php echo htmlspecialchars($item['title']); ?>">
-                                    <span><?php echo htmlspecialchars($item['title']); ?></span>
+                                    <img src="<?php echo htmlspecialchars(!empty($item['image']) ? $item['image'] : 'assets/images/placeholder.png'); ?>" alt="" width="100" height="75" loading="lazy" decoding="async">
+                                    <div class="latest-post-info">
+                                        <span class="latest-post-title"
+                                            data-i18n-key="post_title_<?php echo $item['id']; ?>"><?php echo htmlspecialchars($item['title']); ?></span>
+                                        <span class="latest-post-date"><i class="far fa-clock"></i> <?php echo date('d/m/Y', strtotime($item['created_at'])); ?></span>
+                                    </div>
                                 </a>
                             </li>
                             <?php endforeach; ?>
@@ -137,5 +155,9 @@ include 'includes/header.php';
 </div>
 
 <!-- Tái sử dụng JS của project detail cho chức năng share -->
-<script src="js/project-detail.js"></script>
+<script>
+    // Đổi tên biến để khớp với file JS
+    const postTitle = "<?php echo htmlspecialchars($display_title, ENT_QUOTES); ?>";
+</script>
+<script src="js/blog-single.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

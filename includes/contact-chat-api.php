@@ -10,6 +10,7 @@ switch ($action) {
     $name = trim($_POST['name'] ?? '');
     $phone = trim($_POST['phone'] ?? '');
     $email = trim($_POST['email'] ?? '');
+    $initial_message = trim($_POST['initial_message'] ?? '');
 
     if (empty($name) || empty($phone)) {
         echo json_encode(['success' => false, 'error' => 'Vui lòng cung cấp tên và số điện thoại']);
@@ -29,21 +30,35 @@ switch ($action) {
         $update_stmt->bind_param("ssi", $name, $email, $session_id);
         $update_stmt->execute();
         $update_stmt->close();
-        
-        echo json_encode(['success' => true, 'session_id' => $session_id]);
     } else {
         // Khách mới, tạo phiên chat hoàn toàn mới
         $insert_stmt = $conn->prepare("INSERT INTO chat_sessions (name, phone, email, last_message_time, last_active_time, last_sender) VALUES (?, ?, ?, NOW(), NOW(), 'customer')");
         $insert_stmt->bind_param("sss", $name, $phone, $email);
         
         if ($insert_stmt->execute()) {
-            echo json_encode(['success' => true, 'session_id' => $conn->insert_id]);
+            $session_id = $conn->insert_id;
         } else {
             echo json_encode(['success' => false, 'error' => $insert_stmt->error]);
+            $insert_stmt->close();
+            exit;
         }
         $insert_stmt->close();
     }
     $stmt->close();
+
+    // Nếu có tin nhắn ban đầu, lưu nó lại
+    if (!empty($initial_message) && $session_id > 0) {
+        $msg_stmt = $conn->prepare("INSERT INTO chat_messages (session_id, sender, message, created_at) VALUES (?, 'customer', ?, NOW())");
+        $msg_stmt->bind_param("is", $session_id, $initial_message);
+        $msg_stmt->execute();
+        $msg_stmt->close();
+    }
+
+    if ($session_id > 0) {
+        echo json_encode(['success' => true, 'session_id' => $session_id]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Không thể tạo hoặc tìm thấy phiên chat.']);
+    }
     exit;
 }
 
@@ -86,7 +101,7 @@ if ($action === 'send_message') {
         
         if (move_uploaded_file($file['tmp_name'], $dest)) {
             $mime = mime_content_type($dest) ?: 'application/octet-stream';
-            $url = '/FUTA_PHP/uploads/chat/' . $filename;
+            $url = 'uploads/chat/' . $filename;
             $message = "FILE::{$mime}::{$url}::" . $file['name']; // Tạo chuỗi định danh file
         } else {
             echo json_encode(['success' => false, 'error' => 'Lỗi lưu file trên server']);

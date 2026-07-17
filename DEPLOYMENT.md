@@ -1,30 +1,43 @@
 # Hướng dẫn Triển khai - FUTA Advertising (Windows Server / IIS)
 
-Tài liệu này cung cấp các bước chi tiết để DevOps triển khai dự án lên môi trường **Windows Server**, sử dụng **IIS** và **MySQL**.
+Tài liệu này cung cấp các bước chi tiết để triển khai dự án lên môi trường **Windows Server**, sử dụng **IIS** và **MySQL**.
 
 ---
 
 ## 🛠 1. Yêu cầu Hệ thống (System Requirements)
 
-Đảm bảo Server đã cài đặt các thành phần sau trước khi bắt đầu:
+Đảm bảo máy chủ Windows Server đã cài đặt các thành phần sau:
 
 *   **OS:** Windows Server (2016, 2019 hoặc 2022).
-*   **Web Server:** IIS với tính năng **CGI (FastCGI)** đã được bật.
-*   **IIS Modules (Bắt buộc phải cài thêm):** 
-    *   URL Rewrite 2.1 (Để hỗ trợ Friendly URL định tuyến tự động).
-    *   Application Request Routing (ARR) 3.0 (Để làm Reverse Proxy cho dịch vụ WebSocket).
-*   **PHP:** Từ `8.1` trở lên (Khuyến nghị bản **Non-Thread Safe - NTS** cho IIS). Sử dụng PHP Manager cho IIS để dễ cấu hình.
+*   **Web Server:** IIS với các vai trò (Roles) sau đã được bật:
+    *   `Web Server (IIS)`
+    *   Trong `Web Server` -> `Application Development` -> `CGI` (Bắt buộc để chạy PHP).
+*   **PHP:** Phiên bản `8.1` trở lên (khuyến nghị bản **Non-Thread Safe - NTS** cho IIS).
+    *   Sử dụng **Web Platform Installer** để cài PHP và PHP Manager cho IIS một cách tự động.
 *   **Database:** MySQL Server 5.7+ hoặc MariaDB.
-*   **Công cụ:** `Composer` dành cho Windows.
+*   **IIS Modules (Bắt buộc cài thêm):**
+    *   URL Rewrite 2.1 (Để hỗ trợ URL thân thiện).
+    *   Application Request Routing (ARR) 3.0 (Để làm Reverse Proxy cho WebSocket).
+*   **Công cụ:**
+    *   Composer for Windows (Để cài đặt các thư viện PHP).
+    *   NSSM (Non-Sucking Service Manager) (Để chạy WebSocket server như một dịch vụ Windows).
 
-**Cấu hình `php.ini` (Bắt buộc):**
-Bật các extension: `mysqli`, `mbstring`, `fileinfo`, `openssl`, `curl`.
-Cập nhật các thông số sau để hỗ trợ tính năng upload CV, Ảnh và Video Chat (hỗ trợ tối đa lên tới 50MB):
+**Cấu hình `php.ini` (Quan trọng):**
+
+Mở file `php.ini` (thường nằm trong thư mục cài đặt PHP, ví dụ `C:\Program Files\PHP\v8.1\php.ini`). Đảm bảo các extension sau đã được bật (bỏ dấu `;` ở đầu dòng):
+```ini
+extension=mysqli
+extension=mbstring
+extension=fileinfo
+extension=openssl
+extension=curl
+```
+
+Cập nhật các thông số sau để hỗ trợ upload file lớn (CV, ảnh, video chat):
 ```ini
 upload_max_filesize = 50M
 post_max_size = 50M
 max_execution_time = 120
-extension_dir = "ext"
 ```
 
 ---
@@ -76,6 +89,16 @@ $DB_COLLATE = getenv('DB_COLLATE') ?: 'utf8mb4_unicode_ci';
 
 ## 5. Bước 4: Cấu hình Gửi Email (PHPMailer)
 Tính năng nhận form liên hệ (`contact.php`) và nhận đơn ứng tuyển (`includes/process_application.php`) đang sử dụng Gmail SMTP để gửi thông báo.
+
+Cấu hình được quản lý tập trung tại file `config/mailer.php` và ưu tiên sử dụng các **biến môi trường (environment variables)** trên server.
+
+**Các biến môi trường cần thiết lập:**
+```
+SMTP_HOST="smtp.gmail.com"
+SMTP_PORT=587
+SMTP_USER="futaadvertising@futa.vn"
+SMTP_PASS="xtonupudcelpoixh"
+```
 
 - **DevOps cần lưu ý:** Nếu server bị chặn port `587` (SMTP), cần mở port này trên Firewall.
 - Để thay đổi email nhận thông báo, hãy sửa mảng `$adminEmails` bên trong 2 file trên:

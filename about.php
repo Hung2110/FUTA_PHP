@@ -6,7 +6,7 @@ include 'includes/header.php';
 
 <!-- Clip Intro -->
 <section class="video-section">
-    <video autoplay muted loop class="video-background">
+    <video autoplay muted loop playsinline preload="metadata" class="video-background">
          <source src="assets/images/clip/giới thiệu.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
@@ -35,7 +35,7 @@ include 'includes/header.php';
 
     <!-- Ảnh bản đồ -->
     <div class="intro-map">
-      <img src="assets/images/banners/ban-do-tram-dung.png" alt="Bản đồ Việt Nam FUTA">
+      <img src="assets/images/banners/ban-do-tram-dung.png" alt="Bản đồ Việt Nam FUTA" width="1200" height="800" loading="lazy" decoding="async">
     </div>
   </div>
 </section>
@@ -100,7 +100,7 @@ include 'includes/header.php';
     <div class="banner-approach-wrapper">
         <img src="assets/images/banners/BCR.jpg" 
              class="banner-approach-img" 
-             alt="Approach Banner">
+             alt="Approach Banner" width="1920" height="600" loading="lazy" decoding="async">
         <div class="banner-approach-text">
             <p class="line line-1" data-i18n="about.approach_subtitle">
                 Tất cả các giải pháp của chúng tôi đều hướng đến một mục tiêu: giúp thương hiệu của bạn
@@ -112,7 +112,7 @@ include 'includes/header.php';
     </div>
 </section>
 <section class="full-banner">
-    <img src="assets/images/banners/QC.jpg" alt="FUTA Banner" class="full-banner-img">
+    <img src="assets/images/banners/QC.jpg" alt="FUTA Banner" class="full-banner-img" width="1920" height="600" loading="lazy" decoding="async">
 </section>  
     <script>
       AOS.init({
@@ -120,4 +120,9 @@ include 'includes/header.php';
     once: true      // chỉ chạy 1 lần khi scroll
   });
     </script>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="index.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="ads-car.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
+
 <?php include 'includes/footer.php'; ?>

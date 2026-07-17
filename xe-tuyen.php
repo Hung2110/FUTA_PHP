@@ -6,13 +6,14 @@ include 'includes/header.php';
 <section class="img-section">
     <img src="assets/images/slideshow/QC_Xe.png"
          alt="Quảng Cáo Trên Xe"
-         class="img-background">
+         class="img-background"
+         width="1920" height="600" fetchpriority="high" decoding="async">
 </section>
 <section class="adsroute-section">
   <div class="adsroute-container">
     <!-- Cột hình ảnh -->
     <div class="adsroute-image">
-      <img src="assets/images/service/Xe tuyến.jpg" alt="Quảng cáo Xe Tuyến ">
+      <img src="assets/images/service/Xe tuyến.jpg" alt="Quảng cáo Xe Tuyến" width="600" height="400" decoding="async">
     </div>
     <!-- Cột nội dung -->
     <div class="adsroute-content">
@@ -28,7 +29,7 @@ include 'includes/header.php';
         </div>
         <div class="adsroute-box">
           <p data-i18n="xe_tuyen.stat2_label">Phủ Sóng</p>
-          <h3 data-i18n="xe_tuyen.stat2_value">39 tỉnh thành</h3>
+          <h3 data-i18n="xe_tuyen.stat2_value">34 tỉnh thành</h3>
         </div>
         <div class="adsroute-box">
           <p data-i18n="xe_tuyen.stat3_label">Vận Hành</p>
@@ -67,7 +68,7 @@ include 'includes/header.php';
 
     <!-- Ảnh bên phải -->
     <div class="adsoutcar-image">
-      <img src="assets/images/service/outcarsamsung.jpg" alt="Quảng cáo bên ngoài xe">
+      <img src="assets/images/service/outcarsamsung.jpg" alt="Quảng cáo bên ngoài xe" width="600" height="400" decoding="async">
     </div>
   </div>
 </section>
@@ -76,7 +77,7 @@ include 'includes/header.php';
   <div class="adscompartment-container">
     <!-- Cột hình ảnh -->
     <div class="adscompartment-image">
-      <img src="assets/images/service/hộc-xe.jpg" alt="Quảng cáo trong hộc xe">
+      <img src="assets/images/service/hộc-xe.jpg" alt="Quảng cáo trong hộc xe" width="600" height="400" decoding="async">
     </div>
 
     <!-- Cột nội dung -->
@@ -102,7 +103,7 @@ include 'includes/header.php';
 </section>
 <section class="banner-intro">
     <div class="banner-wrapper">
-        <img src="assets/images/banners/BCR.jpg" class="banner-img" alt="Banner Intro">
+        <img src="assets/images/banners/BCR.jpg" class="banner-img" alt="Banner Intro" width="1920" height="600" loading="lazy" decoding="async">
 
         <div class="banner-text">
             <p class="line line-1" data-i18n="xe_trung_chuyen.line1">
@@ -119,4 +120,9 @@ include 'includes/header.php';
         </div>
     </div>
 </section>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="ads-car.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="xe-buyt.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
+
 <?php include 'includes/footer.php'; ?>

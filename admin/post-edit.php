@@ -79,6 +79,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content = trim($_POST['content'] ?? '');
     $status = trim($_POST['status'] ?? 'draft');
     $tags_input = trim($_POST['tags'] ?? '');
+    $title_en = trim($_POST['title_en'] ?? '');
+    $excerpt_en = trim($_POST['excerpt_en'] ?? '');
+    $content_en = trim($_POST['content_en'] ?? '');
+    $title_cn = trim($_POST['title_cn'] ?? '');
+    $excerpt_cn = trim($_POST['excerpt_cn'] ?? '');
+    $content_cn = trim($_POST['content_cn'] ?? '');
     $current_image = trim($_POST['current_image'] ?? '');
 
     // --- VALIDATION ---
@@ -108,7 +114,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Xử lý upload ảnh
     $image_path = $current_image;
     if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
-        if ($_FILES['image']['size'] > 6 * 1024 * 1024) { // Giới hạn 6MB
+        $file_info = finfo_open(FILEINFO_MIME_TYPE);
+        $mime_type = finfo_file($file_info, $_FILES['image']['tmp_name']);
+        finfo_close($file_info);
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+
+        if (!in_array($mime_type, $allowed_types)) {
+            $message = "Định dạng ảnh không hợp lệ. Chỉ chấp nhận JPG, PNG, GIF, WEBP.";
+            $message_type = 'danger';
+        } elseif ($_FILES['image']['size'] > 6 * 1024 * 1024) { // Giới hạn 6MB
             $message = "Kích thước ảnh quá lớn. Vui lòng chọn ảnh dưới 6MB.";
             $message_type = 'danger';
         } else {
@@ -135,17 +149,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($message)) {
         if ($post_id_from_form) { // Chế độ cập nhật
             $stmt = $conn->prepare(
-                "UPDATE posts SET title=?, slug=?, excerpt=?, content=?, image=?, status=?, tags=? WHERE id=?"
+                "UPDATE posts SET title=?, slug=?, excerpt=?, content=?, image=?, status=?, tags=?, title_en=?, excerpt_en=?, content_en=?, title_cn=?, excerpt_cn=?, content_cn=? WHERE id=?"
             );
-            $stmt->bind_param('sssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $post_id_from_form);
+            $stmt->bind_param('sssssssssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $title_en, $excerpt_en, $content_en, $title_cn, $excerpt_cn, $content_cn, $post_id_from_form);
             $success_message = "Cập nhật bài viết thành công!";
             $redirect_url = "news.php?success=updated";
         } else { // Chế độ thêm mới
             $created_by = $_SESSION['admin_id'];
             $stmt = $conn->prepare(
-                "INSERT INTO posts (title, slug, excerpt, content, image, status, tags, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO posts (title, slug, excerpt, content, image, status, tags, created_by, title_en, excerpt_en, content_en, title_cn, excerpt_cn, content_cn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
             );
-            $stmt->bind_param('sssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $created_by);
+            $stmt->bind_param('sssssssssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $created_by, $title_en, $excerpt_en, $content_en, $title_cn, $excerpt_cn, $content_cn);
             $success_message = "Thêm bài viết thành công!";
             $redirect_url = "news.php?success=added";
         }
@@ -185,13 +199,19 @@ if (!$is_new_post) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA Advertising' : 'FUTA Advertising'; ?></title>
-    <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
+    <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <!-- 1. Thêm CSS của Quill.js -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <style>
         body { background: #f7f9fc; }
         .form-control, .form-select { border-radius: 8px; padding: 10px 15px; }
-         rd { border-radius: 12px; }
+        .card { border-radius: 12px; }
+        /* Tùy chỉnh chiều cao cho editor */
+        .ql-container {
+            min-height: 400px;
+        }
     </style>
 </head>
 <body>
@@ -206,7 +226,7 @@ if (!$is_new_post) {
         </a>
     </div>
 
-    <?php if ($message): ?>
+    <?php if (!empty($message)): ?>
         <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show">
             <?php echo htmlspecialchars($message); ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -250,7 +270,11 @@ if (!$is_new_post) {
                         <h5 class="mb-0 fw-bold"><i class="fas fa-edit text-primary me-2"></i>Nội dung chi tiết</h5>
                     </div>
                     <div class="card-body p-4">
-                        <textarea class="form-control" id="content-editor" name="content" rows="20"><?php echo $post['content'] ?? ''; ?></textarea>
+                        <!-- 2. Thay thế textarea bằng div cho Quill -->
+                        <div id="content-editor">
+                            <?php echo $post['content'] ?? ''; ?>
+                        </div>
+                        <input type="hidden" name="content" id="content-input">
                     </div>
                 </div>
             </div>
@@ -305,7 +329,43 @@ if (!$is_new_post) {
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<!-- 3. Thêm JS của Quill.js -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
 <script>
+    // 4. Khởi tạo Quill.js và đồng bộ dữ liệu
+    const quillOptions = {
+            theme: 'snow',
+            modules: {
+                toolbar: [
+                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                    [{ 'script': 'sub'}, { 'script': 'super' }],
+                    [{ 'indent': '-1'}, { 'indent': '+1' }],
+                    [{ 'color': [] }, { 'background': [] }],
+                    [{ 'align': [] }],
+                    ['link', 'image', 'video', 'blockquote', 'code-block'],
+                    ['clean']
+                ]
+            }
+        };
+
+    const quillVi = new Quill('#content-editor-vi', quillOptions);
+    const quillEn = new Quill('#content-editor-en', quillOptions);
+    const quillCn = new Quill('#content-editor-cn', quillOptions);
+
+    const form = document.querySelector('form');
+    const contentInputVi = document.getElementById('content-input-vi');
+    const contentInputEn = document.getElementById('content-input-en');
+    const contentInputCn = document.getElementById('content-input-cn');
+
+    form.addEventListener('submit', function(e) {
+        // Trước khi submit, lấy nội dung HTML từ Quill và gán vào input ẩn
+        contentInputVi.value = quillVi.root.innerHTML;
+        contentInputEn.value = quillEn.root.innerHTML;
+        contentInputCn.value = quillCn.root.innerHTML;
+    });
+
     function previewImage(event) {
         if (event.target.files && event.target.files[0]) {
             var reader = new FileReader();
@@ -318,29 +378,4 @@ if (!$is_new_post) {
             reader.readAsDataURL(event.target.files[0]);
         }
     }
-</script>
-<!-- Place the first <script> tag in your HTML's <head> -->
-<script src="https://cdn.tiny.cloud/1/l2q0znuxxaqs67g0oq57gq8hvxeewnh664ncw761l4psvcxg/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
-
-<!-- Place the following <script> and <textarea> tags your HTML's <body> -->
-<script>
-  tinymce.init({
-    selector: '#content-editor',
-    plugins: [
-      // Core editing features
-      'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-      // Your account includes a free trial of TinyMCE premium features
-      // Try the most popular premium features until Jan 5, 2026:
-      'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
-    ],
-    toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-    tinycomments_mode: 'embedded',
-    tinycomments_author: 'Author name',
-    mergetags_list: [
-      { value: 'First.Name', title: 'First Name' },
-      { value: 'Email', title: 'Email' },
-    ],
-    ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
-    uploadcare_public_key: 'ab3664f99f73615f23f0',
-  });
 </script>

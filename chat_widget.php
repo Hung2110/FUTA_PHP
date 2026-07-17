@@ -1,9 +1,9 @@
 <style>
-    /* Giao diện khung Chat nổi */
+    /* --- Giao diện khung Chat nổi --- */
     .futa-chat-btn {
         position: fixed;
         bottom: 60px;
-        right: 30px;
+        right: 30px; /* Giữ nguyên vị trí */
         width: 60px;
         height: 60px;
         background: linear-gradient(135deg, #004aad, #007bff);
@@ -14,45 +14,63 @@
         justify-content: center;
         font-size: 28px;
         cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,74,173,0.4);
+        box-shadow: 0 6px 20px rgba(0, 74, 173, 0.4);
         z-index: 9999;
-        transition: transform 0.3s ease;
+        transition: all 0.3s ease;
+        animation: futa-pulse 2s infinite;
     }
     .futa-chat-btn:hover {
         transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(0, 74, 173, 0.5);
+        animation: none;
     }
     
     .futa-chat-box {
         position: fixed;
         bottom: 130px;
-        right: 30px;
-        width: 350px;
-        height: 480px;
+        right: 30px; /* Giữ nguyên vị trí */
+        width: 90%; /* Tự co giãn chiều rộng */
+        max-width: 360px; /* Nhưng không vượt quá 360px trên PC */
+        height: 60vh; /* Chiều cao tự động bằng 60% màn hình */
+        min-height: 400px; /* Không được nhỏ hơn 400px để tránh mất nút bấm */
+        max-height: calc(100vh - 160px); /* Không vượt quá màn hình để không bị mất viền trên */
         background: #fff;
-        border-radius: 12px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        border-radius: 16px; /* Bo góc mềm mại hơn */
+        box-shadow: 0 12px 40px rgba(0,0,0,0.2); /* Đổ bóng sâu và rõ hơn */
         display: none;
         flex-direction: column;
         z-index: 9999;
         overflow: hidden;
-        font-family: inherit;
+        font-family: Arial, Helvetica, sans-serif;
+        transform-origin: bottom right;
+        transform: scale(0.95) translateY(10px);
+        opacity: 0;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .futa-chat-box.show {
+        display: flex;
+        transform: scale(1) translateY(0);
+        opacity: 1;
     }
     
     .futa-chat-header {
         background: linear-gradient(135deg, #004aad, #007bff);
         color: white;
-        padding: 15px 20px;
+        padding: 16px 20px; /* Tăng padding cho thoáng */
         font-weight: 600;
+        font-size: 16px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border-top-left-radius: 12px;
-        border-top-right-radius: 12px;
+        border-top-left-radius: 16px; /* Bo góc tương ứng với box */
+        border-top-right-radius: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1); /* Bóng đổ nhẹ cho header */
+        z-index: 10; /* Đảm bảo header luôn ở trên */
     }
     
     .futa-chat-header .header-actions i {
         cursor: pointer;
-        font-size: 18px;
+        font-size: 18px; /* Kích thước icon vừa phải */
         margin-left: 15px;
         transition: transform 0.2s, opacity 0.2s;
     }
@@ -60,38 +78,68 @@
         opacity: 0.8;
         transform: scale(1.1);
     }
+    
+    .futa-header-title {
+        display: flex;
+        flex-direction: column;
+    }
+    .futa-header-title .title-main {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    .futa-header-title .title-sub {
+        font-size: 12px;
+        opacity: 0.85;
+        font-weight: 400;
+        display: flex; /* Thêm flex để căn chỉnh chấm xanh và chữ */
+        align-items: center; /* Căn giữa theo chiều dọc */
+    }
+
+    .futa-header-title .title-sub::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background-color: #28a745; /* Màu xanh lá */
+        border-radius: 50%;
+        margin-right: 6px;
+        animation: futa-pulse-green 1.5s infinite; /* Hiệu ứng nhấp nháy */
+        box-shadow: 0 0 5px rgba(40, 167, 69, 0.7);
+    }
 
     .futa-chat-body {
         flex: 1;
-        padding: 15px;
+        padding: 20px 15px; /* Tăng padding dọc */
         overflow-y: auto;
-        background: #f4f6f9;
+        background: #f8f9fa; /* Nền xám nhạt dễ chịu */
         display: flex;
         flex-direction: column;
-        gap: 10px;
+        gap: 12px; /* Khoảng cách giữa các tin nhắn */
         scroll-behavior: smooth;
     }
     
     .futa-chat-message {
-        max-width: 80%;
-        padding: 10px 14px;
-        border-radius: 15px;
+        max-width: 85%;
+        padding: 12px 16px; /* Padding bên trong tin nhắn */
+        border-radius: 18px; /* Bo góc tròn trịa */
         font-size: 14.5px;
-        line-height: 1.4;
+        line-height: 1.5;
         word-wrap: break-word;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Bóng đổ nhẹ cho tin nhắn */
     }
     .futa-chat-message.customer {
-        background: #004aad;
+        background: linear-gradient(135deg, #007bff, #004aad); /* Gradient màu FUTA */
         color: white;
         align-self: flex-end;
-        border-bottom-right-radius: 4px;
+        border-bottom-right-radius: 4px; /* Bo góc đặc trưng */
     }
     .futa-chat-message.admin {
-        background: #e9ecef;
+        background: #ffffff;
         color: #333;
         align-self: flex-start;
-        border-bottom-left-radius: 4px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        border-bottom-left-radius: 4px; /* Bo góc đặc trưng */
+        border: 1px solid #eaeaea; /* Viền nhẹ cho dễ phân biệt */
     }
 
     .futa-chat-time {
@@ -121,53 +169,106 @@
 
     .futa-chat-input-area {
         display: flex;
-        padding: 10px;
-        border-top: 1px solid #ddd;
+        padding: 15px; /* Padding cho vùng nhập liệu */
+        border-top: 1px solid #eaeaea;
         background: #fff;
         align-items: center;
-        gap: 5px;
+        gap: 10px;
     }
     .futa-chat-input-area input[type="text"] {
         flex: 1;
-        padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
+        padding: 12px 18px; /* Padding cho input */
+        border: 1px solid #e0e0e0;
+        border-radius: 25px; /* Bo tròn hoàn toàn */
+        background: #f4f6f9; /* Nền xám nhạt */
         outline: none;
-        transition: border-color 0.3s;
+        transition: all 0.3s;
+        font-size: 14.5px;
     }
     .futa-chat-input-area input[type="text"]:focus {
-        border-color: #007bff;
+        background: #fff;
+        border-color: #007bff; /* Hiệu ứng focus màu FUTA */
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1); /* Vòng sáng mờ */
     }
     .futa-chat-input-area button {
-        background: transparent;
-        color: #004aad;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 18px; /* Kích thước icon nút */
         border: none;
-        font-size: 20px;
-        padding: 0 5px;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: all 0.2s;
     }
-    .futa-chat-input-area button:hover {
-        transform: scale(1.1);
+    .futa-chat-input-area #sendChatBtn {
+        background: linear-gradient(135deg, #004aad, #007bff); /* Gradient cho nút gửi */
+        color: white;
+        box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+    }
+    .futa-chat-input-area #sendChatBtn:hover {
+        transform: scale(1.1); /* Hiệu ứng phóng to khi hover */
+        box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4);
+    }
+    .futa-chat-input-area #attachChatBtn {
+        background: #f0f2f5;
+        color: #666;
+    }
+    .futa-chat-input-area #attachChatBtn:hover {
+        background: #e2e6ea;
+        color: #004aad;
     }
     
     /* Tùy chỉnh form nhập thông tin */
-    #chatRegisterForm input {
-        border-radius: 8px;
-        padding: 12px 15px;
+    #chatRegisterForm {
+        padding: 25px !important; /* Padding cho form đăng ký */
+        overflow-y: auto; /* Thêm thanh cuộn khi nội dung bị tràn (quan trọng nhất) */
+        flex-shrink: 0; /* Ngăn form bị co lại quá mức */
+    }
+    #chatRegisterForm .bi-chat-square-text {
+        font-size: 42px !important;
+        background: -webkit-linear-gradient(135deg, #004aad, #007bff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    #chatRegisterForm input, #chatRegisterForm textarea {
+        border-radius: 12px;
+        padding: 14px 15px; /* Padding cho các ô input */
+        background: #f8f9fa;
         border: 1px solid #e0e0e0;
-        font-size: 14px;
+        font-size: 14.5px;
         transition: all 0.3s;
     }
-    #chatRegisterForm input:focus {
+    #chatRegisterForm input:focus, #chatRegisterForm textarea:focus {
+        background: #fff; /* Hiệu ứng focus */
         border-color: #004aad;
         box-shadow: 0 0 0 3px rgba(0, 74, 173, 0.1);
     }
     #startChatBtn {
-        border-radius: 8px;
-        padding: 12px;
-        font-weight: bold;
+        border-radius: 12px !important;
+        padding: 14px !important; /* Nút bấm to, rõ ràng */
+        background: linear-gradient(135deg, #004aad, #007bff) !important;
+        border: none !important;
+        font-size: 16px;
+        box-shadow: 0 4px 15px rgba(0, 74, 173, 0.3);
+        font-weight: bold; /* Chữ đậm */
         letter-spacing: 0.5px;
+        transition: all 0.3s;
+    }
+    #startChatBtn:hover {
+        transform: translateY(-2px); /* Hiệu ứng nhấc lên khi hover */
+        box-shadow: 0 6px 20px rgba(0, 74, 173, 0.4);
+    }
+
+    @keyframes futa-pulse {
+        0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.7); }
+        70% { box-shadow: 0 0 0 15px rgba(0, 123, 255, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+    }
+
+    @keyframes futa-pulse-green {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
     }
 
     /* Responsive cho Mobile */
@@ -175,323 +276,68 @@
         .futa-chat-btn {
             bottom: 20px;
             right: 20px;
-            width: 50px;
-            height: 50px;
+            width: 55px;
+            height: 55px;
             font-size: 24px;
         }
         .futa-chat-box {
             width: calc(100% - 40px);
             right: 20px;
-            bottom: 80px;
-            height: 450px;
-            max-height: calc(100vh - 100px);
+            bottom: 85px;
+            height: auto; /* Cho phép chiều cao tự động co giãn */
+            max-height: 70vh; /* Giới hạn chiều cao tối đa, tự động co lại khi bàn phím hiện */
+        }
+        #chatRegisterForm {
+            padding: 20px !important;
+        }
+        #chatRegisterForm .bi-chat-square-text {
+            font-size: 38px !important;
+        }
+        #chatRegisterForm input, #chatRegisterForm textarea {
+            padding: 12px 15px;
+            font-size: 14px;
         }
     }
 </style>
 
 <!-- Khung chứa HTML -->
-<div class="futa-chat-btn" id="futaChatBtn"><i class="bi bi-chat-dots-fill"></i></div>
+<div class="futa-chat-btn" id="futaChatBtn" title="Hỗ trợ trực tuyến"><i class="bi bi-chat-dots-fill"></i></div>
 
 <div class="futa-chat-box" id="futaChatBox">
     <div class="futa-chat-header">
-        <span><i class="bi bi-headset me-2"></i> <span data-i18n="about.chat_title">Hỗ trợ trực tuyến</span></span>
+        <div class="futa-header-title">
+            <div class="title-main" data-i18n="about.chat_title">FUTA ADVERTISING</div>
+            <div class="title-sub" data-i18n="about.chat_subtitle">Chúng tôi sẽ trả lời sớm nhất có thể</div>
+        </div>
         <div class="header-actions">
             <i class="bi bi-arrow-clockwise" id="resetChatBtn" title="Bắt đầu phiên chat mới" style="display:none;"></i>
             <i class="bi bi-x-lg" id="closeChatBox"></i>
         </div>
     </div>
 
-    <!-- Form xin thông tin lần đầu -->
-    <div id="chatRegisterForm" style="padding: 25px 20px; display: flex; flex-direction: column; gap: 15px; background: #fff; flex: 1;">
-        <div class="text-center mb-2">
-            <i class="bi bi-chat-square-text text-primary" style="font-size: 40px;"></i>
-            <p class="text-muted small mt-2 mb-0" data-i18n="about.chat_form_title">Vui lòng để lại thông tin để chúng tôi hỗ trợ bạn tốt nhất:</p>
+    <!-- Khu vực nội dung chung (bao gồm cả form và chat) -->
+    <div class="futa-chat-body" id="futaChatBody">
+        <!-- Form xin thông tin lần đầu (sẽ bị ẩn sau khi đăng ký) -->
+        <div id="chatRegisterContainer" style="display: flex; flex-direction: column; gap: 15px;">
+            <div class="futa-chat-message admin" data-i18n="about.chat_welcome">Để được FUTA Advertising hỗ trợ nhanh nhất, bạn vui lòng để lại thông tin bên dưới nhé.</div>
+            <input type="text" id="chatName" class="form-control" data-i18n-placeholder="about.chat_name_placeholder" placeholder="Họ và tên *" required>
+            <input type="text" id="chatPhone" class="form-control" data-i18n-placeholder="about.chat_phone_placeholder" placeholder="Số điện thoại *" required>
+            <input type="email" id="chatEmail" class="form-control" data-i18n-placeholder="about.chat_email_placeholder" placeholder="Email (Không bắt buộc)">
+            <textarea id="chatInitialMessage" class="form-control" rows="2" data-i18n-placeholder="about.chat_initial_message_placeholder" placeholder="Nội dung cần tư vấn..."></textarea>
+            <button class="btn btn-primary w-100" id="startChatBtn" data-i18n="about.chat_submit">Gửi yêu cầu</button>
         </div>
-        <input type="text" id="chatName" class="form-control" data-i18n-placeholder="about.chat_name_placeholder" placeholder="Họ và tên *" required>
-        <input type="text" id="chatPhone" class="form-control" data-i18n-placeholder="about.chat_phone_placeholder" placeholder="Số điện thoại *" required>
-        <input type="email" id="chatEmail" class="form-control" data-i18n-placeholder="about.chat_email_placeholder" placeholder="Email (Không bắt buộc)">
-        <button class="btn btn-primary w-100 mt-3" id="startChatBtn" data-i18n="about.chat_submit">Bắt đầu trò chuyện</button>
+
+        <!-- Vùng hiển thị tin nhắn (sẽ hiện sau khi đăng ký) -->
+        <div id="futaChatMessages" style="display: none; flex-direction: column; gap: 12px; padding: 0 5px;">
+            <!-- Tin nhắn sẽ được load ở đây -->
+        </div>
     </div>
 
-    <!-- Khu vực chat chính -->
-    <div id="chatActiveArea" style="display: none; flex-direction: column; flex: 1; min-height: 0;">
-        <div class="futa-chat-body" id="futaChatMessages">
-            <!-- Tin nhắn sẽ được load ở đây -->
-            <div class="futa-chat-message admin" data-i18n="about.chat_welcome">Xin chào! Chúng tôi là FUTA Advertising. Tôi có thể giúp gì cho bạn?</div>
-        </div>
-        <div class="futa-chat-input-area">
-            <input type="file" id="chatAttachFile" style="display: none;">
-            <button id="attachChatBtn" title="Đính kèm file"><i class="bi bi-paperclip"></i></button>
-            <input type="text" id="chatInputMsg" data-i18n-placeholder="about.chat_input_placeholder" placeholder="Nhập tin nhắn..." autocomplete="off">
-            <button id="sendChatBtn"><i class="bi bi-send-fill"></i></button>
-        </div>
+    <!-- Vùng nhập liệu (sẽ hiện sau khi đăng ký) -->
+    <div class="futa-chat-input-area" id="chatInputArea" style="display: none;">
+        <input type="file" id="chatAttachFile" style="display: none;">
+        <button id="attachChatBtn" title="Đính kèm file"><i class="bi bi-paperclip"></i></button>
+        <input type="text" id="chatInputMsg" data-i18n-placeholder="about.chat_input_placeholder" placeholder="Nhập tin nhắn..." autocomplete="off">
+        <button id="sendChatBtn"><i class="bi bi-send-fill"></i></button>
     </div>
 </div>
-
-<!-- Logic JavaScript Vanilla -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const chatBtn = document.getElementById('futaChatBtn');
-    const chatBox = document.getElementById('futaChatBox');
-    const closeBox = document.getElementById('closeChatBox');
-    const resetBtn = document.getElementById('resetChatBtn');
-    const registerForm = document.getElementById('chatRegisterForm');
-    const activeArea = document.getElementById('chatActiveArea');
-    const msgContainer = document.getElementById('futaChatMessages');
-    const chatInput = document.getElementById('chatInputMsg');
-    const sendBtn = document.getElementById('sendChatBtn');
-    const attachBtn = document.getElementById('attachChatBtn');
-    const attachInput = document.getElementById('chatAttachFile');
-
-    let sessionId = localStorage.getItem('futa_chat_session') || null;
-    let customerName = localStorage.getItem('futa_chat_name') || '';
-    let lastMsgId = 0;
-    let lastRenderedDate = '';
-    
-    // --- KẾT NỐI WEBSOCKET ---
-    let ws = null;
-    let isWsConnected = false;
-    function connectWebSocket() {
-        // Tự động nhận diện giao thức (HTTP -> ws://, HTTPS -> wss:// qua Nginx proxy)
-        const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = window.location.protocol === 'https:' 
-            ? `${wsProtocol}//${window.location.host}/chat/` 
-            : `${wsProtocol}//${window.location.hostname}:8080`;
-        ws = new WebSocket(wsUrl);
-        ws.onopen = () => { isWsConnected = true; };
-        ws.onmessage = (e) => {
-            const data = JSON.parse(e.data);
-            if (data.event === 'new_message' && data.session_id == sessionId) {
-                fetchMessages(); // Nhận được tín hiệu có tin nhắn mới -> Tải hiển thị ngay lập tức
-            }
-        };
-        ws.onerror = (e) => console.error('WebSocket Error:', e);
-        ws.onclose = () => {
-            isWsConnected = false;
-            setTimeout(connectWebSocket, 5000); // Tự động kết nối lại sau 5s nếu mất kết nối
-        };
-    }
-    connectWebSocket();
-
-    // --- FALLBACK POLLING ---
-    // Nếu WebSocket chưa chạy hoặc bị lỗi, tự động lấy tin nhắn mới mỗi 3 giây
-    setInterval(() => {
-        if (sessionId && !isWsConnected) {
-            fetchMessages();
-        }
-    }, 3000);
-
-    // Bật tắt khung chat
-    chatBtn.addEventListener('click', () => {
-        chatBox.style.display = chatBox.style.display === 'flex' ? 'none' : 'flex';
-        if(chatBox.style.display === 'flex') {
-            if(sessionId) {
-                registerForm.style.display = 'none';
-                activeArea.style.display = 'flex';
-                // Hiển thị tên khách hàng lên tiêu đề nếu đã từng nhập
-                if (customerName) {
-                    document.querySelector('.futa-chat-header span').innerHTML = `<i class="bi bi-person-circle me-2"></i> Xin chào, ${customerName}`;
-                }
-                resetBtn.style.display = 'inline-block';
-                fetchMessages();
-            } else {
-                registerForm.style.display = 'flex';
-                activeArea.style.display = 'none';
-            }
-        }
-    });
-
-    closeBox.addEventListener('click', () => {
-        chatBox.style.display = 'none';
-    });
-
-    // Xử lý nút Làm mới (Reset) phiên chat
-    resetBtn.addEventListener('click', () => {
-        if (confirm('Bạn có muốn kết thúc phiên chat hiện tại và bắt đầu lại không?')) {
-            localStorage.removeItem('futa_chat_session');
-            localStorage.removeItem('futa_chat_name');
-            sessionId = null;
-            customerName = '';
-            lastRenderedDate = '';
-            msgContainer.innerHTML = '<div class="futa-chat-message admin" data-i18n="about.chat_welcome">Xin chào! Chúng tôi là FUTA Advertising. Tôi có thể giúp gì cho bạn?</div>';
-            registerForm.style.display = 'flex';
-            activeArea.style.display = 'none';
-            resetBtn.style.display = 'none';
-            document.querySelector('.futa-chat-header span').innerHTML = `<i class="bi bi-headset me-2"></i> <span data-i18n="about.chat_title">Hỗ trợ trực tuyến</span>`;
-            if (window.i18n) window.i18n.setLanguage(window.i18n.getLanguage()); // Cập nhật lại ngôn ngữ
-        }
-    });
-
-    // Bắt đầu phiên chat mới
-    document.getElementById('startChatBtn').addEventListener('click', async () => {
-        const name = document.getElementById('chatName').value.trim();
-        const phone = document.getElementById('chatPhone').value.trim();
-        const email = document.getElementById('chatEmail').value.trim();
-        if(!name || !phone) return alert('Vui lòng nhập Họ tên và Số điện thoại!');
-
-        const fd = new URLSearchParams();
-        fd.append('action', 'start_session'); fd.append('name', name); fd.append('phone', phone); fd.append('email', email);
-        
-        const res = await fetch('/FUTA_PHP/includes/contact-chat-api.php', { method: 'POST', body: fd }).then(r => r.json());
-        if(res.success) {
-            sessionId = res.session_id;
-            customerName = name; // Lưu lại tên khách
-            localStorage.setItem('futa_chat_session', sessionId);
-            localStorage.setItem('futa_chat_name', customerName);
-            registerForm.style.display = 'none';
-            activeArea.style.display = 'flex';
-            document.querySelector('.futa-chat-header span').innerHTML = `<i class="bi bi-person-circle me-2"></i> Xin chào, ${customerName}`;
-            resetBtn.style.display = 'inline-block';
-            if (ws && ws.readyState === WebSocket.OPEN) {
-                ws.send(JSON.stringify({ event: 'new_session' })); // Bắn tín hiệu cho Admin biết có khách mới
-            }
-            
-            fetchMessages(true); // Load ngay lịch sử chat cũ (nếu có)
-        }
-    });
-
-    // Gửi và Lấy tin nhắn
-    const sendMessage = async () => {
-        const msg = chatInput.value.trim();
-        if(!msg || !sessionId) return;
-        
-        chatInput.value = ''; // Clear ngay để tạo cảm giác mượt
-        
-        // Hiển thị tin nhắn tạm thời (Optimistic UI)
-        const tempDiv = document.createElement('div');
-        tempDiv.className = 'futa-chat-message customer temp-msg';
-        tempDiv.textContent = msg;
-        tempDiv.style.opacity = '0.6';
-        msgContainer.appendChild(tempDiv);
-        msgContainer.scrollTop = msgContainer.scrollHeight;
-
-        const fd = new URLSearchParams();
-        fd.append('action', 'send_message'); fd.append('session_id', sessionId); fd.append('sender', 'customer'); fd.append('message', msg);
-        
-        try {
-            const res = await fetch('/FUTA_PHP/includes/contact-chat-api.php', { method: 'POST', body: fd }).then(r => r.json());
-            if(res.success) {
-                tempDiv.remove(); // Xóa tin tạm
-                await fetchMessages(true); // Load tin thật & force scroll
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                    ws.send(JSON.stringify({ event: 'new_message', session_id: sessionId })); // Bắn tín hiệu WebSocket cho Admin
-                }
-            }
-        } catch (e) {
-            console.error(e);
-            tempDiv.style.border = '1px solid red';
-        }
-    };
-
-    sendBtn.addEventListener('click', sendMessage);
-    chatInput.addEventListener('keypress', (e) => e.key === 'Enter' && sendMessage());
-
-    // Xử lý gửi file
-    attachBtn.addEventListener('click', () => attachInput.click());
-    attachInput.addEventListener('change', async function() {
-        if(this.files.length > 0 && sessionId) {
-            const file = this.files[0];
-            
-            let maxSize = 15 * 1024 * 1024; // Mặc định 15MB
-            if (file.type.startsWith('video/')) maxSize = 30 * 1024 * 1024;
-            else if (file.type.startsWith('image/')) maxSize = 5 * 1024 * 1024;
-            
-            if (file.size > maxSize) return alert('File quá lớn (Ảnh: Tối đa 5MB, Video: Tối đa 30MB, File khác: Tối đa 15MB)');
-            
-            const tempDiv = document.createElement('div');
-            tempDiv.className = 'futa-chat-message customer temp-msg';
-            tempDiv.innerHTML = '<i class="bi bi-hourglass-split"></i> Đang gửi file...';
-            tempDiv.style.opacity = '0.6';
-            msgContainer.appendChild(tempDiv);
-            msgContainer.scrollTop = msgContainer.scrollHeight;
-
-            const fd = new FormData();
-            fd.append('action', 'send_message');
-            fd.append('session_id', sessionId);
-            fd.append('sender', 'customer');
-            fd.append('file', file);
-            
-            try {
-                const res = await fetch('/FUTA_PHP/includes/contact-chat-api.php', { method: 'POST', body: fd }).then(r => r.json());
-                if(res.success) {
-                    tempDiv.remove();
-                    await fetchMessages(true);
-                    if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ event: 'new_message', session_id: sessionId }));
-                } else {
-                    tempDiv.innerHTML = '<i class="bi bi-exclamation-circle text-danger"></i> ' + res.error;
-                }
-            } catch (e) {
-                tempDiv.style.border = '1px solid red';
-            }
-            this.value = ''; 
-        }
-    });
-
-    // Hàm Format hiển thị ảnh/video/tài liệu
-    const formatChatMessage = (rawMsg) => {
-        if (rawMsg.startsWith('FILE::')) {
-            const parts = rawMsg.split('::');
-            if (parts.length >= 4) {
-                const mime = parts[1]; const url = parts[2]; const name = parts[3];
-                if (mime.startsWith('image/')) {
-                    return `<a href="${url}" target="_blank"><img src="${url}" alt="${name}" style="max-width: 100%; border-radius: 8px; margin-top: 5px;"></a>`;
-                } else if (mime.startsWith('video/')) {
-                    return `<video controls src="${url}" style="max-width: 100%; border-radius: 8px; margin-top: 5px;"></video>`;
-                } else {
-                    return `<a href="${url}" target="_blank" style="text-decoration: none; color: inherit; display:flex; align-items:center; gap:5px;"><i class="bi bi-file-earmark-arrow-down fs-5"></i> ${name}</a>`;
-                }
-            }
-        }
-        const div = document.createElement('div');
-        div.textContent = rawMsg;
-        return div.innerHTML.replace(/\n/g, '<br>');
-    };
-
-    const fetchMessages = async (forceScroll = false) => {
-        if(!sessionId) return;
-        const t = new Date().getTime(); // Chống cache
-        const res = await fetch(`/FUTA_PHP/includes/contact-chat-api.php?action=get_messages&session_id=${sessionId}&last_id=${lastMsgId}&t=${t}`).then(r => r.json());
-        if(res.success && res.messages.length > 0) {
-            const shouldScroll = forceScroll || (msgContainer.scrollTop + msgContainer.clientHeight >= msgContainer.scrollHeight - 50);
-            
-            // Nếu đang tải lần đầu và có lịch sử tin nhắn cũ, xóa câu chào mặc định đi
-            if (lastMsgId === 0) {
-                msgContainer.innerHTML = '';
-                lastRenderedDate = '';
-            }
-
-            res.messages.forEach(m => {
-                const msgDateObj = new Date(m.created_at.replace(' ', 'T'));
-                const msgDateStr = msgDateObj.toLocaleDateString('vi-VN');
-                const msgTimeStr = msgDateObj.toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
-
-                if (msgDateStr !== lastRenderedDate) {
-                    const dateDiv = document.createElement('div');
-                    dateDiv.className = 'futa-chat-date-separator';
-                    
-                    const todayStr = new Date().toLocaleDateString('vi-VN');
-                    const yesterdayObj = new Date();
-                    yesterdayObj.setDate(yesterdayObj.getDate() - 1);
-                    const yesterdayStr = yesterdayObj.toLocaleDateString('vi-VN');
-
-                    if (msgDateStr === todayStr) dateDiv.textContent = 'Hôm nay';
-                    else if (msgDateStr === yesterdayStr) dateDiv.textContent = 'Hôm qua';
-                    else dateDiv.textContent = msgDateStr;
-                    
-                    msgContainer.appendChild(dateDiv);
-                    lastRenderedDate = msgDateStr;
-                }
-
-                const div = document.createElement('div');
-                div.className = `futa-chat-message ${m.sender}`;
-                div.innerHTML = formatChatMessage(m.message) + `<div class="futa-chat-time">${msgTimeStr}</div>`;
-                msgContainer.appendChild(div);
-                lastMsgId = m.id;
-            });
-            if (shouldScroll) {
-                msgContainer.scrollTop = msgContainer.scrollHeight;
-            }
-        }
-    };
-});
-</script>

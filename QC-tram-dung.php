@@ -4,9 +4,9 @@ include 'includes/header.php';
 ?>
 <link rel="stylesheet" href="css/QC-TD.css">
 <section class="img-section">
-    <img src="assets/images/slideshow/QC_TD.png" alt="Quảng Cáo Kỹ Thuật Số" class="img-background">
+    <img src="assets/images/slideshow/QC-TD.jpg" alt="Quảng Cáo Trạm Dừng Chân" class="img-background" width="1920" height="600" fetchpriority="high" decoding="async">
 </section>
-<section class="map-box-section">
+<section class="map-box-section">`
   <div class="map-box">
     <h2 data-i18n="qc_tram_dung.map_title">Hệ Thống Trạm Dừng Chân </h2>
     <div class="map-stopstation">
@@ -419,7 +419,7 @@ include 'includes/header.php';
   </div>
 
   <!-- Block 3 -->
-  <div class="ads-accessory" style="background-image: url('assets/images/service/BetterImage_1759717641938.jpeg')">
+  <div class="ads-accessory" style="background-image: url('assets/images/service/lightbox.jpeg')">
     <div class="overlay right">
       <div class="content">
         <h3 data-i18n="qc_tram_dung.lightbox_title">Quảng Cáo Trên Light-Box</h3>
@@ -431,4 +431,9 @@ include 'includes/header.php';
     </div>
   </div>
 </section>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="xe-trung-chuyen.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="QC-ky-thuat-so.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
+
 <?php include 'includes/footer.php'; ?>

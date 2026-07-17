@@ -2,6 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *'); // Cho phép truy cập từ mọi domain, có thể thay đổi thành domain của bạn
 
+session_start();
 require_once 'db.php';
 
 $resource = $_GET['resource'] ?? null;
@@ -73,13 +74,19 @@ try {
             break;
 
         case 'users':
-            if ($id) {
-                $stmt = $conn->prepare("SELECT id, username, fullname, email, phone, bio, role, status FROM users WHERE id = ?");
-                $stmt->bind_param("i", $id);
-                $stmt->execute();
-                $result = $stmt->get_result();
-                $response = $result->fetch_assoc();
-                $stmt->close();
+            // Bảo mật: Chỉ cho phép tài khoản Admin/User nội bộ mới được xem thông tin users
+            if (isset($_SESSION['admin_id'])) {
+                if ($id) {
+                    $stmt = $conn->prepare("SELECT id, username, fullname, email, phone, bio, role, status FROM users WHERE id = ?");
+                    $stmt->bind_param("i", $id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $response = $result->fetch_assoc();
+                    $stmt->close();
+                }
+            } else {
+                http_response_code(403);
+                $response = ['error' => 'Forbidden. Bạn không có quyền truy cập dữ liệu này.'];
             }
             break;
 

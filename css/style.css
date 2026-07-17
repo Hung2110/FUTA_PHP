@@ -13,6 +13,15 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
+    overflow-x: hidden; /* Ngăn lỗi cuộn ngang trên mọi thiết bị */
+    width: 100%;
+    word-wrap: break-word; /* Tự động xuống dòng các từ hoặc link quá dài */
+    overflow-wrap: break-word;
+}
+
+img, video, iframe, canvas, svg, object {
+    max-width: 100%; /* Đảm bảo hình ảnh/video tự động thu nhỏ, không bao giờ tràn màn hình */
+    height: auto;
 }
 
 /* --- Navbar --- */
@@ -187,7 +196,8 @@ body {
   position: fixed;
   left: 0;
   top: 0;
-  width: 300px;
+  width: 80%; /* Cho phép thanh menu tự động thu nhỏ trên màn hình bé */
+  max-width: 300px;
   height: 100vh;
   background: #fff;
   box-shadow: 2px 0 10px rgba(0,0,0,0.2);
@@ -416,7 +426,13 @@ body {
     transform: translateX(0);
   }
 }
-
+.video-section {
+        height: 40vh !important; /* Đặt chiều cao phù hợp cho màn hình điện thoại (40% chiều cao màn hình) */
+    }
+    .video-background {
+        height: 100% !important;
+        object-fit: cover; /* Cắt video tràn viền để không bị méo hình hoặc dư khoảng trống đen */
+    }
  /* ============================
        CONTACT BUTTONS
     ============================ */
@@ -447,6 +463,7 @@ body {
       justify-content: center;
       animation: pulse-blue 2s infinite; /* Thêm hiệu ứng nhịp đập liên tục thu hút sự chú ý */
       position: relative; /* Thêm relative để chứa các icon absolute */
+      will-change: box-shadow; /* Đẩy xử lý hiệu ứng bóng đổ sang GPU */
     }
 
     .btn-contact-toggle .icon-toggle {
@@ -463,15 +480,20 @@ body {
     }
 
     .btn-contact-toggle .icon-phone {
-      animation: alternate-1 4s infinite;
+      animation: alternate-1 6s infinite;
     }
 
     .btn-contact-toggle .icon-messenger {
-      animation: alternate-2 4s infinite;
+      animation: alternate-2 6s infinite;
+    }
+
+    .btn-contact-toggle .icon-mail {
+      animation: alternate-3 6s infinite;
     }
 
     .contact-buttons-wrapper.show .btn-contact-toggle .icon-phone,
-    .contact-buttons-wrapper.show .btn-contact-toggle .icon-messenger {
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-messenger,
+    .contact-buttons-wrapper.show .btn-contact-toggle .icon-mail {
       animation: none;
       opacity: 0;
       transform: translate(-50%, -50%) scale(0.5);
@@ -508,6 +530,7 @@ body {
       overflow: hidden;
       box-shadow: 0 0 10px rgba(0,0,0,0.25);
       position: relative;
+      will-change: transform, width;
     }
 
     .btn-contact.call { background: #e74c3c; }
@@ -518,6 +541,7 @@ body {
       font-size: 22px;
       transition: all 0.3s ease;
       animation: glow 2s infinite ease-in-out, shake 3s infinite ease-in-out;
+      will-change: filter, transform;
     }
 
     .btn-contact span {
@@ -577,6 +601,7 @@ body {
       box-shadow: 0 4px 10px rgba(0,0,0,0.3);
       transition: all 0.3s ease-in-out;
       animation: pulse 2s infinite ease-in-out;
+      will-change: transform, box-shadow;
     }
 
     .chatbot-button:hover {
@@ -598,14 +623,20 @@ body {
 
     /* Hiệu ứng luân phiên cho 2 icon bên trong nút */
     @keyframes alternate-1 {
-      0%, 45% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-      50%, 95% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      0%, 30% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      33%, 97% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
       100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
     }
 
     @keyframes alternate-2 {
-      0%, 45% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
-      50%, 95% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      0%, 30% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      33%, 63% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      66%, 100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+    }
+
+    @keyframes alternate-3 {
+      0%, 63% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
+      66%, 97% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
       100% { opacity: 0; transform: translate(-50%, -50%) scale(0); }
     }
 
@@ -616,8 +647,11 @@ body {
       position: fixed;
       bottom: 90px;
       right: 20px;
-      width: 360px;
-      height: 520px;
+      width: 90%; /* Cho phép khung chat tự động co giãn theo điện thoại */
+      max-width: 360px;
+      height: 60vh; /* Tự động co giãn theo chiều cao màn hình */
+      min-height: 400px;
+      max-height: calc(100vh - 120px);
       background: #fff;
       border-radius: 15px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.25);
@@ -745,6 +779,7 @@ body {
     padding-top: 40px;
     font-family: Arial, Helvetica, sans-serif;
     position: relative;
+    clear: both; /* Đảm bảo Footer luôn nằm dưới các nút chuyển trang */
 }
 
 .footer-container {
@@ -762,7 +797,7 @@ body {
 }
 
 .footer-column h3 {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     margin-top: 0;
     margin-bottom: 15px;
@@ -784,7 +819,17 @@ body {
 
 .footer-column ul li {
     margin-bottom: 15px;
-    font-size: 20px;
+    font-size: 16px; /* Giảm kích thước chữ để vừa vặn hơn */
+    display: flex;
+    align-items:  flex-start; /* Căn giữa icon và chữ theo chiều dọc */
+    gap: 10px;
+    line-height: 1.4;
+}
+
+.footer-column ul li .icon {
+    flex-shrink: 0;
+    width: 25px;
+    text-align: center;
 }
 
 .footer-column img {
@@ -835,18 +880,21 @@ body {
 .social-icons .bi-instagram { color: #e1306c; }
 .social-icons .bi-youtube { color: #cd201f }
 
-.social-icons a.zalo img {
-    width: 40px; /* Kích thước tương đồng */
-    height: 40px;
-    vertical-align: middle;
-    border-radius: 50%; /* Tạo hình tròn */
-    object-fit: contain; /* Đảm bảo hình ảnh không bị méo */
-    background-color: white; /* Thêm background trắng nếu cần */
-    transition: transform 0.3s;
+.social-icons a.zalo {
+    display: flex; /* Căn giữa icon theo chiều dọc */
+    align-items: center;
 }
 
-.social-icons a.zalo:hover img {
-    transform: scale(1.1);
+.social-icons a.zalo img {
+    width: 28px; /* Giảm kích thước để tương đồng với các icon khác */
+    height: 28px;
+    vertical-align: middle;
+    /* Bỏ nền tròn để giống các icon khác */
+    filter: invert(38%) sepia(98%) saturate(3317%) hue-rotate(208deg) brightness(97%) contrast(101%); /* Chuyển ảnh trắng thành màu xanh #0068FF */
+}
+
+.social-icons a.zalo:hover {
+    transform: scale(1.2); /* Đồng bộ hiệu ứng hover với các icon khác */
 }
 .contact-info {
     display: flex;
@@ -973,11 +1021,11 @@ gap: 5px;
 padding: 8px 12px;
     }
     .features-grid {
-flex-direction: column;
-align-items: center;
+justify-items: center;
     }
     .feature-item {
 width: 90%;
+margin: 0 auto;
     }
     .gallery-section {
 grid-template-columns: 1fr 1fr;
@@ -994,6 +1042,10 @@ grid-template-columns: 1fr;
     }
 
     /* === CSS CHO FOOTER RESPONSIVE === */
+    .main-footer {
+        padding-top: 15px; /* Thu hẹp khoảng cách phía trên footer trên Mobile */
+    }
+
     .footer-container {
         flex-direction: column; /* Xếp các cột theo chiều dọc */
         align-items: flex-start; /* Căn các cột về bên trái */
@@ -1011,106 +1063,14 @@ grid-template-columns: 1fr;
         height: 250px; /* Điều chỉnh chiều cao bản đồ cho phù hợp */
     }
     .footer-bottom {
-        padding-bottom: 120px; /* Đẩy nội dung lên trên để tránh bị các nút floating (contact/chatbot) đè vào trên thiết bị di động */
+        padding-bottom: 10px; /* Đẩy nội dung lên trên để tránh bị các nút floating (contact/chatbot) đè vào trên thiết bị di động */
     }
-}
-
-/* CSS cho slider tin tức */
-.news-slider-wrapper {
-    position: relative;
-    width: 100%;
-    overflow: hidden; /* Ẩn phần nội dung thừa ra ngoài */
-}
-
-.news-slider {
-    display: flex;
-    gap: 10px;
-    padding: 20px 0;
-    /* Animation chạy lặp vô hạn */
-    animation: news-slide-animation 40s linear infinite;
-}
-
-.news-slider::-webkit-scrollbar {
-    display: none; /* Ẩn thanh cuộn cho Chrome, Safari, Opera */
-}
-
-.news-slide {
-    flex: 0 0 350px; /* Đặt kích thước cố định cho mỗi slide */
-    box-sizing: border-box;
-}
-
-@keyframes news-slide-animation {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-}
-
-/* Tạm dừng animation khi di chuột vào */
-.news-slider-wrapper:hover .news-slider {
-    animation-play-state: paused;
-}
-
-/* --- Responsive cho Slider Tin tức --- */
-
-/* Tablet: Hiển thị 2 slide */
-@media (max-width: 992px) {
-    .news-slide {
-        flex-basis: 320px;
-    }
-}
-
-/* Mobile: Hiển thị 1 slide */
-@media (max-width: 768px) {
-    .news-slide {
-        flex-basis: 300px;
-    }
-}
-
-.slider-control {
-    position: absolute;
-    top: 50%;
-    /* Dịch chuyển nút một chút và thêm hiệu ứng phóng to */
-    transform: translateY(-50%) scale(1);
-    background-color: rgba(255, 255, 255, 0.9); /* Nền trắng mờ */
-    color: #333; /* Icon màu tối */
-    border: none;
-    width: 45px; /* Kích thước cố định */
-    height: 45px;
-    line-height: 45px; /* Căn giữa icon theo chiều dọc */
-    text-align: center; /* Căn giữa icon theo chiều ngang */
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 10;
-    border-radius: 50%;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Thêm bóng đổ mềm mại */
-    transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
-}
-
-.slider-control:hover {
-    background-color: var(--primary-color); /* Đổi màu nền khi hover */
-    color: white; /* Đổi màu icon khi hover */
-    transform: translateY(-50%) scale(1.1); /* Phóng to nhẹ khi hover */
-}
-
-/* Ẩn nút điều khiển trên màn hình nhỏ nếu không đủ slide để cuộn */
-@media (max-width: 768px) {
-    /* Các nút điều khiển sẽ bị ẩn vì không còn cần thiết */
 }
 
 @media (max-width: 500px) {
     .gallery-section {
 grid-template-columns: 1fr;
     }
-}
-
-.slider-control.prev {
-    /* Nút không còn cần thiết với animation CSS */
-    display: none;
-}
-
-.slider-control.next {
-    /* Nút không còn cần thiết với animation CSS */
-    display: none;
 }
 
 /* =========================================
@@ -1129,6 +1089,28 @@ grid-template-columns: 1fr;
         display: grid;
         grid-template-columns: repeat(2, 1fr) !important;
         gap: 20px;
+    }
+
+    .btn-contact-toggle {
+        display: flex;
+    }
+    .contact-buttons {
+        position: absolute;
+        bottom: 65px; /* Nằm đè lên trên nút toggle */
+        left: 0;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(20px) scale(0.9);
+        transform-origin: bottom left;
+    }
+    .contact-buttons-wrapper.show .contact-buttons {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0) scale(1);
+    }
+    /* Ẩn chữ trong nút liên hệ cố định góc trái */
+    .btn-contact span {
+        display: none !important;
     }
 
     /* Cột trang liên hệ */
@@ -1182,59 +1164,59 @@ grid-template-columns: 1fr;
 
     /* Xử lý Banner chữ nổi */
     .banner-text .line-1, 
-    .banner-text .line-2 {
+    .banner-text .line-2,
+    .banner-approach-text .line-1 {
         font-size: 16px !important;
         white-space: normal !important; /* Cho phép rớt dòng trên mobile */
     }
-    .banner-text .line-3 {
+    .banner-text .line-3,
+    .banner-approach-text .line-2 {
         font-size: 18px !important;
+        white-space: normal !important; /* Cho phép rớt dòng trên mobile */
+    }
+    .banner-approach-text {
+        width: 95%; /* Thu hẹp chiều rộng để chữ không dính sát 2 lề */
     }
 
-    /* Logo Đối Tác (Bẻ dòng, 3 logo 1 hàng) */
-    .partners-logos {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    .partner-logo {
-        flex: 0 0 calc(33.33% - 15px);
-    }
-    .partner-logo img {
-        max-width: 100%;
-    }
+}
 
-    /* Logo các hệ sinh thái chân trang */
-    .logo-section {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
-    }
-    .logo-section a {
-        flex: 0 0 40%;
-    }
+/* =========================================
+   NÚT CHUYỂN TRANG NHANH TRÊN MOBILE
+   ========================================= */
+.mobile-page-nav-btn {
+    display: none; /* Ẩn mặc định */
+    width: 44px;
+    height: 44px;
+    background-color: #fff; /* Nền trắng */
+    color: #004aad;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    z-index: 1000;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 74, 173, 0.2);
+    transition: all 0.25s ease-in-out;
+}
 
-    /* Ẩn chữ trong nút liên hệ cố định góc trái */
-    .btn-contact span {
-        display: none !important;
+.mobile-page-nav-btn:hover, .mobile-page-nav-btn:active {
+    background-color: #004aad; /* Chuyển sang màu xanh FUTA khi chạm */
+    color: #fff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 74, 173, 0.4);
+}
+@media (max-width: 768px) {
+    .mobile-page-nav-btn {
+        display: inline-flex; /* Hiện trên mobile dạng inline để dùng float */
+        margin-bottom: 30px;
     }
-
-    /* Gộp 3 nút thành 1 nút mở rộng trên mobile */
-    .btn-contact-toggle {
-        display: flex;
+    .mobile-page-nav-btn.prev {
+        float: left;
+        margin-left: 20px;
     }
-    .contact-buttons {
-        position: absolute;
-        bottom: 65px; /* Nằm đè lên trên nút toggle */
-        left: 0;
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(20px) scale(0.9);
-        transform-origin: bottom left;
-    }
-    .contact-buttons-wrapper.show .contact-buttons {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0) scale(1);
+    .mobile-page-nav-btn.next {
+        float: right;
+        margin-right: 20px;
     }
 }

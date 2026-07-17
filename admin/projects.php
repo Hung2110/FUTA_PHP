@@ -15,31 +15,6 @@ function log_activity($conn, $action, $module) {
     }
 }
 
-// Hàm xử lý upload file
-function handle_upload($file_key, $current_path = '', $allowed_types = [], $max_size = 5000000) { // 5MB
-    if (isset($_FILES[$file_key]) && $_FILES[$file_key]['error'] == UPLOAD_ERR_OK) {
-        $upload_dir = '../uploads/projects/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0777, true);
-        }
-
-        // Xóa file cũ nếu có (trừ khi là ảnh mặc định)
-        if ($current_path && file_exists('../' . $current_path) && strpos($current_path, 'assets/') === false) {
-            unlink('../' . $current_path);
-        }
-
-        $file_name = uniqid() . '-' . basename($_FILES[$file_key]['name']);
-        $target_path = $upload_dir . $file_name;
-
-        if (move_uploaded_file($_FILES[$file_key]['tmp_name'], $target_path)) {
-            // Trả về đường dẫn tương đối từ thư mục gốc của web
-            return 'uploads/projects/' . $file_name;
-        }
-    }
-    // Nếu không có file mới hoặc upload lỗi, giữ lại đường dẫn cũ
-    return $current_path;
-}
-
 // --- Thông báo ---
 if (isset($_GET['success'])) {
     if ($_GET['success'] === 'added') $message = 'Thêm dự án thành công!';
@@ -78,9 +53,11 @@ $projects = $stmt_projects->get_result();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo isset($pageTitle) ? htmlspecialchars($pageTitle) . ' | FUTA Advertising' : 'FUTA Advertising'; ?></title>
-    <link rel="icon" href="/FUTA_PHP/assets/images/logo/futa.png" type="image/png">
+    <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
      <!-- Favicon (Logo trên tab trình duyệt) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Quill.js CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         body { background: #f7f9fc; }
@@ -240,7 +217,7 @@ $projects = $stmt_projects->get_result();
                             <p><strong>Trạng thái:</strong> <span id="viewStatus" class="badge"></span></p>
                             <hr>
                             <p><strong>Mô tả chi tiết:</strong></p>
-                            <div id="viewDescription" style="white-space: pre-wrap; word-wrap: break-word; max-height: 400px; overflow-y: auto; background: #f8f9fa; padding: 15px; border-radius: 8px;"></div>
+                            <div id="viewDescription" class="ql-editor" style="min-height: 400px; padding: 0;"></div>
                         </div>
                         <div class="col-md-5">
                             <div class="mb-3">
@@ -263,6 +240,8 @@ $projects = $stmt_projects->get_result();
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         const viewProjectModal = document.getElementById('viewProjectModal');
+        const viewDescriptionDiv = document.getElementById('viewDescription');
+
         viewProjectModal.addEventListener('show.bs.modal', function(event) {
             const button = event.relatedTarget;
             document.getElementById('viewTitle').textContent = button.dataset.title;
@@ -270,9 +249,8 @@ $projects = $stmt_projects->get_result();
             document.getElementById('viewCreatedBy').textContent = button.dataset.createdBy;
             document.getElementById('viewCreatedAt').textContent = button.dataset.createdAt;
 
-            const tempTextarea = document.createElement('textarea');
-            tempTextarea.innerHTML = button.dataset.description;
-            document.getElementById('viewDescription').innerHTML = tempTextarea.value || 'Không có mô tả.';
+            // Set content for the div
+            viewDescriptionDiv.innerHTML = button.dataset.description || '<p class="text-muted">Không có mô tả chi tiết.</p>';
 
             const statusBadge = document.getElementById('viewStatus');
             statusBadge.textContent = button.dataset.statusText;

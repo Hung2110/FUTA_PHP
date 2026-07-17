@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Nếu không có user nào trong DB có quyền này, dùng fallback mặc định
         if (empty($adminEmails)) {
             $envEmails = getenv('ADMIN_EMAILS');
-            $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['hung.nguyen@futa.vn'];
+            $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['futaadvertising@futa.vn'];
         }
         
         $mailSubject = "[FUTA ADVERTISING] Liên hệ mới từ $name";
@@ -59,13 +59,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $mail = new PHPMailer(true);
         try {
-            $mail->SMTPDebug = 0; // Tắt hiển thị chi tiết quá trình kết nối với Google
+            $mail->SMTPDebug = 2; // Bật hiển thị lỗi chi tiết để kiểm tra
+            $mail->Debugoutput = 'html'; // Xuất lỗi dưới dạng HTML để dễ đọc trên trình duyệt
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com'; // Thay bằng SMTP server của bạn (VD: smtp.gmail.com)
             $mail->SMTPAuth   = true;
             $mail->Username   = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn'; // Thay bằng email gửi đi của bạn
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Password   = getenv('SMTP_PASS') ?: 'cwsauhhbyzpjnspa';    // Mật khẩu ứng dụng viết liền không khoảng trắng
+            $mail->Password   = getenv('xtonupudcelpoixh') ?: '';    // Lấy từ biến môi trường
             $mail->Port       = 587; // Sử dụng cổng 587 cho STARTTLS của Gmail
             $mail->CharSet    = 'UTF-8'; // Bổ sung để hỗ trợ tiếng Việt không bị lỗi font
             
@@ -95,8 +96,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Exception $e) {
             // Bắt lỗi và thông báo cho người dùng, đồng thời ghi log
             error_log("Gửi email thất bại. Lỗi: {$mail->ErrorInfo}");
-            $error = "Đã lưu thông tin liên hệ nhưng hệ thống gặp lỗi khi gửi email thông báo. Vui lòng thử lại sau.";
-            $success = false;
+            $error = "Thông tin liên hệ của bạn đã được lưu thành công. Nhân viên của chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.";
+            $success = true;
         }
     } else {
         $error = 'Vui lòng nhập đầy đủ thông tin!';
@@ -133,12 +134,12 @@ include 'includes/header.php';
                 </div>
                 <div class="info-group">
                     <h4 data-i18n="contact.hotline">Tổng đài</h4>
-                    <p><i class="bi bi-telephone-fill"></i> 1900 6912</p>
+                    <p><i class="bi bi-telephone-fill"></i> <a href="tel:19006912" style="color: inherit; text-decoration: none;">1900 6912</a></p>
                 </div>
                 <div class="info-group">
                     <h4 data-i18n="contact.email_website">Email & Website</h4>
-                    <p><i class="bi bi-envelope-fill"></i> futaadvertising@futa.vn</p>
-                    <p><i class="bi bi-globe2"></i> futaads.vn</p>
+                    <p><i class="bi bi-envelope-fill"></i> <a href="mailto:futaadvertising@futa.vn" style="color: inherit; text-decoration: none;">futaadvertising@futa.vn</a></p>
+                    <p><i class="bi bi-globe2"></i> <a href="https://futaadvertising.vn" target="_blank" style="color: inherit; text-decoration: none;">futaadvertising.vn</a></p>
                 </div>
                 <div class="info-group">
                     <h4 data-i18n="contact.social_media">Mạng xã hội</h4>
@@ -150,7 +151,7 @@ include 'includes/header.php';
                 </div>
 
                 <div class="illustration-container">
-                    <img src="assets/images/icon/icon.jpeg" alt="Hình minh họa" class="illustration">
+                    <img src="assets/images/icon/icon.jpeg" alt="Hình minh họa" class="illustration" width="400" height="300" loading="lazy" decoding="async">
                 </div>
             </div>
 
@@ -195,7 +196,7 @@ include 'includes/header.php';
         let height = canvas.height = window.innerHeight;
         
         const particles = [];
-        const maxParticles = 100;
+        const maxParticles = 50; // Giảm số lượng hạt để tối ưu vòng lặp O(N^2)
         
         function Particle(x, y, radius, color) {
             this.x = x;
@@ -258,6 +259,8 @@ include 'includes/header.php';
         
         function animate() {
             requestAnimationFrame(animate);
+            if (document.hidden) return; // Tạm dừng vẽ khi chuyển tab để tiết kiệm CPU/RAM
+            
             ctx.clearRect(0, 0, width, height);
             
             connectParticles();
@@ -276,5 +279,9 @@ include 'includes/header.php';
         init();
         animate();
     </script>
+
+<!-- Nút chuyển trang trên Mobile -->
+<a href="recruitment.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
+<a href="index.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
   
 <?php include 'includes/footer.php'; ?>

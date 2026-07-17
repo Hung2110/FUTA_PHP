@@ -86,7 +86,7 @@
 
 .transit-stats {
   background-color: #ffffff;
-  padding: 40px 20px;
+  padding: 15px 20px 40px 20px; /* Giảm padding phía trên để thu hẹp khoảng cách với carousel */
   text-align: center;
 }
 
@@ -109,6 +109,20 @@
   justify-content: space-around;
   align-items: stretch;
   gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .transit-stats {
+    padding-top: 0px !important; /* Xóa hoàn toàn khoảng cách đệm phía trên ở Mobile */
+  }
+
+  .transit-stats h2 {
+    margin-top: 10px; /* Bỏ margin mặc định của thẻ h2 để kéo chữ sát lên trên màn hình */
+  }
+
+  .carousel-indicators {
+    margin-bottom: 5px; /* Thu hẹp khoảng cách của các dấu chấm điều hướng slide dưới cùng */
+  }
 }
 
 .stat-item {
@@ -160,7 +174,7 @@
 }
 .features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
   gap: 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -224,7 +238,7 @@
 
 .products-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: 30px;
   max-width: 1200px;
   margin: 0 auto;
@@ -238,11 +252,13 @@
   min-height: 260px;
   box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
+  will-change: transform, box-shadow; /* Tối ưu hóa hiệu năng cho animation */
 }
 
 .product-item:hover {
   transform: translateY(-8px);
   box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+  
 }
 
 .product-item img {
@@ -351,50 +367,73 @@
   background-color: #ffffff;
   padding: 40px 20px;
   text-align: center;
+}
+
+.partners-logos-wrapper {
   overflow: hidden;
+  width: 100%;
+  /* Tạo hiệu ứng mờ dần (fade) ở 2 mép trái phải */
+  -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
 }
 
 .partners-logos {
   display: flex;
   align-items: center;
-  gap: 60px; /* Tăng khoảng cách để thoáng hơn */
   padding: 20px 0;
-  animation: slide 30s linear infinite;
+  width: max-content; /* Đảm bảo container trải dài vô tận để không bị rớt dòng */
+  will-change: transform; /* Tận dụng phần cứng (GPU) giúp cuộn mượt, không giật lag */
+  animation: slide 60s linear infinite;
+}
+
+/* Định nghĩa keyframes cuộn liên tục */
+@keyframes slide {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Tạm dừng hiệu ứng cuộn khi rê chuột vào */
+.partners-logos:hover {
+  animation-play-state: paused;
 }
 
 .partner-logo {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 0;
+  width: 160px; /* Cố định chiều rộng khung chứa logo */
+  height: 80px; /* Cố định chiều cao khung chứa logo */
+  margin-right: 60px; /* Đổi từ gap của cha sang margin của con để fix lỗi khựng khi lặp */
 }
 
 .partner-logo img {
-  height: 60px; /* hoặc max-height */
-  width: auto;
-}
-
-
-@keyframes slide {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Giúp logo tự căn chỉnh vừa vặn vào khung 160x80 mà không bị méo */
+  transform: translateZ(0); /* Kích hoạt tăng tốc phần cứng cho ảnh */
 }
 
 @media (max-width: 992px) {
   .partner-logo {
-    width: 120px;
-    height: 70px;
+    width: 130px;
+    height: 60px;
+    margin-right: 40px; /* Chỉnh lại khoảng cách cho Tablet */
   }
 }
 
 @media (max-width: 600px) {
+  .partners-section {
+    padding: 30px 10px;
+  }
   .partner-logo {
-    width: 100px;
-    height: 60px;
+    width: 110px;
+    height: 50px;
+    margin-right: 30px; /* Chỉnh lại khoảng cách cho Mobile */
   }
 }
 
@@ -456,20 +495,42 @@ section.advertising {
   100% { transform: scale(1); }
 }
 
+/* Reponsive Banner Đăng ký tư vấn */
+@media (max-width: 768px) {
+  .banner-container {
+    justify-content: center; /* Đưa nội dung ra giữa màn hình thay vì dạt phải */
+    padding: 20px;
+    height: auto;
+    min-height: 200px; /* Thu gọn chiều cao */
+  }
+  .banner-content .main-title {
+    font-size: 20px; /* Giảm kích cỡ tiêu đề */
+  }
+}
+
 .logo-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(6, 1fr);
   justify-items: center;
   align-items: center;
   gap: 40px;
-  padding: 40px 20px;
+  padding: 40px 20px 20px 20px; /* Giảm padding dưới để thu hẹp khoảng cách với phần kế tiếp/footer */
   background: #fff;
+}
+
+.logo-section a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 }
 
 .logo-section a img {
   width: 100%;
-  max-width: 250px;
-  height: auto;
+  max-width: 300px; /* Tăng chiều rộng của logo trên PC */
+  height: 150px; /* Tăng chiều cao của logo trên PC */
+  object-fit: contain;
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
@@ -480,38 +541,44 @@ section.advertising {
 
 @media (max-width: 992px) {
   .logo-section {
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 30px;
-    padding: 30px 15px;
+    padding: 30px 15px 15px 15px; /* Giảm padding dưới trên Tablet */
   }
 
   .logo-section a img {
-    max-width: 130px;
+    max-width: 160px; /* Tăng kích thước trên Tablet */
+    height: 80px;
   }
 }
 
 @media (max-width: 600px) {
   .logo-section {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(3, 1fr); /* Giữ lưới 3 cột trên Mobile để 6 logo chia thành 2 hàng */
     gap: 20px;
-    padding: 20px 10px;
+    padding: 20px 15px 0px 15px !important; /* Xóa padding dưới và ghi đè padding toàn cục trên Mobile */
   }
 
   .logo-section a img {
-    max-width: 100px;
+    max-width: 140px; /* Tăng kích thước trên Mobile */
+    height: 70px;
   }
 }
 
 @media (max-width: 400px) {
+  .logo-section {
+    gap: 15px;
+  }
+
   .logo-section a img {
-    max-width: 85px;
+    max-width: 110px; /* Tăng kích thước trên màn hình Mobile rất nhỏ */
+    height: 60px; /* Tăng chiều cao trên màn hình Mobile rất nhỏ */
   }
 }
 
 /* ===== NEWS SECTION ===== */
 .news-section {
-
-    padding: 60px 0;
+    padding: 60px 0 20px 0; /* Thu hẹp padding dưới của section tin tức (nếu nó nằm gần Footer) */
     overflow: hidden;
 }
 
@@ -535,23 +602,25 @@ section.advertising {
 /* ===== SLIDER ===== */
 .news-slider {
     display: flex;
-    /* gap: 30px; Removed to fix animation jump */
-    width: max-content;
-    /* Animation chạy lặp vô hạn */
-    animation: news-slide-animation 40s linear infinite;
+    gap: 30px;
+    width: 100%;
+    overflow-x: auto;
+    padding-bottom: 15px; /* Khoảng trống cho bóng đổ của card */
+    transform: translateZ(0); /* Kích hoạt 3D Hardware Acceleration để cuộn không bị giật lag */
+    -ms-overflow-style: none;  /* Ẩn scrollbar IE/Edge */
+    scrollbar-width: none;  /* Ẩn scrollbar Firefox */
 }
 
-/* Tạm dừng khi di chuột vào */
-.news-slider:hover {
-    animation-play-state: paused;
+/* Ẩn thanh cuộn trên Chrome/Safari/Opera */
+.news-slider::-webkit-scrollbar {
+    display: none;
 }
 
-@keyframes news-slide-animation {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-}
 
 /* ===== SLIDE ===== */
+.news-slide {
+    flex: 0 0 350px; /* Cố định kích thước mỗi thẻ tin tức */
+}
 
 /* ===== CARD ===== */
 .news-card {
@@ -559,16 +628,10 @@ section.advertising {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
     display: flex;
     flex-direction: column;
     height: 100%;
     border: none;
-}
-
-.news-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
 }
 
 .news-card-link {
@@ -589,18 +652,10 @@ section.advertising {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.5s ease;
-}
-
-.news-card:hover .news-card-img-wrapper img {
-    transform: scale(1.05);
 }
 
 .news-card-badge {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background-color: #004aad;
+    display: inline-block;
     color: #fff;
     padding: 6px 14px;
     border-radius: 4px;
@@ -608,7 +663,14 @@ section.advertising {
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    z-index: 2;
+}
+
+.news-card-badge.badge-news {
+    background-color: #17a2b8; /* Màu xanh lơ (info) cho Tin tức */
+}
+
+.news-card-badge.badge-project {
+    background-color: #28a745; /* Màu xanh lá (success) cho Dự án */
 }
 
 /* ===== BODY ===== */
@@ -631,12 +693,7 @@ section.advertising {
     overflow: hidden;
     text-overflow: ellipsis;
     min-height: 2.8em;
-    transition: color 0.3s;
     line-height: 1.4;
-}
-
-.news-card:hover .news-card-title {
-    color: #004aad;
 }
 
 
@@ -672,14 +729,13 @@ section.advertising {
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
     .news-slide {
-        width: 300px;
+        flex-basis: 300px;
     }
 }
 
 @media (max-width: 576px) {
     .news-slide {
-        width: 280px; /* Thu nhỏ card cho màn hình điện thoại */
-        margin-right: 20px;
+        flex-basis: 280px; /* Thu nhỏ card cho màn hình điện thoại */
     }
 }
 

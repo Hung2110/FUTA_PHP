@@ -512,10 +512,13 @@ include 'includes/header.php';
         <div class="col-lg-8">
             <div class="job-content-wrapper">
                 <p class="job-post-date fw-medium">
-                    Lượt xem: <?php echo rand(500, 5000); /* View tĩnh hiển thị minh họa */ ?> &nbsp;&nbsp;|&nbsp;&nbsp; 
-                    Ngày cập nhật: <?php echo date('d/m/Y', strtotime($job['created_at'])); ?>
+                    <span data-i18n="recruitment_detail.views">Lượt xem:</span> <?php echo rand(500, 5000); /* View tĩnh hiển thị minh họa */ ?> &nbsp;&nbsp;|&nbsp;&nbsp; 
+                    <span data-i18n="recruitment_detail.updated_date">Ngày cập nhật:</span> <?php echo date('d/m/Y', strtotime($job['created_at'])); ?>
                 </p>
-                <h1 class="job-title-main mb-4"><?php echo htmlspecialchars($job['title']); ?></h1>
+                <h1 class="job-title-main mb-4" 
+                    data-i18n-key="job_title_<?php echo $job['id']; ?>" 
+                    data-i18n-text="<?php echo htmlspecialchars($job['title']); ?>"
+                ><?php echo htmlspecialchars($job['title']); ?></h1>
                 
                 <div class="job-detail-section">
                     <?php if (!empty($details['benefits'])): ?>
@@ -545,7 +548,9 @@ include 'includes/header.php';
                                     elseif (strpos($lower_line, 'lương') !== false) $icon = 'fa-money-bill-wave';
 
                                     echo '<div class="col-md-4">';
-                                    echo '<span><i class="fa ' . $icon . ' pull-left ico-ttd"></i> ' . htmlspecialchars($line) . '</span>';
+                                     echo '<span><i class="fa ' . $icon . ' pull-left ico-ttd"></i> <span data-i18n-key="job_benefit_'.md5($line).'" data-i18n-text="'.htmlspecialchars($line).'">'.
+                                          htmlspecialchars($line) . 
+                                          '</span></span>';
                                     echo '</div>';
                                 }
                                 echo '</div>';
@@ -556,34 +561,34 @@ include 'includes/header.php';
 
                     <?php if (!empty($details['description'])): ?>
                         <h4 class="detail-subtitle"><i class="fas fa-briefcase"></i> <span data-i18n="recruitment_detail.job_desc">Mô tả công việc</span></h4>
-                        <div class="job-full-description"><?php echo nl2br(htmlspecialchars($details['description'])); ?></div>
+                         <div class="job-full-description" data-i18n-key="job_desc_<?php echo $job['id']; ?>" data-i18n-text="<?php echo htmlspecialchars(strip_tags($details['description'])); ?>"><?php echo nl2br(htmlspecialchars($details['description'])); ?></div>
                     <?php endif; ?>
 
                     <?php if (!empty($details['requirements'])): ?>
-                        <h4 class="detail-subtitle"><i class="fas fa-user-check"></i> <span>Yêu cầu</span></h4>
-                        <div class="job-full-description"><?php echo nl2br(htmlspecialchars($details['requirements'])); ?></div>
+                        <h4 class="detail-subtitle"><i class="fas fa-user-check"></i> <span data-i18n="recruitment_detail.job_req">Yêu cầu công việc</span></h4>
+                        <div class="job-full-description" data-i18n-key="job_req_<?php echo $job['id']; ?>" data-i18n-text="<?php echo htmlspecialchars(strip_tags($details['requirements'])); ?>"><?php echo nl2br(htmlspecialchars($details['requirements'])); ?></div>
                     <?php endif; ?>
 
                     <?php if (!empty($details['documents'])): ?>
-                        <h4 class="detail-subtitle"><i class="fas fa-folder-open"></i> <span>Danh sách hồ sơ xin việc</span></h4>
-                        <div class="job-full-description"><?php echo nl2br(htmlspecialchars($details['documents'])); ?></div>
+                        <h4 class="detail-subtitle"><i class="fas fa-folder-open"></i> <span data-i18n="recruitment_detail.documents">Danh sách hồ sơ xin việc</span></h4>
+                        <div class="job-full-description" data-i18n-key="job_docs_<?php echo $job['id']; ?>" data-i18n-text="<?php echo htmlspecialchars(strip_tags($details['documents'])); ?>"><?php echo nl2br(htmlspecialchars($details['documents'])); ?></div>
                     <?php endif; ?>
 
                     <?php if (!empty($details['contact'])): ?>
-                        <h4 class="detail-subtitle"><i class="fas fa-address-book"></i> <span>Thông tin liên hệ</span></h4>
-                        <div class="job-full-description fw-medium"><?php echo nl2br(htmlspecialchars($details['contact'])); ?></div>
+                        <h4 class="detail-subtitle"><i class="fas fa-address-book"></i> <span data-i18n="recruitment_detail.contact_info">Thông tin liên hệ</span></h4>
+                        <div class="job-full-description fw-medium" data-i18n-key="job_contact_<?php echo $job['id']; ?>" data-i18n-text="<?php echo htmlspecialchars(strip_tags($details['contact'])); ?>"><?php echo nl2br(htmlspecialchars($details['contact'])); ?></div>
                     <?php endif; ?>
 
                     <?php if (!empty($details['notes'])): ?>
-                        <h4 class="detail-subtitle"><i class="fas fa-exclamation-circle text-danger"></i> <span>Ghi chú</span></h4>
-                        <div class="job-full-description fst-italic text-danger fw-bold"><?php echo nl2br(htmlspecialchars($details['notes'])); ?></div>
+                        <h4 class="detail-subtitle"><i class="fas fa-exclamation-circle text-danger"></i> <span data-i18n="recruitment_detail.notes">Ghi chú</span></h4>
+                        <div class="job-full-description fst-italic text-danger fw-bold" data-i18n-key="job_notes_<?php echo $job['id']; ?>" data-i18n-text="<?php echo htmlspecialchars(strip_tags($details['notes'])); ?>"><?php echo nl2br(htmlspecialchars($details['notes'])); ?></div>
                     <?php endif; ?>
                 </div>
 
                 <div class="job-detail-section contact-info">
                     <h3 class="section-title"><i class="fas fa-paper-plane"></i> <span data-i18n="recruitment_detail.contact_apply">Thông tin liên hệ & Ứng tuyển</span></h3>
                     <p class="d-flex"><i class="fas fa-envelope mt-1 me-2 text-primary"></i> <span><span data-i18n="recruitment_detail.contact_desc1">Để ứng tuyển, vui lòng gửi CV và các giấy tờ liên quan về địa chỉ email:</span> <strong>futaadvertising@futa.vn</strong></span></p>
-                    <p class="d-flex"><i class="fas fa-pen mt-1 me-2 text-primary"></i> <span><span data-i18n="recruitment_detail.contact_desc2">Tiêu đề email ghi rõ:</span> "Ứng tuyển vị trí [<?php echo htmlspecialchars($job['title']); ?>] - [Họ và tên]"</span></p>
+                    <p class="d-flex"><i class="fas fa-pen mt-1 me-2 text-primary"></i> <span><span data-i18n="recruitment_detail.contact_desc2">Tiêu đề email ghi rõ:</span> "Ứng tuyển vị trí [<span data-i18n-key="job_title_<?php echo $job['id']; ?>" data-i18n-text="<?php echo htmlspecialchars($job['title']); ?>"><?php echo htmlspecialchars($job['title']); ?></span>] - [Họ và tên]"</span></p>
                     <p class="d-flex"><i class="fas fa-phone-alt mt-1 me-2 text-primary"></i> <span><span data-i18n="recruitment_detail.contact_desc3">Hoặc liên hệ qua số điện thoại:</span> <strong>1900 6912 </strong> <span data-i18n="recruitment_detail.contact_desc4">để được hướng dẫn.</span></span></p>
                 </div>
             </div>
@@ -611,7 +616,9 @@ include 'includes/header.php';
                             <i class="fa <?php echo $item['icon']; ?> ico-ttd"></i>
                             <div class="summary-item-content">
                                     <strong data-i18n="<?php echo $item['i18n']; ?>"><?php echo $item['label']; ?></strong>
-                                <span><?php echo htmlspecialchars($item['value']); ?></span>
+                                <span data-i18n-key="job_summary_<?php echo str_replace('recruitment_detail.summary_', '', $item['i18n']) . '_' . $job['id']; ?>" 
+                                      data-i18n-text="<?php echo htmlspecialchars($item['value']); ?>"
+                                ><?php echo htmlspecialchars($item['value']); ?></span>
                             </div>
                         </li>
                     <?php endforeach; ?>
@@ -626,21 +633,21 @@ include 'includes/header.php';
 <div class="modal" id="applyModal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('applyModal')">&times;</span>
-        <h2 data-i18n="recruitment_detail.modal_title">Nộp hồ sơ ứng tuyển</h2>
+        <h2 data-i18n="recruitment.modal_title">Nộp hồ sơ ứng tuyển</h2>
         <p id="applyJobTitle"></p>
         <form method="POST" enctype="multipart/form-data" class="apply-form">
             <div class="row g-3">
                 <input type="hidden" name="position" id="applicationPosition">
                 <div class="col-md-6">
-                    <label data-i18n="recruitment.modal_name">Họ và tên *</label>
+                    <label data-i18n="recruitment.modal_name">Họ và tên</label>
                     <input type="text" id="applicantName" name="fullname" class="form-control" required placeholder="Nhập họ và tên của bạn">
                 </div>
                 <div class="col-md-6">
-                    <label data-i18n="recruitment.modal_phone">Số điện thoại *</label>
+                    <label data-i18n="recruitment.modal_phone">Số điện thoại</label>
                     <input type="text" id="applicantPhone" name="phone" class="form-control" required placeholder="0123 456 789">
                 </div>
                 <div class="col-12">
-                    <label data-i18n="recruitment.modal_email">Email *</label>
+                    <label data-i18n="recruitment.modal_email">Email</label>
                     <input type="email" id="applicantEmail" name="email" class="form-control" required placeholder="email@example.com">
                 </div>
                 <div class="col-12">
@@ -648,11 +655,11 @@ include 'includes/header.php';
                     <textarea id="applicantMessage" name="message" class="form-control" rows="3" placeholder="Chia sẻ thêm về kỹ năng và kinh nghiệm làm việc của bạn..."></textarea>
                 </div>
                 <div class="col-12">
-                    <label data-i18n="recruitment.modal_cv">CV/Resume (PDF, DOC, DOCX) *</label>
+                    <label data-i18n="recruitment.modal_cv">CV/Resume (PDF, DOC, DOCX)</label>
                     <input type="file" id="applicantCV" name="cv_file" class="form-control bg-white" accept=".pdf,.doc,.docx" required>
                 </div>
                 <div class="col-12 mt-4">
-                    <button type="submit" name="submit_application" value="1" class="btn-apply-now w-100" data-i18n="recruitment.modal_submit">
+                    <button type="submit" name="submit_application" value="1" class="btn-apply-now w-100" data-i18n="recruitment_detail.apply_now">
                         <i class="fas fa-paper-plane me-2"></i>Gửi Đơn Ứng Tuyển
                     </button>
                 </div>
