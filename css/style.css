@@ -879,23 +879,6 @@ img, video, iframe, canvas, svg, object {
 .social-icons .bi-envelope { color: #27abe8; }
 .social-icons .bi-instagram { color: #e1306c; }
 .social-icons .bi-youtube { color: #cd201f }
-
-.social-icons a.zalo {
-    display: flex; /* Căn giữa icon theo chiều dọc */
-    align-items: center;
-}
-
-.social-icons a.zalo img {
-    width: 28px; /* Giảm kích thước để tương đồng với các icon khác */
-    height: 28px;
-    vertical-align: middle;
-    /* Bỏ nền tròn để giống các icon khác */
-    filter: invert(38%) sepia(98%) saturate(3317%) hue-rotate(208deg) brightness(97%) contrast(101%); /* Chuyển ảnh trắng thành màu xanh #0068FF */
-}
-
-.social-icons a.zalo:hover {
-    transform: scale(1.2); /* Đồng bộ hiệu ứng hover với các icon khác */
-}
 .contact-info {
     display: flex;
     flex-direction: column;
@@ -1120,13 +1103,26 @@ grid-template-columns: 1fr;
 
     /* Các trang chi tiết dịch vụ (Ảnh + Chữ) xếp dọc lại */
     .adsroute-container, 
-    .adsoutcar-container, 
-    .adscompartment-container, 
-    .adsbus-intro-container,
-    .intercity-wrapper,
+    .adsbus-intro-container {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Đảo ngược thứ tự cho các khối có ảnh đứng trước trong HTML */
+    .adsroute-container,
     .intercity-wrapper-2 {
+        display: flex !important;
+        flex-direction: column-reverse !important;
+    }
+
+    /* Giữ nguyên thứ tự cho các khối có nội dung đứng trước trong HTML */
+    .adsoutcar-container,
+    .adscompartment-container,
+    .intercity-wrapper,
+    .adsbus-intro-container {
+        display: flex !important;
         flex-direction: column !important;
     }
+
     
     .adsroute-image, 
     .adsoutcar-image, 

@@ -27,8 +27,6 @@
                 <a href="gmailto:futaadvertising@futa.vn"><i class="bi bi-envelope-fill"></i></a>
                 <a href="https://www.youtube.com/@futaadvertisingofficial3494"><i class="bi bi-youtube"></i></a>
                 <a href="https://www.linkedin.com/company/futa-advertising/"><i class="bi bi-linkedin"></i></a>
-                <a href="#" class="zalo">
-                <img src="assets/images/icon/zalo.png" alt="Zalo" width="40" height="40" loading="lazy" decoding="async"></a>
             </div>
         </div>
         <div class="footer-column">

@@ -95,22 +95,18 @@ include 'includes/header.php';
                         <?php endif; ?>
                     </div>
 
-                    <!-- Social Share Buttons -->
-                    <div class="social-share">
+                    <div class="project-content-body">
+                        <div class="project-description">
+                            <?php echo $display_content; ?>
+                        </div>
+                    </div>
+
+                    <!-- Social Share Buttons (Moved to bottom) -->
+                    <div class="social-share mt-4 pt-4 border-top">
                         <a id="share-facebook" href="#" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i> <span data-i18n="news.share">Chia sẻ</span></a>
                         <a id="share-zalo" href="#" target="_blank" class="share-btn zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" loading="lazy" decoding="async"> <span data-i18n="news.share">Chia sẻ</span></a>
                         <button id="copy-link" class="share-btn copy"><i class="fas fa-link"></i> <span data-i18n="news.copy">Sao chép</span></button>
                         <span id="copy-success" style="display:none; margin-left: 10px; color: #28a745; align-items: center; font-weight: 500;" data-i18n="news.copied"><i class="fas fa-check-circle me-1"></i> Đã sao chép!</span>
-                    </div>
-
-                    <div class="project-content-body">
-                        <?php if (!empty($post['image'])): ?>
-                            <img src="<?php echo htmlspecialchars($post['image']); ?>" alt="" class="img-fluid rounded project-main-image mb-4" width="800" height="450" fetchpriority="high" decoding="async">
-                        <?php endif; ?>
-                        
-                        <div class="project-description">
-                            <?php echo $display_content; ?>
-                        </div>
                     </div>
                 </div>
             </div>

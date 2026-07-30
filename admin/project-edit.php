@@ -87,12 +87,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = trim($_POST['status'] ?? 'draft');
     $current_image = trim($_POST['current_image'] ?? '');
     $current_video = trim($_POST['current_video'] ?? '');
-    $title_en = trim($_POST['title_en'] ?? '');
-    $client_en = trim($_POST['client_en'] ?? '');
-    $description_en = trim($_POST['description_en'] ?? '');
-    $title_cn = trim($_POST['title_cn'] ?? '');
-    $client_cn = trim($_POST['client_cn'] ?? '');
-    $description_cn = trim($_POST['description_cn'] ?? '');
 
     if (empty($title) || empty($client)) {
         $message = "Tiêu đề và Mô tả ngắn không được để trống.";
@@ -117,18 +111,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($image_path === null || (isset($_FILES['preview_video']) && $_FILES['preview_video']['error'] == UPLOAD_ERR_OK && $video_path === null)) {
             // Lỗi đã được ghi nhận trong $message bên trong hàm handle_upload
         } else {
+            // Mới: Tự động chèn ảnh đại diện vào đầu mô tả nếu có
+            if (!empty($image_path)) {
+                $image_html = '<p><img src="../' . htmlspecialchars($image_path) . '" class="img-fluid rounded"></p>';
+                $description = $image_html . $description;
+            }
+
             if ($project_id_from_form) { // Chế độ cập nhật
             $stmt = $conn->prepare(
-                "UPDATE projects SET title=?, client=?, description=?, preview_image=?, preview_video=?, status=?, title_en=?, client_en=?, description_en=?, title_cn=?, client_cn=?, description_cn=? WHERE id=?"
+                "UPDATE projects SET title=?, client=?, description=?, preview_image=?, preview_video=?, status=? WHERE id=?"
             );
-            $stmt->bind_param('ssssssssssssi', $title, $client, $description, $image_path, $video_path, $status, $title_en, $client_en, $description_en, $title_cn, $client_cn, $description_cn, $project_id_from_form);
+            $stmt->bind_param('ssssssi', $title, $client, $description, $image_path, $video_path, $status, $project_id_from_form);
             $redirect_url = "projects.php?success=updated";
         } else { // Chế độ thêm mới
             $created_by = $_SESSION['admin_id'];
             $stmt = $conn->prepare(
-                "INSERT INTO projects (title, client, description, preview_image, preview_video, status, created_by, title_en, client_en, description_en, title_cn, client_cn, description_cn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO projects (title, client, description, preview_image, preview_video, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)"
             );
-            $stmt->bind_param('ssssssissssss', $title, $client, $description, $image_path, $video_path, $status, $created_by, $title_en, $client_en, $description_en, $title_cn, $client_cn, $description_cn);
+            $stmt->bind_param('ssssssi', $title, $client, $description, $image_path, $video_path, $status, $created_by);
             $redirect_url = "projects.php?success=added";
         }
 
@@ -172,11 +172,13 @@ if (!$is_new_project) {
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <style>
         body { background: #f7f9fc; }
-        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; }
-        .card { border-radius: 12px; }
+        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; transition: all 0.2s ease; }
+        .form-control:focus, .form-select:focus { box-shadow: 0 0 0 3px rgba(0,123,255,0.1); border-color: #007bff; }
+        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
         /* Tùy chỉnh chiều cao cho editor */
         .ql-container {
             min-height: 400px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -211,75 +213,23 @@ if (!$is_new_project) {
             <div class="col-lg-8">
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white py-3">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" id="languageTabs" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active" id="vi-tab" data-bs-toggle="tab" data-bs-target="#vi-content" type="button" role="tab" aria-controls="vi-content" aria-selected="true">🇻🇳 Tiếng Việt (Mặc định)</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="en-tab" data-bs-toggle="tab" data-bs-target="#en-content" type="button" role="tab" aria-controls="en-content" aria-selected="false">🇬🇧 English</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link" id="cn-tab" data-bs-toggle="tab" data-bs-target="#cn-content" type="button" role="tab" aria-controls="cn-content" aria-selected="false">🇨🇳 中文</button>
-                            </li>
-                        </ul>
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-file-alt text-primary me-2"></i>Nội dung dự án</h5>
                     </div>
-                    <div class="card-body p-4 tab-content" id="languageTabsContent">
-                        <!-- Vietnamese Content -->
-                        <div class="tab-pane fade show active" id="vi-content" role="tabpanel" aria-labelledby="vi-tab">
-                            <div class="mb-4">
-                                <label for="title" class="form-label fw-semibold">Tiêu đề dự án *</label>
-                                <input type="text" class="form-control form-control-lg fw-bold" id="title" name="title" value="<?php echo htmlspecialchars($project['title'] ?? ''); ?>" required placeholder="Nhập tên dự án quảng cáo...">
-                            </div>
-                            <div class="mb-4">
-                                <label for="client" class="form-label fw-semibold">Mô tả ngắn (Khách hàng/Chiến dịch) *</label>
-                                <textarea class="form-control" id="client" name="client" rows="3" required placeholder="Ví dụ: Chiến dịch quảng cáo cho nhãn hàng X..."><?php echo htmlspecialchars($project['client'] ?? ''); ?></textarea>
-                            </div>
-                            <div>
-                                <label class="form-label fw-semibold">Mô tả chi tiết</label>
-                                <div id="description-editor-vi">
-                                    <?php echo $project['description'] ?? ''; ?>
-                                </div>
-                                <input type="hidden" name="description" id="description-input-vi">
-                            </div>
+                    <div class="card-body p-4">
+                        <div class="mb-4">
+                            <label for="title" class="form-label fw-semibold">Tiêu đề dự án *</label>
+                            <input type="text" class="form-control form-control-lg fw-bold" id="title" name="title" value="<?php echo htmlspecialchars($project['title'] ?? ''); ?>" required placeholder="Nhập tên dự án quảng cáo...">
                         </div>
-
-                        <!-- English Content -->
-                        <div class="tab-pane fade" id="en-content" role="tabpanel" aria-labelledby="en-tab">
-                            <div class="mb-4">
-                                <label for="title_en" class="form-label fw-semibold">Project Title</label>
-                                <input type="text" class="form-control" id="title_en" name="title_en" value="<?php echo htmlspecialchars($project['title_en'] ?? ''); ?>" placeholder="Enter project title...">
-                            </div>
-                            <div class="mb-4">
-                                <label for="client_en" class="form-label fw-semibold">Short Description (Client/Campaign)</label>
-                                <textarea class="form-control" id="client_en" name="client_en" rows="3" placeholder="Example: Advertising campaign for brand X..."><?php echo htmlspecialchars($project['client_en'] ?? ''); ?></textarea>
-                            </div>
-                            <div>
-                                <label class="form-label fw-semibold">Detailed Description</label>
-                                <div id="description-editor-en">
-                                    <?php echo $project['description_en'] ?? ''; ?>
-                                </div>
-                                <input type="hidden" name="description_en" id="description-input-en">
-                            </div>
+                        <div class="mb-4">
+                            <label for="client" class="form-label fw-semibold">Mô tả ngắn (Khách hàng/Chiến dịch) *</label>
+                            <textarea class="form-control" id="client" name="client" rows="3" required placeholder="Ví dụ: Chiến dịch quảng cáo cho nhãn hàng X..."><?php echo htmlspecialchars($project['client'] ?? ''); ?></textarea>
                         </div>
-
-                        <!-- Chinese Content -->
-                        <div class="tab-pane fade" id="cn-content" role="tabpanel" aria-labelledby="cn-tab">
-                            <div class="mb-4">
-                                <label for="title_cn" class="form-label fw-semibold">项目标题</label>
-                                <input type="text" class="form-control" id="title_cn" name="title_cn" value="<?php echo htmlspecialchars($project['title_cn'] ?? ''); ?>" placeholder="输入项目标题...">
+                        <div>
+                            <label class="form-label fw-semibold mb-2">Mô tả chi tiết</label>
+                            <div id="description-editor">
+                                <?php echo $project['description'] ?? ''; ?>
                             </div>
-                            <div class="mb-4">
-                                <label for="client_cn" class="form-label fw-semibold">简短描述 (客户/活动)</label>
-                                <textarea class="form-control" id="client_cn" name="client_cn" rows="3" placeholder="例如：X品牌的广告活动..."><?php echo htmlspecialchars($project['client_cn'] ?? ''); ?></textarea>
-                            </div>
-                            <div>
-                                <label class="form-label fw-semibold">详细描述</label>
-                                <div id="description-editor-cn">
-                                    <?php echo $project['description_cn'] ?? ''; ?>
-                                </div>
-                                <input type="hidden" name="description_cn" id="description-input-cn">
-                            </div>
+                            <input type="hidden" name="description" id="description-input">
                         </div>
                     </div>
                 </div>
@@ -288,50 +238,38 @@ if (!$is_new_project) {
             <!-- Cột phải (Cài đặt) -->
             <div class="col-lg-4">
                 <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-cog text-primary me-2"></i>Xuất bản</h5>
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-cog text-primary me-2"></i>Cài đặt</h5>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i> <?php echo $is_new_project ? 'Lưu dự án' : 'Cập nhật'; ?>
+                        </button>
                     </div>
                     <div class="card-body p-4">
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="status" class="form-label fw-semibold">Trạng thái</label>
                             <select class="form-select fw-semibold" id="status" name="status">
                                 <option value="published" <?php echo ($project['status'] ?? '') === 'published' ? 'selected' : ''; ?>>🟢 Đã xuất bản (Published)</option>
                                 <option value="draft" <?php echo ($project['status'] ?? 'draft') === 'draft' ? 'selected' : ''; ?>>🟠 Bản nháp (Draft)</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 0.5px;">
-                            <i class="fas fa-save me-2"></i> <?php echo $is_new_project ? 'Lưu dự án' : 'Cập nhật dự án'; ?>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-image text-primary me-2"></i>Ảnh đại diện</h5>
-                    </div>
-                    <div class="card-body p-4 text-center">
+                        <hr>
                         <div class="mb-3">
-                            <img id="image-preview" src="<?php echo !empty($project['preview_image']) ? '../' . htmlspecialchars($project['preview_image']) : ''; ?>" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($project['preview_image']) ? 'block' : 'none'; ?>;">
-                            <div id="image-placeholder" class="text-muted p-4 border rounded bg-light" style="display: <?php echo empty($project['preview_image']) ? 'block' : 'none'; ?>;">
-                                <i class="fas fa-image fa-3x mb-2 opacity-25"></i><br>Chưa có ảnh đại diện
+                            <h6 class="fw-semibold mb-3"><i class="fas fa-image text-primary me-2"></i>Ảnh đại diện</h6>
+                            <img id="image-preview" src="<?php echo !empty($project['preview_image']) ? '../' . htmlspecialchars($project['preview_image']) : ''; ?>" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm mb-2" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($project['preview_image']) ? 'block' : 'none'; ?>;">
+                            <div id="image-placeholder" class="text-muted p-4 border rounded bg-light text-center" style="display: <?php echo empty($project['preview_image']) ? 'block' : 'none'; ?>;">
+                                <i class="fas fa-image fa-3x mb-2 opacity-25"></i><br>Chưa có ảnh
                             </div>
+                            <input type="file" class="form-control mt-2" id="preview_image" name="preview_image" accept="image/*" onchange="previewImage(event, 'image-preview')">
                         </div>
-                        <input type="file" class="form-control" id="preview_image" name="preview_image" accept="image/*" onchange="previewImage(event, 'image-preview')">
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-video text-primary me-2"></i>Video dự án (Tùy chọn)</h5>
-                    </div>
-                    <div class="card-body p-4 text-center">
-                        <div class="mb-3">
-                            <video id="video-preview" src="<?php echo !empty($project['preview_video']) ? '../' . htmlspecialchars($project['preview_video']) : ''; ?>" class="img-fluid rounded shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($project['preview_video']) ? 'block' : 'none'; ?>;" controls></video>
-                            <div id="video-placeholder" class="text-muted p-4 border rounded bg-light" style="display: <?php echo empty($project['preview_video']) ? 'block' : 'none'; ?>;">
+                        <hr>
+                        <div>
+                            <h6 class="fw-semibold mb-3"><i class="fas fa-video text-primary me-2"></i>Video dự án (Tùy chọn)</h6>
+                            <video id="video-preview" src="<?php echo !empty($project['preview_video']) ? '../' . htmlspecialchars($project['preview_video']) : ''; ?>" class="img-fluid rounded shadow-sm mb-2" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($project['preview_video']) ? 'block' : 'none'; ?>;" controls></video>
+                            <div id="video-placeholder" class="text-muted p-4 border rounded bg-light text-center" style="display: <?php echo empty($project['preview_video']) ? 'block' : 'none'; ?>;">
                                 <i class="fas fa-film fa-3x mb-2 opacity-25"></i><br>Chưa có video
                             </div>
+                            <input type="file" class="form-control mt-2" id="preview_video" name="preview_video" accept="video/*" onchange="previewVideo(event, 'video-preview')">
                         </div>
-                        <input type="file" class="form-control" id="preview_video" name="preview_video" accept="video/*" onchange="previewVideo(event, 'video-preview')">
                     </div>
                 </div>
             </div>
@@ -350,7 +288,6 @@ if (!$is_new_project) {
                 var output = document.getElementById(previewId);
                 output.src = reader.result;
                 output.style.display = 'block';
-                output.style.opacity = '1';
                 var placeholder = document.getElementById('image-placeholder');
                 if (placeholder) placeholder.style.display = 'none';
             };
@@ -389,20 +326,14 @@ if (!$is_new_project) {
         }
     };
 
-    const quillVi = new Quill('#description-editor-vi', quillOptions);
-    const quillEn = new Quill('#description-editor-en', quillOptions);
-    const quillCn = new Quill('#description-editor-cn', quillOptions);
+    const quill = new Quill('#description-editor', quillOptions);
 
     const form = document.querySelector('form');
-    const descriptionInputVi = document.getElementById('description-input-vi');
-    const descriptionInputEn = document.getElementById('description-input-en');
-    const descriptionInputCn = document.getElementById('description-input-cn');
+    const descriptionInput = document.getElementById('description-input');
 
     form.addEventListener('submit', function(e) {
         // Trước khi submit, lấy nội dung HTML từ Quill và gán vào input ẩn
-        descriptionInputVi.value = quillVi.root.innerHTML;
-        descriptionInputEn.value = quillEn.root.innerHTML;
-        descriptionInputCn.value = quillCn.root.innerHTML;
+        descriptionInput.value = quill.root.innerHTML;
     });
 </script>
 </body>

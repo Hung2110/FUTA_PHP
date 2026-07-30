@@ -80,13 +80,7 @@ include 'includes/header.php';
 </section>
 <section class="wifimkt-section" id="wfmkt">
   <!-- Khung iPhone bên trái -->
-  <div class="wifimkt-frame">
-    <div class="wifimkt-notch"></div>
-    <video autoplay muted loop playsinline preload="metadata" class="wifimkt-screen">
-      <source src="assets/images/clip/wifi.mp4" type="video/mp4">
-      Trình duyệt không hỗ trợ video.
-    </video>
-  </div>
+ 
 
   <!-- Nội dung mô tả bên phải -->
   <div class="wifimkt-content">
@@ -99,6 +93,13 @@ include 'includes/header.php';
       <li data-i18n="qc_kts.wifi_li2">📊 Báo cáo & thống kê chi tiết</li>
       <li data-i18n="qc_kts.wifi_li3">⚡ Tăng độ nhận diện thương hiệu</li>
     </ul>
+  </div>
+   <div class="wifimkt-frame">
+    <div class="wifimkt-notch"></div>
+    <video autoplay muted loop playsinline preload="metadata" class="wifimkt-screen">
+      <source src="assets/images/clip/wifi.mp4" type="video/mp4">
+      Trình duyệt không hỗ trợ video.
+    </video>
   </div>
 </section>
 

@@ -75,11 +75,6 @@ include 'includes/header.php';
 <!-- SECTION ADSCOMPARTMENT -->
 <section class="adscompartment-section">
   <div class="adscompartment-container">
-    <!-- Cột hình ảnh -->
-    <div class="adscompartment-image">
-      <img src="assets/images/service/hộc-xe.jpg" alt="Quảng cáo trong hộc xe" width="600" height="400" decoding="async">
-    </div>
-
     <!-- Cột nội dung -->
     <div class="adscompartment-content">
       <div class="adscompartment-number">
@@ -98,6 +93,10 @@ include 'includes/header.php';
         <li data-i18n="xe_tuyen.compartment_feat3">Tối ưu chi phí</li>
         <li data-i18n="xe_tuyen.compartment_feat4">Độ phủ rộng trên nhiều tuyến xe</li>
       </ul>
+    </div>
+    <!-- Cột hình ảnh -->
+    <div class="adscompartment-image">
+      <img src="assets/images/service/hộc-xe.jpg" alt="Quảng cáo trong hộc xe" width="600" height="400" decoding="async">
     </div>
   </div>
 </section>

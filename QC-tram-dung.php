@@ -393,7 +393,7 @@ include 'includes/header.php';
 <section class="ads-sections">
 
   <!-- Block 1 -->
-  <div class="ads-accessory" style="background-image: url('assets/images/service/result_billboard (1).jpg')">
+  <div class="ads-accessory" style="background-image: url('assets/images/service/billboard.jpg')">
     <div class="overlay right">
       <div class="content">
         <h3 data-i18n="qc_tram_dung.billboard_title">Quảng Cáo Trên Billboard</h3>

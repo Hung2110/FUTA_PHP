@@ -239,19 +239,20 @@
   .lcd-section,
   .wifimkt-section {
     flex-direction: column;
-    text-align: left;
+    text-align: center; /* Căn giữa nội dung khi responsive */
     padding: 40px 15px;
   }
 
   .lcd-content,
   .wifimkt-content {
+    order: 1; /* Đưa nội dung lên trên */
     max-width: 100%;
     padding-left: 0; /* bỏ khoảng cách thừa bên trái */
   }
 
   .lcd-frame,
   .wifimkt-frame {
-    order: -1; /* đưa khung màn hình lên trên */
+    order: 2; /* Đưa khung màn hình xuống dưới */
     margin-bottom: 20px;
   }
 
@@ -287,7 +288,7 @@
   .lcd-content ul li,
   .wifimkt-content li {
     font-size: 14px;
-    text-align: left;
+    text-align: center; /* Căn giữa nội dung khi responsive */
   }
 
   .lcd-frame {
@@ -299,9 +300,9 @@
 
   .wifimkt-frame {
     width: 90%;
-    max-width: 280px;
+    max-width: 250px; /* Giảm chiều rộng tối đa để khung trông gọn hơn */
     height: auto;
-    aspect-ratio: 9 / 16; /* Giữ tỷ lệ khung hình dọc */
+    aspect-ratio: 9 / 19.5; /* Cập nhật tỷ lệ cho giống điện thoại hiện đại */
   }
 
   .info-item {

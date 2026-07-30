@@ -79,12 +79,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content = trim($_POST['content'] ?? '');
     $status = trim($_POST['status'] ?? 'draft');
     $tags_input = trim($_POST['tags'] ?? '');
-    $title_en = trim($_POST['title_en'] ?? '');
-    $excerpt_en = trim($_POST['excerpt_en'] ?? '');
-    $content_en = trim($_POST['content_en'] ?? '');
-    $title_cn = trim($_POST['title_cn'] ?? '');
-    $excerpt_cn = trim($_POST['excerpt_cn'] ?? '');
-    $content_cn = trim($_POST['content_cn'] ?? '');
     $current_image = trim($_POST['current_image'] ?? '');
 
     // --- VALIDATION ---
@@ -147,25 +141,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if (empty($message)) {
+        // Mới: Tự động chèn ảnh đại diện vào đầu nội dung nếu có
+        if (!empty($image_path)) {
+            $image_html = '<p><img src="../' . htmlspecialchars($image_path) . '" class="img-fluid rounded"></p>';
+            $content = $image_html . $content;
+        }
+
         if ($post_id_from_form) { // Chế độ cập nhật
             $stmt = $conn->prepare(
-                "UPDATE posts SET title=?, slug=?, excerpt=?, content=?, image=?, status=?, tags=?, title_en=?, excerpt_en=?, content_en=?, title_cn=?, excerpt_cn=?, content_cn=? WHERE id=?"
+                "UPDATE posts SET title=?, slug=?, excerpt=?, content=?, image=?, status=?, tags=? WHERE id=?"
             );
-            $stmt->bind_param('sssssssssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $title_en, $excerpt_en, $content_en, $title_cn, $excerpt_cn, $content_cn, $post_id_from_form);
+            $stmt->bind_param('sssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $post_id_from_form);
             $success_message = "Cập nhật bài viết thành công!";
             $redirect_url = "news.php?success=updated";
         } else { // Chế độ thêm mới
             $created_by = $_SESSION['admin_id'];
             $stmt = $conn->prepare(
-                "INSERT INTO posts (title, slug, excerpt, content, image, status, tags, created_by, title_en, excerpt_en, content_en, title_cn, excerpt_cn, content_cn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"
+                "INSERT INTO posts (title, slug, excerpt, content, image, status, tags, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
             );
-            $stmt->bind_param('sssssssssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $created_by, $title_en, $excerpt_en, $content_en, $title_cn, $excerpt_cn, $content_cn);
+            $stmt->bind_param('sssssssi', $title, $slug, $excerpt, $content, $image_path, $status, $tags_json, $created_by);
             $success_message = "Thêm bài viết thành công!";
             $redirect_url = "news.php?success=added";
         }
 
         if ($stmt->execute()) {
-            header("Location: " . $redirect_url);
+            header("Location: " . $redirect_url); // Chuyển hướng sau khi thực thi thành công
             exit;
         } else {
             $message = "Lỗi khi lưu bài viết: " . $stmt->error;
@@ -206,11 +206,13 @@ if (!$is_new_post) {
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
     <style>
         body { background: #f7f9fc; }
-        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; }
-        .card { border-radius: 12px; }
+        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; transition: all 0.2s ease; }
+        .form-control:focus, .form-select:focus { box-shadow: 0 0 0 3px rgba(0,123,255,0.1); border-color: #007bff; }
+        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
         /* Tùy chỉnh chiều cao cho editor */
         .ql-container {
             min-height: 400px;
+            font-size: 16px;
         }
     </style>
 </head>
@@ -244,7 +246,7 @@ if (!$is_new_post) {
             <div class="col-lg-8">
                 <div class="card shadow-sm border-0 mb-4">
                     <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-info-circle text-primary me-2"></i>Thông tin cơ bản</h5>
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-file-alt text-primary me-2"></i>Nội dung bài viết</h5>
                     </div>
                     <div class="card-body p-4">
                         <div class="mb-4">
@@ -252,29 +254,22 @@ if (!$is_new_post) {
                             <input type="text" class="form-control form-control-lg fw-bold" id="title" name="title" value="<?php echo htmlspecialchars($post['title'] ?? ''); ?>" required placeholder="Nhập tiêu đề bài viết...">
                         </div>
                         <div class="mb-4">
+                            <label for="excerpt" class="form-label fw-semibold">Mô tả ngắn (Excerpt)</label>
+                            <textarea class="form-control" id="excerpt" name="excerpt" rows="3" placeholder="Tóm tắt nội dung bài viết (Tối đa 150-200 ký tự)..."><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></textarea>
+                        </div>
+                         <div class="mb-4">
                             <label for="slug" class="form-label fw-semibold">Đường dẫn (Slug)</label>
                             <div class="input-group">
                                 <span class="input-group-text bg-light text-muted"><i class="fas fa-link"></i></span>
                                 <input type="text" class="form-control bg-light" id="slug" name="slug" value="<?php echo htmlspecialchars($post['slug'] ?? ''); ?>" placeholder="Để trống hệ thống sẽ tự động tạo từ tiêu đề">
                             </div>
+                            <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i>Slug sẽ được tự động tạo từ tiêu đề nếu để trống.</div>
                         </div>
-                        <div class="mb-0">
-                            <label for="excerpt" class="form-label fw-semibold">Mô tả ngắn (Excerpt)</label>
-                            <textarea class="form-control" id="excerpt" name="excerpt" rows="3" placeholder="Tóm tắt nội dung bài viết (Tối đa 150-200 ký tự)..."><?php echo htmlspecialchars($post['excerpt'] ?? ''); ?></textarea>
+                        <div>
+                            <label class="form-label fw-semibold">Nội dung chi tiết</label>
+                            <div id="content-editor"><?php echo $post['content'] ?? ''; ?></div>
+                            <input type="hidden" name="content" id="content-input">
                         </div>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-edit text-primary me-2"></i>Nội dung chi tiết</h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <!-- 2. Thay thế textarea bằng div cho Quill -->
-                        <div id="content-editor">
-                            <?php echo $post['content'] ?? ''; ?>
-                        </div>
-                        <input type="hidden" name="content" id="content-input">
                     </div>
                 </div>
             </div>
@@ -282,42 +277,32 @@ if (!$is_new_post) {
             <!-- Cột phải (Cài đặt) -->
             <div class="col-lg-4">
                 <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-cog text-primary me-2"></i>Xuất bản</h5>
+                    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="fas fa-cog text-primary me-2"></i>Cài đặt</h5>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i><?php echo $is_new_post ? 'Lưu bài viết' : 'Cập nhật'; ?>
+                        </button>
                     </div>
                     <div class="card-body p-4">
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label for="status" class="form-label fw-semibold">Trạng thái</label>
                             <select class="form-select fw-semibold" id="status" name="status">
                                 <option value="published" <?php echo ($post['status'] ?? '') === 'published' ? 'selected' : ''; ?>>🟢 Đã xuất bản (Published)</option>
-                                <option value="draft" <?php echo ($post['status'] ?? '') === 'draft' ? 'selected' : ''; ?>>🟠 Bản nháp (Draft)</option>
+                                <option value="draft" <?php echo ($post['status'] ?? 'draft') === 'draft' ? 'selected' : ''; ?>>🟠 Bản nháp (Draft)</option>
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold text-uppercase" style="letter-spacing: 0.5px;">
-                            <i class="fas fa-save me-2"></i><?php echo $is_new_post ? 'Lưu bài viết' : 'Cập nhật bài viết'; ?>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-image text-primary me-2"></i>Ảnh đại diện</h5>
-                    </div>
-                    <div class="card-body p-4 text-center">
+                        <hr>
                         <div class="mb-3">
-                            <img id="image-preview" src="<?php echo !empty($post['image']) ? '../' . htmlspecialchars($post['image']) : '../assets/img/placeholder.png'; ?>" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover; <?php echo empty($post['image']) ? 'opacity: 0.5;' : ''; ?>">
+                            <h6 class="fw-semibold mb-3"><i class="fas fa-image text-primary me-2"></i>Ảnh đại diện</h6>
+                            <img id="image-preview" src="<?php echo !empty($post['image']) ? '../' . htmlspecialchars($post['image']) : ''; ?>" alt="Xem trước ảnh" class="img-fluid rounded shadow-sm mb-2" style="max-height: 200px; width: 100%; object-fit: cover; display: <?php echo !empty($post['image']) ? 'block' : 'none'; ?>;">
+                            <div id="image-placeholder" class="text-muted p-4 border rounded bg-light text-center" style="display: <?php echo empty($post['image']) ? 'block' : 'none'; ?>;">
+                                <i class="fas fa-image fa-3x mb-2 opacity-25"></i><br>Chưa có ảnh
+                            </div>
+                            <input type="file" class="form-control mt-2" id="image" name="image" accept="image/*" onchange="previewImage(event, 'image-preview', 'image-placeholder')">
                         </div>
-                        <input type="file" class="form-control" id="image" name="image" accept="image/*" onchange="previewImage(event)">
-                    </div>
-                </div>
-
-                <div class="card shadow-sm border-0 mb-4">
-                    <div class="card-header bg-white py-3">
-                        <h5 class="mb-0 fw-bold"><i class="fas fa-tags text-primary me-2"></i>Phân loại</h5>
-                    </div>
-                    <div class="card-body p-4">
+                        <hr>
                         <div class="mb-0">
-                            <label for="tags" class="form-label fw-semibold">Từ khóa (Tags)</label>
+                            <h6 for="tags" class="form-label fw-semibold"><i class="fas fa-tags text-primary me-2"></i>Từ khóa (Tags)</h6>
                             <input type="text" class="form-control" id="tags" name="tags" value="<?php echo htmlspecialchars($post['tags_str'] ?? ''); ?>" placeholder="quangcao, futa, marketing...">
                             <div class="form-text mt-2"><i class="fas fa-info-circle me-1"></i>Các từ khóa cách nhau bằng dấu phẩy.</div>
                         </div>
@@ -349,31 +334,26 @@ if (!$is_new_post) {
                 ]
             }
         };
-
-    const quillVi = new Quill('#content-editor-vi', quillOptions);
-    const quillEn = new Quill('#content-editor-en', quillOptions);
-    const quillCn = new Quill('#content-editor-cn', quillOptions);
-
+    
+    const quill = new Quill('#content-editor', quillOptions);
+    
     const form = document.querySelector('form');
-    const contentInputVi = document.getElementById('content-input-vi');
-    const contentInputEn = document.getElementById('content-input-en');
-    const contentInputCn = document.getElementById('content-input-cn');
-
+    const contentInput = document.getElementById('content-input');
+    
     form.addEventListener('submit', function(e) {
         // Trước khi submit, lấy nội dung HTML từ Quill và gán vào input ẩn
-        contentInputVi.value = quillVi.root.innerHTML;
-        contentInputEn.value = quillEn.root.innerHTML;
-        contentInputCn.value = quillCn.root.innerHTML;
+        contentInput.value = quill.root.innerHTML;
     });
 
-    function previewImage(event) {
+    function previewImage(event, previewId, placeholderId) {
         if (event.target.files && event.target.files[0]) {
             var reader = new FileReader();
             reader.onload = function(){
-                var output = document.getElementById('image-preview');
+                var output = document.getElementById(previewId);
                 output.src = reader.result;
                 output.style.display = 'block';
-                output.style.opacity = '1';
+                var placeholder = document.getElementById(placeholderId);
+                if (placeholder) placeholder.style.display = 'none';
             };
             reader.readAsDataURL(event.target.files[0]);
         }

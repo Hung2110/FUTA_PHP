@@ -86,20 +86,7 @@ include 'includes/header.php';
                     <div class="project-meta">
                         <span><i class="fas fa-calendar-alt"></i> <strong data-i18n="news.post_date">Ngày:</strong> <?php echo date('d/m/Y', strtotime($project['created_at'])); ?></span>
                     </div>
-
-                    <!-- Social Share Buttons -->
-                    <div class="social-share">
-                        <a id="share-facebook" href="#" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i> <span data-i18n="news.share">Chia sẻ</span></a>
-                        <a id="share-zalo" href="#" target="_blank" class="share-btn zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo"> <span data-i18n="news.share">Chia sẻ</span></a>
-                        <button id="copy-link" class="share-btn copy"><i class="fas fa-link"></i> <span data-i18n="news.copy">Sao chép</span></button>
-                        <span id="copy-success" style="display:none; margin-left: 10px; color: #28a745; align-items: center; font-weight: 500;" data-i18n="news.copied"><i class="fas fa-check-circle me-1"></i> Đã sao chép!</span>
-                    </div>
-
                     <div class="project-content-body">
-                        <?php if (!empty($project['preview_image'])): ?>
-                            <img src="<?php echo htmlspecialchars($project['preview_image']); ?>" alt="" class="img-fluid rounded project-main-image mb-4" width="800" height="450" fetchpriority="high" decoding="async">
-                        <?php endif; ?>
-                        
                         <?php if (!empty($display_client)): ?>
                             <p class="lead fst-italic text-muted">"<?php echo htmlspecialchars($display_client); ?>"</p>
                         <?php endif; ?>
@@ -114,6 +101,14 @@ include 'includes/header.php';
                                 <video src="<?php echo htmlspecialchars($project['preview_video']); ?>" controls playsinline preload="metadata" class="w-100 rounded"></video>
                             </div>
                         <?php endif; ?>
+                    </div>
+
+                    <!-- Social Share Buttons (Moved to bottom) -->
+                    <div class="social-share mt-4 pt-4 border-top">
+                        <a id="share-facebook" href="#" target="_blank" class="share-btn facebook"><i class="fab fa-facebook-f"></i> <span data-i18n="news.share">Chia sẻ</span></a>
+                        <a id="share-zalo" href="#" target="_blank" class="share-btn zalo"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo"> <span data-i18n="news.share">Chia sẻ</span></a>
+                        <button id="copy-link" class="share-btn copy"><i class="fas fa-link"></i> <span data-i18n="news.copy">Sao chép</span></button>
+                        <span id="copy-success" style="display:none; margin-left: 10px; color: #28a745; align-items: center; font-weight: 500;" data-i18n="news.copied"><i class="fas fa-check-circle me-1"></i> Đã sao chép!</span>
                     </div>
                 </div>
             </div>

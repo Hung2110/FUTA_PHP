@@ -4,7 +4,6 @@
 
 .img-section {
   width: 100%;
-  overflow: hidden; /* Cắt bỏ phần bị tràn ra ngoài khung */
 }
 
 .img-section .img-background {
@@ -12,7 +11,6 @@
   height: auto;
   display: block;
   object-fit: cover;
-  margin-bottom: -50px; /* Đẩy phần dưới của ảnh (nơi chứa logo AI) ra khỏi khung nhìn */
 }
 /* Coming Soon Section */
 .coming-soon-section {

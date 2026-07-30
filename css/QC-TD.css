@@ -448,8 +448,7 @@ stroke-width: 4px;
     width: 100%;
     height: auto;
     flex-grow: 1; /* Phủ kín chiều cao tối thiểu */
-    background: rgba(255, 255, 255, 0.01); /* Giảm độ đục nền trắng để nhìn xuyên thấy ảnh nền ở Mobile */
-    backdrop-filter: blur(4px); /* Hiệu ứng kính mờ giúp chữ dễ đọc hơn */
+    background: rgba(255, 255, 255, 0.3); /* Giảm độ đục nền trắng để nhìn xuyên thấy ảnh nền ở Mobile */
     -webkit-backdrop-filter: blur(4px);
   }
   
