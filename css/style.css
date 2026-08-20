@@ -878,7 +878,7 @@ img, video, iframe, canvas, svg, object {
 .social-icons .bi-facebook { color: #000080; }
 .social-icons .bi-envelope { color: #27abe8; }
 .social-icons .bi-instagram { color: #e1306c; }
-.social-icons .bi-youtube { color: #cd201f }
+.social-icons .bi-youtube { color: #cd201f }  
 .contact-info {
     display: flex;
     flex-direction: column;

@@ -46,22 +46,11 @@
 
 /* ========================= */
 /* 🔽 Responsive */
+/* Responsive */
 /* ========================= */
 
 /* Tablet (<=992px) */
 @media (max-width: 992px) {
-  /* --- CSS cho màn hình nhỏ hơn (Responsive) --- */
-@media (max-width: 768px) {
-  .hero-banner-section {
-    height: 40vh; /* Giảm chiều cao trên thiết bị di động */
-  }
-
-  .hero-content h1 {
-    font-size: 2.5rem; /* Giảm kích thước chữ trên thiết bị di động */
-  }
-}
-
-
   .vehicle-item img {
     height: 180px;
   }
@@ -70,6 +59,21 @@
     font-size: 1.2em;
     margin-top: 15px;
   }
+
+  .intercity-wrapper,
+  .intercity-wrapper-2 {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex-direction: column !important; /* Xếp dọc */
+    align-items: center !important; /* Căn giữa */
+  }
+
+  .text-content,
+  .text-content-2 {
+    text-align: center;
+    text-align: center !important; /* Căn giữa chữ */
+  }
 }
 
 /* Mobile (<=768px) */
@@ -77,6 +81,10 @@
   .hero-banner-section {
     padding-top: 80px;
     padding-bottom: 60px;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem; /* Giảm kích thước chữ trên thiết bị di động */
   }
 
   .hero-title {
@@ -91,6 +99,7 @@
   .vehicle-display {
     flex-direction: column; /* Các xe xếp dọc */
     gap: 20px;
+    align-items: center; /* Căn giữa các xe khi xếp dọc */
     margin-top: 20px;
   }
 
@@ -177,6 +186,7 @@
       justify-content: center;
       gap: 40px;
       flex-wrap: wrap;
+      justify-content: center; /* Căn giữa các item khi rớt dòng */
     }
 
     .text-content {
@@ -236,6 +246,8 @@
       flex: 1;
       min-width: 250px;
       position: relative;
+      display: flex; /* Thêm flex để căn giữa */
+      justify-content: center; /* Căn giữa hình ảnh bên trong */
     }
 
     .image-content img {
@@ -251,6 +263,7 @@
   justify-content: center;
   gap: 40px;
   flex-wrap: wrap;
+  justify-content: center; /* Căn giữa các item khi rớt dòng */
 }
 
 .text-content-2 {
@@ -310,6 +323,8 @@
   flex: 1;
   min-width: 250px;
   position: relative;
+  display: flex; /* Thêm flex để căn giữa */
+  justify-content: center; /* Căn giữa hình ảnh bên trong */
 }
 
 .image-content-2 img {

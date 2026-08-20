@@ -15,8 +15,8 @@ const translations = {
       projects: "Dự Án",
       recruitment: "Tuyển Dụng",
       contact: "Liên Hệ",
-      xe_tuyen: "Xe Tuyến",
-      xe_buyt: "Xe Buýt",
+      xe_tuyen: "Xe Tuyến Liên Tỉnh",
+      xe_buyt: "Xe Buýt Nội Ô",
       xe_trung_chuyen: "Xe Trung Chuyển",
       pano: "Pano",
       billboard: "Billboard",
@@ -994,7 +994,7 @@ async function googleTranslate(text, sourceLang, targetLang) {
 }
 
 /**
- * Dịch các phần tử động (từ CSDL) có thuộc tính data-i18n-key
+nav.xe_buyt * Dịch các phần tử động (từ CSDL) có thuộc tính data-i18n-key
  * @param {NodeListOf<Element>|Element[]} elements - Các phần tử cần dịch
  * @param {string} lang - Mã ngôn ngữ đích
  */

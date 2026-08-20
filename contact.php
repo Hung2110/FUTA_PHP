@@ -143,7 +143,7 @@ include 'includes/header.php';
                 </div>
                 <div class="info-group">
                     <h4 data-i18n="contact.social_media">Mạng xã hội</h4>
-                    <div class="social-icons">
+                    <div class="social-iconss">
                         <a href="#"><i class="bi bi-facebook"></i></a>
                         <a href="#"><i class="bi bi-chat-dots"></i></a>
                         <a href="#"><i class="bi bi-messenger"></i></a>
