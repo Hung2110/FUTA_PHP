@@ -153,12 +153,101 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
             cursor: pointer; transition: background 0.2s;
         }
         .btn-send:hover { background: #0056b3; }
+
+        /* Responsive Chat cho Tablet & Mobile */
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 8px !important;
+                padding-top: 68px !important;
+                height: 100vh;
+            }
+            .chat-wrapper {
+                position: relative;
+                margin-bottom: 0px;
+                border-radius: 8px;
+                height: calc(100vh - 80px);
+            }
+            .chat-sidebar {
+                width: 100% !important;
+                border-right: none;
+                height: 100%;
+            }
+            .chat-main {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: 20;
+                background: #f4f6f9;
+            }
+            .chat-empty {
+                display: none !important;
+            }
+            .chat-header {
+                padding: 10px 14px;
+            }
+            .chat-body {
+                padding: 12px;
+                gap: 10px;
+            }
+            .msg-wrapper {
+                max-width: 90%;
+            }
+            .chat-footer {
+                padding: 8px 12px;
+            }
+        }
+        @media (min-width: 768px) and (max-width: 991.98px) {
+            .chat-sidebar {
+                width: 270px;
+            }
+        }
+        @media (min-width: 992px) and (max-width: 1199.98px) {
+            .chat-sidebar {
+                width: 290px;
+            }
+        }
+        @media (max-width: 399.98px) {
+            .main-content {
+                padding: 4px !important;
+                padding-top: 56px !important;
+            }
+            .chat-wrapper {
+                height: calc(100vh - 64px);
+                border-radius: 6px;
+            }
+            .chat-header {
+                padding: 8px 10px;
+            }
+            .session-avatar {
+                width: 36px; height: 36px; font-size: 1rem; margin-right: 8px;
+            }
+            .session-item {
+                padding: 10px 12px;
+            }
+            .chat-body {
+                padding: 8px;
+                gap: 8px;
+            }
+            .msg-bubble {
+                padding: 8px 12px;
+                font-size: 13.5px;
+            }
+            .chat-footer {
+                padding: 6px 8px;
+            }
+            .btn-send {
+                width: 34px;
+                height: 34px;
+            }
+        }
     </style>
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2 d-none d-md-flex">
             <h1 class="h3 mb-0"><i class="fas fa-comments text-primary me-2"></i>Quản Lý Chat Trực Tuyến</h1>
         </div>
 
@@ -177,16 +266,19 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
             <!-- Main Chat Room -->
             <div class="chat-main" id="chatMain" style="display: none;">
                 <div class="chat-header">
-                    <div class="d-flex align-items-center">
-                        <div class="session-avatar" id="headerAvatar">?</div>
-                        <div>
-                            <h5 class="mb-0 fw-bold" id="headerName">Khách hàng</h5>
-                            <div class="text-muted small">
+                    <div class="d-flex align-items-center flex-grow-1 overflow-hidden">
+                        <button type="button" class="btn btn-sm btn-light border me-2 d-md-none flex-shrink-0" id="btnBackToSessions" title="Quay lại danh sách">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="session-avatar me-2 flex-shrink-0" id="headerAvatar" style="width: 40px; height: 40px; font-size: 1.1rem; margin-right: 10px;">?</div>
+                        <div class="overflow-hidden">
+                            <h6 class="mb-0 fw-bold text-truncate" id="headerName" style="max-width: 220px;">Khách hàng</h6>
+                            <div class="text-muted small text-truncate" style="font-size: 11px;">
                                 <span id="headerStatus"></span>
-                                <span class="mx-2">|</span>
+                                <span class="mx-1">|</span>
                                 <i class="fas fa-phone-alt me-1"></i><span id="headerPhone">---</span>
-                                <span class="mx-2">|</span>
-                                <i class="fas fa-envelope me-1"></i><span id="headerEmail">---</span>
+                                <span class="mx-1 d-none d-sm-inline">|</span>
+                                <span class="d-none d-sm-inline"><i class="fas fa-envelope me-1"></i><span id="headerEmail">---</span></span>
                             </div>
                         </div>
                     </div>
@@ -341,6 +433,13 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
             $('#chatMain').show();
             
             loadMessages(true);
+        });
+
+        // Nút quay lại danh sách trên mobile
+        $('#btnBackToSessions').on('click', function() {
+            $('#chatMain').hide();
+            currentSessionId = null;
+            $('.session-item').removeClass('active');
         });
 
         $('#searchSession').on('input', loadSessions);

@@ -369,12 +369,12 @@ if (isset($_GET['edit'])) {
             color: #6b7280;
             border-bottom: 2px solid #e5e7eb;
             background: #f9fafb;
-            padding: 16px;
+            padding: 8px 10px;
             font-weight: 600;
         }
 
         .table tbody td {
-            padding: 16px;
+            padding: 8px 10px;
             vertical-align: middle;
             border-bottom: 1px solid #f3f4f6;
         }
@@ -520,12 +520,6 @@ if (isset($_GET['edit'])) {
             margin-bottom: 24px;
         }
 
-        @media (max-width: 992px) {
-            .stat-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -588,46 +582,46 @@ if (isset($_GET['edit'])) {
         <?php endif; ?>
 
         <div class="card">
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Công việc</th>
-                                <th>Nơi làm việc</th>
-                                <th>Trạng thái</th>
-                                <th>Mô tả ngắn</th>
-                                <th>Lương</th>
-                                <th>Ngày tạo</th>
-                                <th class="text-end">Thao tác</th>
+                                <th class="ps-3" style="min-width: 50px;">ID</th>
+                                <th style="min-width: 160px;">Công việc</th>
+                                <th style="min-width: 110px;">Nơi làm việc</th>
+                                <th style="min-width: 95px;">Trạng thái</th>
+                                <th style="min-width: 140px;">Mô tả ngắn</th>
+                                <th style="min-width: 90px;">Lương</th>
+                                <th style="min-width: 100px;">Ngày tạo</th>
+                                <th class="text-end pe-3" style="min-width: 90px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($jobs && $jobs->num_rows > 0): ?>
                                 <?php while($job = $jobs->fetch_assoc()): ?>
                                     <tr>
-                                        <td><strong>#<?php echo $job['id']; ?></strong></td>
-                                        <td>
-                                            <p class="job-title mb-1"><?php echo htmlspecialchars($job['title']); ?></p>
+                                        <td data-label="Mã ID"><strong>#<?php echo $job['id']; ?></strong></td>
+                                        <td data-label="Công việc">
+                                            <p class="job-title mb-1 fw-bold" style="line-height: 1.35;"><?php echo htmlspecialchars($job['title']); ?></p>
                                             <p class="job-meta mb-0">
                                                 <a href="../recruitment-detail.php?id=<?php echo $job['id']; ?>&preview=1" target="_blank" class="text-decoration-none small"><i class="fas fa-external-link-alt fa-xs"></i> Xem tin</a>
                                             </p>
                                         </td>
-                                        <td><?php echo htmlspecialchars($job['branch'] ?? '—'); ?></td>
-                                        <td>
+                                        <td data-label="Nơi làm việc"><?php echo htmlspecialchars($job['branch'] ?? '—'); ?></td>
+                                        <td data-label="Trạng thái">
                                             <span class="badge <?php echo $job['status'] === 'open' ? 'badge-open' : 'badge-closed'; ?>">
                                                 <?php echo $job['status'] === 'open' ? 'Đang tuyển' : 'Đã đóng'; ?>
                                             </span>
                                         </td>
-                                        <td>
-                                            <div class="description-snippet">
-                                                <?php echo htmlspecialchars(substr($job['description'], 0, 100)) . '...'; ?>
+                                        <td data-label="Mô tả">
+                                            <div class="description-snippet text-muted text-expandable" style="font-size: 0.88rem; line-height: 1.5;" title="Bấm để xem đầy đủ">
+                                                <?php echo htmlspecialchars(strip_tags($job['description'])); ?>
                                             </div>
                                         </td>
-                                        <td><span class="text-primary fw-bold">Thỏa thuận</span></td>
-                                        <td style="font-size: 13px; color: #6b7280;"><?php echo date('d/m/Y H:i', strtotime($job['created_at'])); ?></td>
-                                        <td>
+                                        <td data-label="Lương"><span class="text-primary fw-bold">Thỏa thuận</span></td>
+                                        <td data-label="Ngày tạo" style="font-size: 13px; color: #6b7280;"><?php echo date('d/m/Y H:i', strtotime($job['created_at'])); ?></td>
+                                        <td data-label="Thao tác" class="text-end">
                                             <div class="table-actions">
                                                 <a href="?edit=<?php echo $job['id']; ?>" class="btn btn-sm btn-warning" title="Sửa">
                                                     <i class="fas fa-edit"></i>

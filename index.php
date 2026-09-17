@@ -68,7 +68,127 @@ if ($carousel_slides_query) {
     }
 }
 
+// Cấu hình danh mục dịch vụ kết nối với slide carousel từ thứ tự 1 trở đi
+$services_catalog = [
+    'car' => [
+        'id' => 2,
+        'link' => 'ads-car.php',
+        'title' => 'QUẢNG CÁO TRÊN XE',
+        'i18n' => 'home.service1',
+        'default_image' => 'assets/images/slideshow/QC_XE.jpg',
+        'keywords' => ['qc_xe', 'xe', 'car'],
+        'default_order' => 1
+    ],
+    'station' => [
+        'id' => 3,
+        'link' => 'QC-tram-dung.php',
+        'title' => 'QUẢNG CÁO TRẠM DỪNG',
+        'i18n' => 'home.service2',
+        'default_image' => 'assets/images/slideshow/QC-TD.jpg',
+        'keywords' => ['qc-td', 'qc_td', 'tram', 'station'],
+        'default_order' => 2
+    ],
+    'digital' => [
+        'id' => 4,
+        'link' => 'QC-ky-thuat-so.php',
+        'title' => 'QUẢNG CÁO KỸ THUẬT SỐ',
+        'i18n' => 'home.service3',
+        'default_image' => 'assets/images/slideshow/QC-KTS.jpg',
+        'keywords' => ['qc-kts', 'qc_kts', 'kts', 'digital', 'ky-thuat-so'],
+        'default_order' => 3
+    ]
+];
 
+// Lọc các slide dịch vụ bắt đầu từ thứ tự 1 (bỏ qua slide tổng hợp sort_order = 0 hoặc slide đầu tiên nếu có)
+$active_service_slides = [];
+if (!empty($carousel_slides)) {
+    foreach ($carousel_slides as $idx => $slide) {
+        $order = (int)($slide['sort_order'] ?? 0);
+        if ($order >= 1 || $idx >= 1) {
+            $active_service_slides[] = $slide;
+        }
+    }
+}
+
+// Xây dựng danh sách dịch vụ cho products-grid đồng bộ với carousel slides và số thứ tự
+$grid_services = [];
+$assigned_keys = [];
+
+foreach ($active_service_slides as $slide) {
+    $matched_key = null;
+    $slide_id = (int)($slide['id'] ?? 0);
+    $slide_path = strtolower($slide['image_path'] ?? '');
+
+    // 1. Khớp theo ID slide trong CSDL (id=2: Xe, id=3: Trạm dừng, id=4: Kỹ thuật số)
+    foreach ($services_catalog as $key => $cat) {
+        if (!in_array($key, $assigned_keys) && isset($cat['id']) && $cat['id'] === $slide_id) {
+            $matched_key = $key;
+            break;
+        }
+    }
+
+    // 2. Khớp theo từ khóa tên file ảnh nếu chưa khớp
+    if (!$matched_key) {
+        foreach ($services_catalog as $key => $cat) {
+            if (!in_array($key, $assigned_keys)) {
+                foreach ($cat['keywords'] as $kw) {
+                    if (strpos($slide_path, $kw) !== false) {
+                        $matched_key = $key;
+                        break 2;
+                    }
+                }
+            }
+        }
+    }
+
+    // 3. Khớp tuần tự nếu chưa khớp
+    if (!$matched_key) {
+        foreach ($services_catalog as $key => $cat) {
+            if (!in_array($key, $assigned_keys)) {
+                $matched_key = $key;
+                break;
+            }
+        }
+    }
+
+    if ($matched_key) {
+        $assigned_keys[] = $matched_key;
+        $grid_services[] = [
+            'link' => $services_catalog[$matched_key]['link'],
+            'title' => $services_catalog[$matched_key]['title'],
+            'i18n' => $services_catalog[$matched_key]['i18n'],
+            'image' => !empty($slide['image_path']) ? $slide['image_path'] : $services_catalog[$matched_key]['default_image'],
+            'sort_order' => (int)($slide['sort_order'] ?? $services_catalog[$matched_key]['default_order'])
+        ];
+    } else {
+        // Slide bổ sung khác (nếu có)
+        $grid_services[] = [
+            'link' => !empty($slide['button_link']) ? $slide['button_link'] : '#',
+            'title' => !empty($slide['title']) ? $slide['title'] : 'DỊCH VỤ FUTA',
+            'i18n' => '',
+            'image' => $slide['image_path'],
+            'sort_order' => (int)($slide['sort_order'] ?? 99)
+        ];
+    }
+}
+
+// Bổ sung các dịch vụ chưa có slide trong CSDL (dùng ảnh và thứ tự mặc định)
+foreach ($services_catalog as $key => $cat) {
+    if (!in_array($key, $assigned_keys)) {
+        $grid_services[] = [
+            'link' => $cat['link'],
+            'title' => $cat['title'],
+            'i18n' => $cat['i18n'],
+            'image' => $cat['default_image'],
+            'sort_order' => (int)$cat['default_order']
+        ];
+    }
+}
+
+// Sắp xếp các mục dịch vụ theo đúng số thứ tự (sort_order) của carousel slide
+usort($grid_services, function($a, $b) {
+    return $a['sort_order'] <=> $b['sort_order'];
+});
 ?>
 <!-- Slideshow chính - Bootstrap Carousel -->
 <section class="slideshow">
@@ -86,9 +206,19 @@ if ($carousel_slides_query) {
     <!-- Carousel items -->
     <div class="carousel-inner">
         <?php if (!empty($carousel_slides)): // Nếu có slide trong CSDL ?>
-            <?php foreach ($carousel_slides as $index => $slide): ?>
+            <?php foreach ($carousel_slides as $index => $slide): 
+                $slide_link = !empty($slide['link']) ? $slide['link'] : (!empty($slide['button_link']) ? $slide['button_link'] : '');
+                if (empty($slide_link)) {
+                    $s_id = (int)($slide['id'] ?? 0);
+                    $s_path = strtolower($slide['image_path'] ?? '');
+                    if ($s_id === 2 || strpos($s_path, 'xe') !== false) $slide_link = 'ads-car.php';
+                    elseif ($s_id === 3 || strpos($s_path, 'td') !== false || strpos($s_path, 'tram') !== false) $slide_link = 'QC-tram-dung.php';
+                    elseif ($s_id === 4 || strpos($s_path, 'kts') !== false || strpos($s_path, 'digital') !== false) $slide_link = 'QC-ky-thuat-so.php';
+                    else $slide_link = '#';
+                }
+            ?>
                 <div class="carousel-item <?php echo $index === 0 ? 'active' : ''; ?>" alt="">
-                    <a href="<?php echo htmlspecialchars($slide['link'] ?? '#'); ?>" <?php if(!empty($slide['link'])) echo 'target="_blank"'; ?>>
+                    <a href="<?php echo htmlspecialchars($slide_link); ?>" <?php if(strpos($slide_link, 'http') === 0) echo 'target="_blank"'; ?>>
                         <img src="<?php echo htmlspecialchars($slide['image_path']); ?>" class="d-block w-100" alt="<?php echo htmlspecialchars($slide['title'] ?? 'Carousel Slide'); ?>" width="1920" height="1080" <?php echo $index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'; ?> decoding="async">
                     </a>
                 </div>
@@ -196,26 +326,14 @@ if ($carousel_slides_query) {
 
     <!-- Grid dịch vụ -->
     <div class="products-grid">
-    <a href="ads-car.php" class="product-item">
-        <img src="assets/images/slideshow/QC_XE.jpg" alt="" width="800" height="400" fetchpriority="high" decoding="async">
-        <div class="product-info">
-            <h3 data-i18n="home.service1">QUẢNG CÁO TRÊN XE</h3>
-        </div>
-    </a>
-
-    <a href="QC-tram-dung.php" class="product-item">
-        <img src="assets/images/slideshow/QC-TD.jpg" alt="" width="800" height="400" fetchpriority="high" decoding="async">
-        <div class="product-info">
-            <h3 data-i18n="home.service2">QUẢNG CÁO TRẠM DỪNG</h3>
-        </div>
-    </a>
-
-    <a href="QC-ky-thuat-so.php" class="product-item">
-        <img src="assets/images/slideshow/QC-KTS.jpg" alt="" width="800" height="400" fetchpriority="high" decoding="async">
-        <div class="product-info">
-            <h3 data-i18n="home.service3">QUẢNG CÁO KỸ THUẬT SỐ</h3>
-        </div>
-    </a>
+        <?php foreach ($grid_services as $service): ?>
+        <a href="<?php echo htmlspecialchars($service['link']); ?>" class="product-item">
+            <img src="<?php echo htmlspecialchars($service['image']); ?>" alt="<?php echo htmlspecialchars($service['title']); ?>" width="800" height="400" fetchpriority="high" decoding="async">
+            <div class="product-info">
+                <h3 <?php if (!empty($service['i18n'])) echo 'data-i18n="' . htmlspecialchars($service['i18n']) . '"'; ?>><?php echo htmlspecialchars($service['title']); ?></h3>
+            </div>
+        </a>
+        <?php endforeach; ?>
     </div>
 </section>
 <!-- Tin tức & Sự kiện -->

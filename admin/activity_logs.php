@@ -36,6 +36,14 @@ $logs = $conn->query("SELECT al.*, u.username, u.fullname FROM activity_logs al
             background: #f8f9fa; /* Màu nền header để không bị trong suốt khi cuộn */
             z-index: 1;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            padding: 8px 10px;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .table tbody td {
+            padding: 8px 10px;
+            font-size: 0.82rem;
         }
     </style>
 </head>
@@ -47,30 +55,30 @@ $logs = $conn->query("SELECT al.*, u.username, u.fullname FROM activity_logs al
             <p class="mb-0">Theo dõi lịch sử thao tác và đăng nhập của quản trị viên.</p>
         </div>
 
-        <div class="card">
-            <div class="card-body">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <th>ID</th>
-                                <th>Người dùng</th>
-                                <th>Hành động</th>
-                                <th>Module</th>
-                                <th>IP</th>
-                                <th>Thời gian</th>
+                                <th class="ps-3" style="min-width: 50px;">ID</th>
+                                <th style="min-width: 120px;">Người dùng</th>
+                                <th style="min-width: 160px;">Hành động</th>
+                                <th style="min-width: 100px;">Module</th>
+                                <th style="min-width: 100px;">IP</th>
+                                <th class="text-end pe-3" style="min-width: 130px;">Thời gian</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($logs->num_rows > 0): ?>
                                 <?php while($log = $logs->fetch_assoc()): ?>
                                     <tr>
-                                        <td><?php echo $log['id']; ?></td>
-                                        <td><?php echo htmlspecialchars($log['fullname'] ?? $log['username'] ?? 'N/A'); ?></td>
-                                        <td><?php echo htmlspecialchars($log['action']); ?></td>
-                                        <td><?php echo htmlspecialchars($log['module']); ?></td>
-                                        <td><?php echo htmlspecialchars($log['ip']); ?></td>
-                                        <td><?php echo date('d/m/Y H:i:s', strtotime($log['created_at'])); ?></td>
+                                        <td data-label="Mã ID" class="ps-3"><strong>#<?php echo $log['id']; ?></strong></td>
+                                        <td data-label="Người dùng"><?php echo htmlspecialchars($log['fullname'] ?? $log['username'] ?? 'N/A'); ?></td>
+                                        <td data-label="Hành động"><div style="line-height: 1.35;"><?php echo htmlspecialchars($log['action']); ?></div></td>
+                                        <td data-label="Module"><span class="badge bg-light text-dark border"><?php echo htmlspecialchars($log['module']); ?></span></td>
+                                        <td data-label="Địa chỉ IP"><code><?php echo htmlspecialchars($log['ip']); ?></code></td>
+                                        <td data-label="Thời gian" class="text-end pe-3 text-nowrap"><?php echo date('d/m/Y H:i:s', strtotime($log['created_at'])); ?></td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else: ?>

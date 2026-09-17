@@ -172,15 +172,15 @@ $role_colors = [
                     </span>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-1">
                         <span class="text-muted">Email</span>
-                        <strong><?php echo htmlspecialchars($user['email']); ?></strong>
+                        <strong class="text-break"><?php echo htmlspecialchars($user['email']); ?></strong>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-1">
                         <span class="text-muted">Điện thoại</span>
                         <strong><?php echo htmlspecialchars($user['phone'] ?: 'Chưa cập nhật'); ?></strong>
                     </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-1">
                         <span class="text-muted">Ngày tham gia</span>
                         <strong><?php echo date('d/m/Y', strtotime($user['created_at'])); ?></strong>
                     </li>

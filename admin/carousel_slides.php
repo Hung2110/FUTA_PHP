@@ -182,27 +182,32 @@ if (isset($post_message)) {
         .table { vertical-align: middle; }
         .table thead th {
             text-transform: uppercase;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
             color: #6b7280;
+            padding: 8px 10px;
+        }
+        .table tbody td {
+            padding: 8px 10px;
         }
         .table tbody tr:hover {
             background-color: #f9fafb;
         }
         .slide-image {
-            width: 100px;
-            height: 60px;
+            width: 60px;
+            height: 36px;
             object-fit: cover;
-            border-radius: 6px;
+            border-radius: 4px;
         }
-        .badge { padding: .4em .8em; font-size: 11px; }
+        .badge { padding: .3em .6em; font-size: 11px; }
         .form-control, .form-select, textarea { border-radius: 8px; }
         .action-btn {
-            width: 36px;
-            height: 36px;
+            width: 28px;
+            height: 28px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            font-size: 12px;
         }
         .preview-img-modal {
             max-width: 100%;
@@ -212,12 +217,18 @@ if (isset($post_message)) {
             border: 1px solid #ddd;
             border-radius: 5px;
         }
+        @media (max-width: 575.98px) {
+            .slide-image {
+                width: 46px;
+                height: 26px;
+            }
+        }
     </style>
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h1><i class="fas fa-images text-primary"></i> Quản Lý Carousel</h1>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#slideModal" id="addSlideBtn">
                 <i class="fas fa-plus"></i> Thêm slide mới
@@ -232,35 +243,35 @@ if (isset($post_message)) {
         <?php endif; ?>
 
         <div class="card">
-            <div class="card-body">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover mb-0">
+                    <table class="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Ảnh</th>
-                                <th>Thứ tự</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày đăng</th>
-                                <th class="text-end">Thao tác</th>
+                                <th class="ps-3" style="min-width: 50px;">ID</th>
+                                <th style="min-width: 90px;">Ảnh</th>
+                                <th style="min-width: 65px;">Thứ tự</th>
+                                <th class="text-center" style="min-width: 95px;">Trạng thái</th>
+                                <th style="min-width: 95px;">Ngày đăng</th>
+                                <th class="text-end pe-3" style="min-width: 90px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (!empty($slides)): ?>
                                 <?php foreach($slides as $slide): ?>
                                 <tr>
-                                    <td><?php echo $slide['id']; ?></td>
-                                    <td>
+                                    <td data-label="Mã ID"><?php echo $slide['id']; ?></td>
+                                    <td data-label="Hình ảnh">
                                         <img src="../<?php echo htmlspecialchars($slide['image_path'] ?: 'assets/images/service/billboard.jpg'); ?>" alt="Slide image" class="slide-image">
                                     </td>
-                                    <td><?php echo $slide['sort_order']; ?></td>
-                                    <td class="text-center">
+                                    <td data-label="Thứ tự"><?php echo $slide['sort_order']; ?></td>
+                                    <td data-label="Trạng thái" class="text-center">
                                         <span class="badge bg-<?php echo $slide['status']=='active' ? 'success' : 'secondary'; ?>">
                                             <?php echo ucfirst($slide['status']); ?>
                                         </span>
                                     </td>
-                                    <td><?php echo date('d/m/Y', strtotime($slide['created_at'])); ?></td>
-                                    <td class="text-end" style="width: 120px;">
+                                    <td data-label="Ngày đăng"><?php echo date('d/m/Y', strtotime($slide['created_at'])); ?></td>
+                                    <td data-label="Thao tác" class="text-end" style="width: 120px;">
                                         <button type="button" class="btn btn-sm btn-warning action-btn btn-edit" title="Sửa"
                                             data-bs-toggle="modal" data-bs-target="#slideModal"
                                             data-id="<?php echo $slide['id']; ?>"

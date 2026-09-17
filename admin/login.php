@@ -136,7 +136,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
        
         .page-logo {
             display: block;
-            max-width: 300px;
+            max-width: 250px;
+            width: 100%;
+            height: auto;
+            object-fit: contain;
             margin: 0 auto 20px auto;
         }
         .page-subtitle {

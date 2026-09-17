@@ -63,8 +63,39 @@ $projects = $stmt_projects->get_result();
         body { background: #f7f9fc; }
         .project-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 575.98px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .project-card-img {
+                height: 160px;
+            }
+            .project-card-body {
+                padding: 15px;
+            }
+            .project-card-footer {
+                padding: 12px 15px;
+            }
+        }
+        @media (max-width: 399.98px) {
+            .project-card-img {
+                height: 135px;
+            }
+            .project-card-body {
+                padding: 10px 12px;
+            }
+            .project-card-footer {
+                padding: 8px 12px;
+            }
+            .action-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
         }
         .project-card {
             background: #fff;
@@ -101,14 +132,14 @@ $projects = $stmt_projects->get_result();
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h1><i class="fas fa-project-diagram text-primary"></i> Quản Lý Dự Án</h1>
-             <div class="d-flex gap-2">
-            <a href="import.php?type=project" class="btn btn-outline-primary"><i class="fas fa-file-import"></i> Import từ file</a>
-            <a href="project-edit.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Thêm dự án mới
-            </a>
-        </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="import.php?type=project" class="btn btn-outline-primary"><i class="fas fa-file-import"></i> Import từ file</a>
+                <a href="project-edit.php" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Thêm dự án mới
+                </a>
+            </div>
         </div>
 
         <?php if ($message): ?>

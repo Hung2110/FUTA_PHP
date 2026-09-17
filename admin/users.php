@@ -338,12 +338,12 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
             color: #6b7280;
             border-bottom: 2px solid #e5e7eb;
             background: #f9fafb;
-            padding: 16px;
+            padding: 8px 10px;
             font-weight: 600;
         }
 
         .table tbody td {
-            padding: 16px;
+            padding: 8px 10px;
             vertical-align: middle;
             border-bottom: 1px solid #f3f4f6;
         }
@@ -353,10 +353,10 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
         }
 
         .badge {
-            padding: 6px 12px;
+            padding: 3px 8px;
             border-radius: 20px;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .form-label {
@@ -399,12 +399,6 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
 
         .btn:hover {
             transform: translateY(-1px);
-        }
-
-        @media (max-width: 992px) {
-            .stat-grid {
-                grid-template-columns: 1fr;
-            }
         }
 
         .empty-state {
@@ -543,10 +537,10 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
         </div>
         <div class="card">
             <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
                     <h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách người dùng</h5>
                     <form method="GET" action="users.php" class="d-flex align-items-center">
-                        <select name="role_filter" class="form-select form-select-sm" style="width: auto; min-width: 200px;" onchange="this.form.submit()">
+                        <select name="role_filter" class="form-select form-select-sm" style="width: auto; min-width: 180px; max-width: 100%;" onchange="this.form.submit()">
                             <option value="">-- Tất cả vai trò --</option>
                             <?php foreach ($role_config as $key => $config): ?>
                                 <option value="<?php echo $key; ?>" <?php echo $role_filter === $key ? 'selected' : ''; ?>><?php echo $config['label']; ?></option>
@@ -560,25 +554,26 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
                     <table class="table table-hover align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>ID</th>
-                                <th>Tên đăng nhập</th>
-                                <th>Họ tên</th>
-                                <th>Email</th>
-                                <th>Vai trò</th>
-                                <th>Trạng thái</th>
-                                <th>Ngày tạo</th>
-                                <th class="text-end">Thao tác</th>
+                                <th class="ps-3" style="min-width: 50px;">ID</th>
+                                <th style="min-width: 120px;">Tên đăng nhập</th>
+                                <th style="min-width: 130px;">Họ tên</th>
+                                <th style="min-width: 140px;">Email</th>
+                                <th style="min-width: 120px;">Vai trò</th>
+                                <th style="min-width: 95px;">Trạng thái</th>
+                                <th style="min-width: 110px;">Ngày tạo</th>
+                                <th class="text-end pe-3" style="min-width: 105px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($users->num_rows): ?>
                                 <?php while($user = $users->fetch_assoc()): ?>
                                     <tr>
-                                        <td><strong>#<?php echo $user['id']; ?></strong></td>
-                                        <td><?php echo htmlspecialchars($user['username']); ?></td>
-                                        <td><?php echo htmlspecialchars($user['fullname']); ?></td>
-                                        <td><?php echo htmlspecialchars($user['email']); ?></td>
-                                        <td>
+                                        <td data-label="Mã ID"><strong>#<?php echo $user['id']; ?></strong></td>
+                                        <td data-label="Tên đăng nhập"><?php echo htmlspecialchars($user['username']); ?></td>
+                                        <td data-label="Họ tên"><div><?php echo htmlspecialchars($user['fullname']); ?></div></td>
+                                        <td data-label="Email"><div><?php echo htmlspecialchars($user['email']); ?></div></td>
+                                        <td data-label="Vai trò">
+                                            <div>
                                             <?php 
                                                 $user_roles_arr = !empty($user['role']) ? explode(',', $user['role']) : [];
                                                 foreach ($user_roles_arr as $r) {
@@ -588,15 +583,16 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
                                                     $color = $role_config[$r]['color'] ?? 'secondary';
                                                     echo '<span class="badge bg-'.$color.' me-1">'.$label.'</span>';
                                                 }
-                                            ?>                                            
+                                            ?>
+                                            </div>                                            
                                         </td>
-                                        <td>
+                                        <td data-label="Trạng thái">
                                             <span class="badge bg-<?php echo $user['status'] === 'active' ? 'success' : 'secondary'; ?>">
                                                 <?php echo ucfirst($user['status']); ?>
                                             </span>
                                         </td>
-                                        <td style="font-size: 13px; color: #6b7280;"><?php echo date('d/m/Y H:i', strtotime($user['created_at'])); ?></td>
-                                        <td class="text-end">
+                                        <td data-label="Ngày tạo" style="font-size: 13px; color: #6b7280;"><?php echo date('d/m/Y H:i', strtotime($user['created_at'])); ?></td>
+                                        <td data-label="Thao tác" class="text-end">
                                             <div class="d-flex gap-2 justify-content-end">
                                                 <a href="view_user.php?id=<?php echo $user['id']; ?>" class="btn btn-sm btn-info" title="Xem">
                                                     <i class="fas fa-eye"></i>

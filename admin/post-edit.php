@@ -219,7 +219,7 @@ if (!$is_new_post) {
 <body>
 <?php include 'sidebar.php'; ?>
 <div class="main-content">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <h1 class="h3 mb-0">
             <i class="fas fa-<?php echo $is_new_post ? 'plus-circle' : 'edit'; ?> text-primary"></i> <?php echo $is_new_post ? 'Thêm bài viết mới' : 'Chỉnh sửa bài viết'; ?>
         </h1>

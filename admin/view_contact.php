@@ -69,7 +69,7 @@ $status_colors = ['pending' => 'secondary', 'done' => 'success'];
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
             <h1 class="mb-0"><i class="fas fa-envelope-open-text text-primary"></i> Chi Tiết Liên Hệ</h1>
             <a href="contacts.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
         </div>

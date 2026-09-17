@@ -39,50 +39,45 @@ $contacts = $conn->query("SELECT * FROM contact ORDER BY created_at DESC");
         <?php if ($message): ?>
         <div class="alert alert-success"><?php echo $message; ?></div>
         <?php endif; ?>
-        <div class="card">
-            <div class="card-body">
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <th>ID</th>
-                                <th>Họ tên</th>
-                                <th>Email</th>
-                                <th>Điện thoại</th>
-                                <th>Website</th>
-                                <th>Tin nhắn</th>
-                                <th>Ngày gửi</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
+                                <th class="ps-3" style="min-width: 50px;">ID</th>
+                                <th style="min-width: 120px;">Họ tên</th>
+                                <th style="min-width: 140px;">Email</th>
+                                <th style="min-width: 100px;">Điện thoại</th>
+                                <th style="min-width: 110px;">Chủ đề</th>
+                                <th style="min-width: 140px;">Tin nhắn</th>
+                                <th style="min-width: 105px;">Ngày gửi</th>
+                                <th style="min-width: 110px;">Trạng thái</th>
+                                <th class="text-end pe-3" style="min-width: 70px;">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($contacts->num_rows > 0): ?>
                                 <?php while($contact = $contacts->fetch_assoc()): ?>
                                     <tr>
-                                        <td><?php echo $contact['id']; ?></td>
-                                        <td><?php echo htmlspecialchars($contact['name']); ?></td>
-                                        <td><?php echo htmlspecialchars($contact['email']); ?></td>
-                                        <td><?php echo htmlspecialchars($contact['phone']); ?></td>
-                                        <td><?php echo htmlspecialchars($contact['subject'] ?? ''); ?></td>
-                                        <td><?php echo htmlspecialchars(mb_substr($contact['message'], 0, 50)) . '...'; ?></td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($contact['created_at'])); ?></td>
-                                        <td>
-                                            <form method="post" style="display:inline-block">
+                                        <td data-label="Mã ID"><strong>#<?php echo $contact['id']; ?></strong></td>
+                                        <td data-label="Họ tên"><?php echo htmlspecialchars($contact['name']); ?></td>
+                                        <td data-label="Email"><?php echo htmlspecialchars($contact['email']); ?></td>
+                                        <td data-label="Điện thoại"><?php echo htmlspecialchars($contact['phone']); ?></td>
+                                        <td data-label="Chủ đề"><div class="fw-semibold"><?php echo htmlspecialchars($contact['subject'] ?? ''); ?></div></td>
+                                        <td data-label="Tin nhắn"><div class="text-secondary text-expandable" title="Bấm để xem đầy đủ"><?php echo htmlspecialchars($contact['message']); ?></div></td>
+                                        <td data-label="Ngày gửi"><?php echo date('d/m/Y H:i', strtotime($contact['created_at'])); ?></td>
+                                        <td data-label="Trạng thái">
+                                            <form method="post" style="display:inline-block; margin:0;">
                                                 <input type="hidden" name="id" value="<?php echo $contact['id']; ?>">
                                                 <input type="hidden" name="update_status" value="1">
-                                                <select name="status" class="form-select form-select-sm" style="width:auto;display:inline-block;vertical-align:middle" onchange="this.form.submit()">
+                                                <select name="status" class="form-select form-select-sm <?php echo (($contact['status'] ?? 'new')=='replied') ? 'border-success text-success fw-semibold' : 'text-secondary'; ?>" style="font-size: 0.85rem; padding: 4px 24px 4px 8px;" onchange="this.form.submit()">
                                                     <option value="new" <?php if(($contact['status'] ?? 'new')=='new') echo 'selected'; ?>>Chưa tư vấn</option>
                                                     <option value="replied" <?php if(($contact['status'] ?? '')=='replied') echo 'selected'; ?>>Đã tư vấn</option>
                                                 </select>
                                             </form>
-                                            <?php if(($contact['status'] ?? 'new')=='replied'): ?>
-                                                <span class="badge bg-success ms-1">Đã tư vấn</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-secondary ms-1">Chưa tư vấn</span>
-                                            <?php endif; ?>
                                         </td>
-                                        <td>
+                                        <td data-label="Thao tác" class="text-end">
                                             <a href="view_contact.php?id=<?php echo $contact['id']; ?>" class="btn btn-sm btn-info" title="Xem chi tiết">
                                                 <i class="fas fa-eye"></i>
                                             </a>
