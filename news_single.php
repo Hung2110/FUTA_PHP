@@ -62,11 +62,6 @@ $pageStyles = ['css/project-detail.css'];
 include 'includes/header.php'; 
 ?>
 
-<script>
-    // Lấy URL hiện tại cho các nút chia sẻ
-    const currentUrl = window.location.href;
-    const projectTitle = "<?php echo htmlspecialchars($display_title, ENT_QUOTES); ?>";
-</script>
 <!-- Sử dụng class project-detail-container để kế thừa CSS của trang dự án -->
 <div class="project-detail-container">
     <div class="container">
@@ -151,9 +146,5 @@ include 'includes/header.php';
 </div>
 
 <!-- Tái sử dụng JS của project detail cho chức năng share -->
-<script>
-    // Đổi tên biến để khớp với file JS
-    const postTitle = "<?php echo htmlspecialchars($display_title, ENT_QUOTES); ?>";
-</script>
 <script src="js/blog-single.js?v=<?php echo time(); ?>"></script>
 <?php include 'includes/footer.php'; ?>

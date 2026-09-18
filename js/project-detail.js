@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const url = (typeof currentUrl !== 'undefined') ? currentUrl : window.location.href;
-    const originalTitle = (typeof projectTitle !== 'undefined') ? projectTitle : document.title;
+    const titleEl = document.querySelector('.project-title');
+    const originalTitle = (typeof projectTitle !== 'undefined') ? projectTitle : (titleEl ? titleEl.textContent.trim() : document.title);
     let translatedTitle = originalTitle;
 
     const facebookBtn = document.getElementById('share-facebook');
@@ -38,8 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(url).then(() => {
-                copySuccess.style.display = 'inline';
-                setTimeout(() => { copySuccess.style.display = 'none'; }, 2000);
+                if (copySuccess) {
+                    copySuccess.style.display = 'inline';
+                    setTimeout(() => { copySuccess.style.display = 'none'; }, 2000);
+                }
             });
         });
     }

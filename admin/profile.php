@@ -126,25 +126,17 @@ $role_colors = [
     <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body { background: #f7f9fc; }
-        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
-        .profile-header { text-align: center; padding: 2rem 1rem; }
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 4px solid #fff;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 1rem;
-        }
-        .form-label { font-weight: 600; }
-    </style>
+    <link rel="stylesheet" href="css/profile.css">
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
 <div class="main-content">
-    <h1 class="mb-4"><i class="fas fa-user-edit text-primary"></i> Hồ Sơ Của Tôi</h1>
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-user-edit text-primary me-2"></i>Hồ Sơ Của Tôi</h1>
+            <p class="mb-0">Cập nhật thông tin cá nhân và thay đổi mật khẩu quản trị.</p>
+        </div>
+    </div>
 
     <?php if ($message): ?>
         <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show">

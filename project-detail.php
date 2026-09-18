@@ -61,11 +61,7 @@ $pageTitle = "Dự án: " . htmlspecialchars($display_title);
 $pageStyles = ['css/project-detail.css'];
 include 'includes/header.php'; 
 ?>
-<script>
-    // Lấy URL hiện tại cho các nút chia sẻ
-    const currentUrl = window.location.href;
-    const projectTitle = "<?php echo htmlspecialchars($display_title, ENT_QUOTES); ?>";
-</script>
+
 <div class="project-detail-container">
     <div class="container">
         <!-- Breadcrumb -->

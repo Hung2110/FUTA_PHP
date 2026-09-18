@@ -1,0 +1,30 @@
+body { background: #f7f9fc; }
+.profile-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.profile-card .card-body { padding: 2rem; }
+.profile-card .list-group-item { 
+    border: none; 
+    padding: .85rem 0;
+    display: flex;
+    align-items: center;
+}
+.profile-card .list-group-item strong { 
+    min-width: 180px; 
+    display: inline-block; 
+    color: #6b7280;
+}
+.profile-card .list-group-item .value {
+    font-weight: 500;
+    color: #1f2a37;
+}
+.bio-text {
+    white-space: pre-wrap;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    font-style: italic;
+}
+

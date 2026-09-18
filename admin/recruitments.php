@@ -147,7 +147,12 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_jobs' => 0, 'open_
 $latestJobResult = $conn->query("SELECT title, created_at FROM jobs ORDER BY created_at DESC LIMIT 1");
 $latestJob = $latestJobResult && $latestJobResult->num_rows > 0 ? $latestJobResult->fetch_assoc() : null;
 
-$jobs = $conn->query("SELECT * FROM jobs ORDER BY created_at DESC");
+$filter = isset($_GET['filter']) && in_array($_GET['filter'], ['open', 'closed']) ? $_GET['filter'] : 'all';
+$jobs_query = "SELECT * FROM jobs";
+if ($filter !== 'all') {
+    $jobs_query .= " WHERE status = '" . $conn->real_escape_string($filter) . "'";
+}
+$jobs = $conn->query($jobs_query . " ORDER BY created_at DESC");
 
 $edit_job = null;
 if (isset($_GET['edit'])) {
@@ -227,351 +232,22 @@ if (isset($_GET['edit'])) {
     <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        :root {
-            --primary: #007bff;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
-            --dark: #343a40;
-            --light: #f8f9fa;
-        }
-
-        body {
-            background: #f7f9fc;
-            color: #1f2a37;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        .page-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 30px;
-            padding: 25px;
-        }
-
-        .page-header h1 {
-            font-weight: 700;
-            font-size: 1.75rem;
-            margin: 0;
-            color: #1f2a37;
-        }
-
-        .page-header p {
-            color: #6b7280;
-            margin: 5px 0 0;
-            font-size: 14px;
-        }
-
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            border: none;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-            text-decoration: none;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,123,255,0.4);
-            color: #fff;
-        }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        }
-
-        .stat-card:nth-child(2) {
-            border-left-color: var(--success);
-        }
-
-        .stat-card:nth-child(3) {
-            border-left-color: var(--danger);
-        }
-
-        .stat-card:nth-child(4) {
-            border-left-color: var(--info);
-        }
-
-        .stat-card h6 {
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: #6b7280;
-            font-weight: 600;
-            margin: 0 0 12px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 8px 0;
-            color: #1f2a37;
-        }
-
-        .stat-trend {
-            font-size: 13px;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
-            background: #fff;
-        }
-
-        .card-body {
-            padding: 0;
-        }
-
-        .table {
-            margin: 0;
-        }
-
-        .table thead th {
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 11px;
-            color: #6b7280;
-            border-bottom: 2px solid #e5e7eb;
-            background: #f9fafb;
-            padding: 8px 10px;
-            font-weight: 600;
-        }
-
-        .table tbody td {
-            padding: 8px 10px;
-            vertical-align: middle;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .table tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        .job-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-            color: #1f2a37;
-            font-size: 15px;
-        }
-
-        .job-meta {
-            font-size: 12px;
-            color: #6b7280;
-            margin: 0;
-        }
-
-        .badge-open {
-            background: rgba(40,167,69,0.1);
-            color: #28a745;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .badge-closed {
-            background: rgba(108,117,125,0.1);
-            color: #6c757d;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-        }
-
-        .description-snippet {
-            max-width: 400px;
-            color: #4b5563;
-            font-size: 13px;
-            line-height: 1.5;
-        }
-
-        .file-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            border-radius: 20px;
-            background: rgba(0,123,255,0.1);
-            color: #007bff;
-            font-size: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s ease;
-        }
-
-        .file-pill:hover {
-            background: #007bff;
-            color: #fff;
-            transform: translateY(-1px);
-        }
-
-        .table-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end;
-        }
-
-        .table-actions .btn {
-            border-radius: 6px;
-            padding: 6px 12px;
-            font-size: 13px;
-        }
-
-        .modal-content {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #e5e7eb;
-            padding: 20px 24px;
-            background: #f9fafb;
-        }
-
-        .modal-title {
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: #1f2a37;
-        }
-
-        .modal-body {
-            padding: 24px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #374151;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .form-control,
-        .form-select {
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            padding: 10px 14px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .note-muted {
-            font-size: 12px;
-            color: #6b7280;
-            margin-top: 8px;
-        }
-
-        .note-muted a {
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        .note-muted a:hover {
-            text-decoration: underline;
-        }
-
-        .alert {
-            border-radius: 8px;
-            border: none;
-            padding: 14px 20px;
-            margin-bottom: 24px;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b7280;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-    </style>
+    <link rel="stylesheet" href="css/recruitments.css">
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
         <div class="page-header">
             <div>
-                <h1><i class="fas fa-briefcase me-2 text-primary"></i>Quản Lý Tuyển Dụng</h1>
+                <h1><i class="fas fa-briefcase text-primary me-2"></i>Quản Lý Tuyển Dụng</h1>
                 <p class="mb-0">Kiểm soát toàn bộ tin đăng và hồ sơ ứng viên trên một giao diện duy nhất.</p>
             </div>
-            <button class="cta-button" data-bs-toggle="modal" data-bs-target="#jobModal">
-                <i class="fas fa-plus"></i> Thêm tin tuyển dụng
-            </button>
-        </div>
-
-        <div class="stat-grid">
-            <div class="stat-card">
-                <h6>Tổng số tin</h6>
-                <div class="stat-value"><?php echo number_format($stats['total_jobs'] ?? 0); ?></div>
-                <div class="stat-trend"><i class="fas fa-chart-line"></i>Tất cả trạng thái</div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#jobModal">
+                    <i class="fas fa-plus me-1"></i> Thêm tin tuyển dụng
+                </button>
             </div>
-            <div class="stat-card">
-                <h6>Đang tuyển</h6>
-                <div class="stat-value text-success"><?php echo number_format($stats['open_jobs'] ?? 0); ?></div>
-                <div class="stat-trend text-success"><i class="fas fa-check-circle"></i>Hiển thị trên website</div>
-            </div>
-            <div class="stat-card">
-                <h6>Đã đóng</h6>
-                <div class="stat-value text-secondary"><?php echo number_format($stats['closed_jobs'] ?? 0); ?></div>
-                <div class="stat-trend text-secondary"><i class="fas fa-circle-xmark"></i>Ẩn với ứng viên</div>
-            </div>
-            <div class="stat-card">
-                <h6>Cập nhật gần nhất</h6>
-                <div class="stat-value" style="font-size:20px;">
-                    <?php echo $latestJob ? date('d/m/Y', strtotime($latestJob['created_at'])) : '-'; ?>
-                </div>
-                <div class="stat-trend text-primary">
-                    <?php echo $latestJob ? htmlspecialchars($latestJob['title']) : 'Chưa có dữ liệu'; ?>
-                </div>
-            </div>
-        </div>
+        </div> 
 
         <?php if ($message): ?>
             <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show">
@@ -581,7 +257,24 @@ if (isset($_GET['edit'])) {
             </div>
         <?php endif; ?>
 
-        <div class="card">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 table-filter-toolbar">
+            <div class="btn-group filter-btn-group" role="group">
+                <a href="recruitments.php" class="btn <?php echo ($filter ?? 'all') === 'all' ? 'btn-primary' : 'btn-outline-secondary'; ?>">
+                    Tất cả <span class="badge <?php echo ($filter ?? 'all') === 'all' ? 'bg-white text-primary' : 'bg-secondary'; ?> ms-1"><?php echo (int)($stats['total_jobs'] ?? 0); ?></span>
+                </a>
+                <a href="recruitments.php?filter=open" class="btn <?php echo ($filter ?? 'all') === 'open' ? 'btn-success fw-semibold' : 'btn-outline-secondary'; ?>">
+                    <i class="far fa-check-circle me-1"></i>Đang tuyển <span class="badge <?php echo ($filter ?? 'all') === 'open' ? 'bg-white text-success' : 'bg-secondary'; ?> ms-1"><?php echo (int)($stats['open_jobs'] ?? 0); ?></span>
+                </a>
+                <a href="recruitments.php?filter=closed" class="btn <?php echo ($filter ?? 'all') === 'closed' ? 'btn-secondary text-white fw-semibold' : 'btn-outline-secondary'; ?>">
+                    <i class="far fa-times-circle me-1"></i>Đã đóng <span class="badge <?php echo ($filter ?? 'all') === 'closed' ? 'bg-dark text-white' : 'bg-secondary'; ?> ms-1"><?php echo (int)($stats['closed_jobs'] ?? 0); ?></span>
+                </a>
+            </div>
+            <div class="text-muted small filter-count-info">
+                <i class="fas fa-briefcase me-1 text-primary"></i> Tổng số: <strong><?php echo (int)($stats['total_jobs'] ?? 0); ?></strong> tin tuyển dụng
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -773,42 +466,6 @@ if (isset($_GET['edit'])) {
             </div>
         </div>
 
-        <script>
-        // Gán id vào modal xóa
-        var deleteModal = document.getElementById('deleteModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var jobId = button.getAttribute('data-id');
-            document.getElementById('deleteJobId').value = jobId;
-        });
-
-        // Focus vào input đầu tiên khi mở modal thêm/sửa
-        <?php if ($edit_job): ?>
-        var jobModal = new bootstrap.Modal(document.getElementById('jobModal'));
-        jobModal.show();
-        setTimeout(function() {
-            document.querySelector('#jobModal input[name="title"]').focus();
-            document.getElementById('jobModal').scrollTo(0,0);
-        }, 400);
-        <?php endif; ?>
-
-        // Loading khi submit form thêm/sửa
-        document.querySelectorAll('form').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
-                var btn = form.querySelector('button[type="submit"]');
-                if (btn) {
-                    btn.disabled = true;
-                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...';
-                }
-            });
-        });
-
-        // Chặn submit lại khi nhấn Enter ngoài input
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT') {
-                e.preventDefault();
-            }
-        });
-        </script>
+        <script src="js/recruitments.js"></script>
 </body>
 </html>

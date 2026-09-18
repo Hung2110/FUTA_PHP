@@ -1,0 +1,83 @@
+body { background: #f7f9fc; }
+.profile-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.profile-card .card-body { padding: 2rem; }
+.profile-card .list-group-item { 
+    border: none; 
+    padding: .85rem 0;
+    display: flex;
+    align-items: flex-start;
+}
+.profile-card .list-group-item strong { 
+    min-width: 180px; 
+    display: inline-block; 
+    color: #6b7280;
+}
+.profile-card .list-group-item .value {
+    font-weight: 500;
+    color: #1f2a37;
+}
+.message-box {
+    white-space: pre-wrap;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+/* Pill Badge Dropdown cho Trạng thái */
+.status-badge-select {
+    display: inline-block;
+    min-width: 135px;
+    padding: 6px 28px 6px 14px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    border-radius: 50px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    background-size: 9px 9px;
+    background-position: right 11px center;
+    background-repeat: no-repeat;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.status-badge-select.status-new {
+    background-color: #fff8e6;
+    color: #b45309;
+    border-color: #fde68a;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23b45309' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+}
+.status-badge-select.status-new:hover,
+.status-badge-select.status-new:focus {
+    background-color: #fef3c7;
+    border-color: #f59e0b;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.18);
+}
+.status-badge-select.status-replied {
+    background-color: #ecfdf5;
+    color: #047857;
+    border-color: #a7f3d0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23047857' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3E%3C/svg%3E");
+}
+.status-badge-select.status-replied:hover,
+.status-badge-select.status-replied:focus {
+    background-color: #d1fae5;
+    border-color: #10b981;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+.status-badge-select option {
+    background-color: #ffffff;
+    color: #1f2937;
+    font-weight: 500;
+}
+

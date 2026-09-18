@@ -61,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $conn->prepare("DELETE FROM posts WHERE id = ?");
             $stmt->bind_param('i', $post_id_to_delete);
             if ($stmt->execute()) {
+                log_activity($conn, "Xóa bài viết #$post_id_to_delete", 'news');
                 header('Location: news.php?success=deleted');
             } else {
                 header('Location: news.php?error=delete_failed');
@@ -165,6 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         if ($stmt->execute()) {
+            if ($post_id_from_form) {
+                log_activity($conn, "Cập nhật bài viết: " . $title, 'news');
+            } else {
+                log_activity($conn, "Thêm bài viết mới: " . $title, 'news');
+            }
             header("Location: " . $redirect_url); // Chuyển hướng sau khi thực thi thành công
             exit;
         } else {
@@ -204,28 +210,21 @@ if (!$is_new_post) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <!-- 1. Thêm CSS của Quill.js -->
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
-    <style>
-        body { background: #f7f9fc; }
-        .form-control, .form-select { border-radius: 8px; padding: 10px 15px; transition: all 0.2s ease; }
-        .form-control:focus, .form-select:focus { box-shadow: 0 0 0 3px rgba(0,123,255,0.1); border-color: #007bff; }
-        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: none; }
-        /* Tùy chỉnh chiều cao cho editor */
-        .ql-container {
-            min-height: 400px;
-            font-size: 16px;
-        }
-    </style>
+    <link rel="stylesheet" href="css/post-edit.css">
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
 <div class="main-content">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-        <h1 class="h3 mb-0">
-            <i class="fas fa-<?php echo $is_new_post ? 'plus-circle' : 'edit'; ?> text-primary"></i> <?php echo $is_new_post ? 'Thêm bài viết mới' : 'Chỉnh sửa bài viết'; ?>
-        </h1>
-        <a href="news.php" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Quay lại danh sách
-        </a>
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-<?php echo $is_new_post ? 'plus-circle' : 'edit'; ?> text-primary me-2"></i><?php echo $is_new_post ? 'Thêm Bài Viết Mới' : 'Chỉnh Sửa Bài Viết'; ?></h1>
+            <p class="mb-0"><?php echo $is_new_post ? 'Soạn thảo và xuất bản bài viết tin tức mới.' : 'Cập nhật nội dung và thông tin bài viết tin tức.'; ?></p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="news.php" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+            </a>
+        </div>
     </div>
 
     <?php if (!empty($message)): ?>
@@ -316,46 +315,4 @@ if (!$is_new_post) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <!-- 3. Thêm JS của Quill.js -->
 <script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
-<script>
-    // 4. Khởi tạo Quill.js và đồng bộ dữ liệu
-    const quillOptions = {
-            theme: 'snow',
-            modules: {
-                toolbar: [
-                    [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                    [{ 'script': 'sub'}, { 'script': 'super' }],
-                    [{ 'indent': '-1'}, { 'indent': '+1' }],
-                    [{ 'color': [] }, { 'background': [] }],
-                    [{ 'align': [] }],
-                    ['link', 'image', 'video', 'blockquote', 'code-block'],
-                    ['clean']
-                ]
-            }
-        };
-    
-    const quill = new Quill('#content-editor', quillOptions);
-    
-    const form = document.querySelector('form');
-    const contentInput = document.getElementById('content-input');
-    
-    form.addEventListener('submit', function(e) {
-        // Trước khi submit, lấy nội dung HTML từ Quill và gán vào input ẩn
-        contentInput.value = quill.root.innerHTML;
-    });
-
-    function previewImage(event, previewId, placeholderId) {
-        if (event.target.files && event.target.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function(){
-                var output = document.getElementById(previewId);
-                output.src = reader.result;
-                output.style.display = 'block';
-                var placeholder = document.getElementById(placeholderId);
-                if (placeholder) placeholder.style.display = 'none';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    }
-</script>
+<script src="js/post-edit.js"></script>

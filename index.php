@@ -489,46 +489,5 @@ usort($grid_services, function($a, $b) {
 <a href="contact.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
 <a href="about.php" class="mobile-page-nav-btn next"><i class="fas fa-chevron-right"></i></a>
 
+<script src="js/home.js"></script>
 <?php include 'includes/footer.php'; ?>
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Hàm mở modal và tải nội dung
-    window.openContentModal = function(element) {
-        const type = element.dataset.type;
-        const id = element.dataset.id;
-        const slug = element.dataset.slug;
-
-        const modal = new bootstrap.Modal(document.getElementById('contentModal'));
-        const modalTitle = document.getElementById('contentModalLabel');
-        const modalBody = document.getElementById('contentModalBody');
-
-        // Reset modal
-        modalTitle.textContent = 'Đang tải...';
-        modalBody.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
-        modal.show();
-
-        // Xác định endpoint API
-        let apiUrl = 'api.php?resource=';
-        if (type === 'post') {
-            apiUrl += `posts&slug=${slug}`;
-        } else {
-            apiUrl += `projects&id=${id}`;
-        }
-
-        // Gọi API để lấy dữ liệu
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data && !data.error) {
-                    modalTitle.textContent = data.title;
-                    // Hiển thị nội dung, ưu tiên 'content' cho bài viết và 'description' cho dự án
-                    modalBody.innerHTML = `
-                        <img src="${data.image || data.preview_image}" class="img-fluid rounded mb-3" alt="${data.title}">
-                        <div>${data.content || data.description}</div>
-                    `;
-                }
-            });
-    }
-});
-</script>

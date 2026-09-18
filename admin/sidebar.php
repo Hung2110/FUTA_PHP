@@ -72,7 +72,92 @@ $display_roles = array_map(function($r) use ($role_config) {
 }, $user_roles);
 $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Chưa phân quyền';
 ?>
+<link rel="stylesheet" href="css/admin.css">
 <style>
+    /* ==========================================================================
+       CHUNG CHO TẤT CẢ PAGE-HEADER TRONG HỆ THỐNG ADMIN
+       ========================================================================== */
+    .page-header {
+        background: #ffffff;
+        padding: 20px 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        margin-bottom: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+        transition: all 0.2s ease;
+    }
+    .page-header > div:first-child {
+        flex: 1 1 auto;
+    }
+    .page-header h1 {
+        font-weight: 700;
+        font-size: 1.55rem;
+        line-height: 1.3;
+        margin: 0;
+        color: #1e293b;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    .page-header h1 i {
+        font-size: 1.4rem;
+    }
+    .page-header p {
+        color: #64748b;
+        margin: 5px 0 0 0;
+        font-size: 13.5px;
+        line-height: 1.5;
+    }
+    .page-header .btn {
+        font-weight: 600;
+        font-size: 14px;
+        padding: 8px 16px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all 0.2s ease;
+    }
+    .page-header .btn:hover {
+        transform: translateY(-1px);
+    }
+    @media (max-width: 576px) {
+        .page-header {
+            padding: 16px;
+            margin-bottom: 18px;
+            gap: 14px;
+        }
+        .page-header h1 {
+            font-size: 1.3rem;
+        }
+        .page-header p {
+            font-size: 12.5px;
+        }
+        .page-header .btn {
+            font-size: 13px;
+            padding: 7px 12px;
+        }
+    }
+    @media (max-width: 399.98px) {
+        .page-header {
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            gap: 10px;
+        }
+        .page-header h1 {
+            font-size: 1.18rem;
+        }
+        .page-header p {
+            font-size: 12px;
+        }
+    }
+
     /* ==========================================================================
        UNIVERSAL MULTI-DEVICE RESPONSIVE SYSTEM - FUTA ADMIN
        Supports: Extra Small Mobile (<400px), Mobile (400-575px), Phablets (576-767px),
@@ -447,14 +532,17 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
             color: #0f172a !important;
         }
 
-        /* Tiêu đề trang và thanh tác vụ */
-        .page-header,
-        .main-content > .d-flex.justify-content-between.align-items-center {
+        /* Tiêu đề trang */
+        .page-header {
             flex-wrap: wrap !important;
             gap: 12px !important;
             padding: 14px 18px !important;
             margin-bottom: 16px !important;
             border-radius: 10px !important;
+        }
+        /* Thanh tác vụ / Toolbar */
+        .main-content > .d-flex.justify-content-between.align-items-center {
+            padding: 0 !important;
         }
         .main-content h1,
         .page-header h1 {
@@ -969,8 +1057,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
             height: 52px;
             padding: 6px 14px;
         }
-        .page-header,
-        .main-content > .d-flex.justify-content-between.align-items-center {
+        .page-header {
             flex-direction: column !important;
             align-items: stretch !important;
             gap: 10px !important;
@@ -1515,87 +1602,4 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Xử lý đóng/mở Sidebar Drawer trên Mobile và Tablet (< 992px)
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    const sidebarClose = document.getElementById('sidebarClose');
-    const sidebar = document.getElementById('adminSidebar');
-    const backdrop = document.getElementById('sidebarBackdrop');
-
-    function openSidebar() {
-        if (sidebar) sidebar.classList.add('show');
-        if (backdrop) backdrop.classList.add('show');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function closeSidebar() {
-        if (sidebar) sidebar.classList.remove('show');
-        if (backdrop) backdrop.classList.remove('show');
-        document.body.style.overflow = '';
-    }
-
-    if (sidebarToggle) sidebarToggle.addEventListener('click', openSidebar);
-    if (sidebarClose) sidebarClose.addEventListener('click', closeSidebar);
-    if (backdrop) backdrop.addEventListener('click', closeSidebar);
-
-    // Đóng sidebar khi nhấn phím ESC
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('show')) {
-            closeSidebar();
-        }
-    });
-
-    // Xử lý đánh dấu đã đọc cho thông báo
-    document.querySelectorAll('.notification-item').forEach(item => {
-        item.addEventListener('click', function(e) {
-            const notificationId = this.dataset.id;
-            const isUnread = this.classList.contains('fw-bold');
-            const href = this.getAttribute('href');
-
-            if (isUnread) {
-                e.preventDefault(); // Ngăn trình duyệt chuyển trang ngay lập tức để chờ API
-                
-                // Cập nhật giao diện ngay lập tức (Optimistic UI)
-                this.classList.remove('fw-bold');
-                this.classList.remove('bg-light');
-                const badge = document.querySelector('.notification-badge');
-                if (badge) {
-                    let count = parseInt(badge.textContent) - 1;
-                    if (count > 0) {
-                        badge.textContent = count;
-                    } else {
-                        badge.remove(); // Xóa chấm đỏ nếu đã đọc hết
-                    }
-                }
-
-                fetch('mark_notification_read.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'id=' + notificationId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    window.location.href = href; // Chuyển trang sau khi đã đánh dấu đọc thành công
-                }).catch(error => {
-                    console.error('Error:', error);
-                    window.location.href = href; // Vẫn cho phép chuyển trang nếu có lỗi mạng
-                });
-            }
-        });
-    });
-
-    // Xử lý tóm tắt & bấm vào để mở rộng / thu gọn nội dung dài (.text-expandable)
-    document.addEventListener('click', function(e) {
-        if (e.target.closest('a') || e.target.closest('button') || e.target.closest('input') || e.target.closest('select')) {
-            return;
-        }
-        const expandable = e.target.closest('.text-expandable');
-        if (expandable) {
-            expandable.classList.toggle('expanded');
-        }
-    });
-});
-</script>
+<script src="js/sidebar.js"></script>

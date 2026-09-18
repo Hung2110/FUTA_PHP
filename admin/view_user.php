@@ -53,44 +53,21 @@ $status_colors = ['active' => 'success', 'inactive' => 'secondary'];
     <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body { background: #f7f9fc; }
-        .profile-card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        .profile-card .card-body { padding: 2rem; }
-        .profile-card .list-group-item { 
-            border: none; 
-            padding: .85rem 0;
-            display: flex;
-            align-items: center;
-        }
-        .profile-card .list-group-item strong { 
-            min-width: 180px; 
-            display: inline-block; 
-            color: #6b7280;
-        }
-        .profile-card .list-group-item .value {
-            font-weight: 500;
-            color: #1f2a37;
-        }
-        .bio-text {
-            white-space: pre-wrap;
-            background-color: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            font-style: italic;
-        }
-    </style>
+    <link rel="stylesheet" href="css/view_user.css">
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h1 class="mb-0"><i class="fas fa-user-circle text-primary"></i> Hồ Sơ Người Dùng</h1>
-            <a href="users.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-user-circle text-primary me-2"></i>Hồ Sơ Người Dùng</h1>
+                <p class="mb-0">Xem chi tiết thông tin tài khoản và vai trò phân quyền người dùng.</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="users.php" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                </a>
+            </div>
         </div>
         
         <div class="card profile-card">

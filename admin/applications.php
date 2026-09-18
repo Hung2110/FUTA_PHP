@@ -13,15 +13,24 @@ $applications = $conn->query("SELECT * FROM applications ORDER BY created_at DES
     <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body { background: #f7f9fc; }
-    </style>
+    <link rel="stylesheet" href="css/applications.css">
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <h1 class="mb-4"><i class="fas fa-file-alt"></i> Đơn Ứng Tuyển</h1>
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-file-alt text-primary me-2"></i>Đơn Ứng Tuyển</h1>
+                <p class="mb-0">Danh sách hồ sơ ứng tuyển và ứng viên nộp hồ sơ xin việc.</p>
+            </div>
+        </div>
         
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <div class="text-muted small">
+                <i class="fas fa-file-alt me-1 text-primary"></i> Tổng số: <strong><?php echo (int)($applications ? $applications->num_rows : 0); ?></strong> hồ sơ ứng tuyển
+            </div>
+        </div>
+
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <div class="table-responsive">

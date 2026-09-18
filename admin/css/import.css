@@ -1,0 +1,11 @@
+body { background: #f7f9fc; }
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.card-body { padding: 2rem; }
+.form-label { font-weight: 600; color: #374151; }
+.form-control, .form-select { border-radius: 8px; padding: 10px 14px; }
+.btn-primary { font-weight: 600; }
+

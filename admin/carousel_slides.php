@@ -137,8 +137,26 @@ if (isset($_GET['error'])) {
     $message_type = 'danger';
 }
 
+// Lọc theo trạng thái
+$filter = isset($_GET['filter']) && in_array($_GET['filter'], ['active', 'inactive']) ? $_GET['filter'] : 'all';
+
+// Thống kê số lượng slide
+$status_counts_result = $conn->query("
+    SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'active' THEN 1 ELSE 0 END) as count_active,
+        SUM(CASE WHEN status = 'inactive' THEN 1 ELSE 0 END) as count_inactive
+    FROM carousel_slides
+");
+$status_counts = $status_counts_result ? $status_counts_result->fetch_assoc() : ['total' => 0, 'count_active' => 0, 'count_inactive' => 0];
+
 // Lấy danh sách slide carousel
-$slides_query = $conn->query("SELECT * FROM carousel_slides ORDER BY sort_order ASC, created_at DESC");
+$slides_sql = "SELECT * FROM carousel_slides";
+if ($filter !== 'all') {
+    $slides_sql .= " WHERE status = '" . $conn->real_escape_string($filter) . "'";
+}
+$slides_sql .= " ORDER BY sort_order ASC, created_at DESC";
+$slides_query = $conn->query($slides_sql);
 $slides = [];
 if ($slides_query) {
     while($row = $slides_query->fetch_assoc()) {
@@ -176,63 +194,21 @@ if (isset($post_message)) {
      <!-- Favicon (Logo trên tab trình duyệt) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body { background: #f7f9fc; }
-        .card { border-radius: 12px; }
-        .table { vertical-align: middle; }
-        .table thead th {
-            text-transform: uppercase;
-            font-size: 11px;
-            font-weight: 600;
-            color: #6b7280;
-            padding: 8px 10px;
-        }
-        .table tbody td {
-            padding: 8px 10px;
-        }
-        .table tbody tr:hover {
-            background-color: #f9fafb;
-        }
-        .slide-image {
-            width: 60px;
-            height: 36px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        .badge { padding: .3em .6em; font-size: 11px; }
-        .form-control, .form-select, textarea { border-radius: 8px; }
-        .action-btn {
-            width: 28px;
-            height: 28px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-        }
-        .preview-img-modal {
-            max-width: 100%;
-            max-height: 200px;
-            object-fit: contain;
-            margin-top: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        @media (max-width: 575.98px) {
-            .slide-image {
-                width: 46px;
-                height: 26px;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/carousel_slides.css">
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h1><i class="fas fa-images text-primary"></i> Quản Lý Carousel</h1>
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#slideModal" id="addSlideBtn">
-                <i class="fas fa-plus"></i> Thêm slide mới
-            </button>
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-images text-primary me-2"></i>Quản Lý Carousel</h1>
+                <p class="mb-0">Quản lý hình ảnh và thứ tự hiển thị banner/slide trên trang chủ.</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#slideModal" id="addSlideBtn">
+                    <i class="fas fa-plus me-1"></i> Thêm slide mới
+                </button>
+            </div>
         </div>
 
         <?php if ($message): ?>
@@ -242,7 +218,24 @@ if (isset($post_message)) {
             </div>
         <?php endif; ?>
 
-        <div class="card">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 table-filter-toolbar">
+            <div class="btn-group filter-btn-group" role="group">
+                <a href="carousel_slides.php" class="btn <?php echo $filter === 'all' ? 'btn-primary' : 'btn-outline-secondary'; ?>">
+                    Tất cả <span class="badge <?php echo $filter === 'all' ? 'bg-white text-primary' : 'bg-secondary'; ?> ms-1"><?php echo (int)($status_counts['total'] ?? 0); ?></span>
+                </a>
+                <a href="carousel_slides.php?filter=active" class="btn <?php echo $filter === 'active' ? 'btn-success fw-semibold' : 'btn-outline-secondary'; ?>">
+                    <i class="far fa-check-circle me-1"></i>Hoạt động <span class="badge <?php echo $filter === 'active' ? 'bg-white text-success' : 'bg-secondary'; ?> ms-1"><?php echo (int)($status_counts['count_active'] ?? 0); ?></span>
+                </a>
+                <a href="carousel_slides.php?filter=inactive" class="btn <?php echo $filter === 'inactive' ? 'btn-secondary text-white fw-semibold' : 'btn-outline-secondary'; ?>">
+                    <i class="far fa-eye-slash me-1"></i>Tạm ẩn <span class="badge <?php echo $filter === 'inactive' ? 'bg-dark text-white' : 'bg-secondary'; ?> ms-1"><?php echo (int)($status_counts['count_inactive'] ?? 0); ?></span>
+                </a>
+            </div>
+            <div class="text-muted small filter-count-info">
+                <i class="fas fa-images me-1 text-primary"></i> Tổng số: <strong><?php echo (int)($status_counts['total'] ?? 0); ?></strong> slide banner
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -343,99 +336,4 @@ if (isset($post_message)) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const slideModal = document.getElementById('slideModal');
-            const slideForm = document.getElementById('slideForm');
-            const modalTitle = document.getElementById('slideModalLabel');
-            const formAction = document.getElementById('formAction');
-            const slideId = document.getElementById('slideId');
-            const sortOrderInput = document.getElementById('sort_order');
-            const statusSelect = document.getElementById('status');
-            const imageFileInput = document.getElementById('image_file');
-            const imagePreview = document.getElementById('image_preview');
-            const currentImagePath = document.getElementById('currentImagePath');
-            const submitBtn = document.getElementById('submitBtn');
-
-            // Reset form khi modal đóng
-            slideModal.addEventListener('hide.bs.modal', function () {
-                // Nếu đang ở trang edit, khi đóng modal thì quay về trang danh sách
-                if (window.location.search.includes('edit=')) {
-                    window.location.href = 'carousel_slides.php';
-                }
-            });
-            slideModal.addEventListener('hidden.bs.modal', function () {
-                slideForm.reset();
-                formAction.value = 'add';
-                modalTitle.textContent = 'Thêm slide mới';
-                submitBtn.textContent = 'Lưu';
-                imagePreview.style.display = 'none';
-                imagePreview.src = '';
-                currentImagePath.value = '';
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Lưu';
-            });
-
-            // Xử lý khi nhấn nút "Thêm slide mới"
-            document.getElementById('addSlideBtn').addEventListener('click', function() {
-                formAction.value = 'add';
-                modalTitle.textContent = 'Thêm slide mới';
-                submitBtn.textContent = 'Lưu';
-            });
-
-            // Xử lý khi nhấn nút "Sửa"
-            slideModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget; // Nút kích hoạt modal
-                if (button && button.classList.contains('btn-edit')) {
-                    slideForm.action = `carousel_slides.php?edit=${button.dataset.id}`;
-                    modalTitle.textContent = 'Sửa slide';
-                    submitBtn.textContent = 'Cập nhật';
-                    formAction.value = 'edit';
-
-                    slideId.value = button.dataset.id;
-                    sortOrderInput.value = button.dataset.sort_order;
-                    statusSelect.value = button.dataset.status;
-                    currentImagePath.value = button.dataset.image_path;
-
-                    if (button.dataset.image_path) {
-                        imagePreview.src = '../' + button.dataset.image_path;
-                        imagePreview.style.display = 'block';
-                    } else {
-                        imagePreview.style.display = 'none';
-                    }
-                } else {
-                    // Chế độ thêm mới
-                    slideForm.action = 'carousel_slides.php';
-                }
-            });
-
-            // Preview ảnh khi chọn file
-            imageFileInput.addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(event) {
-                        imagePreview.src = event.target.result;
-                        imagePreview.style.display = 'block';
-                    };
-                    reader.readAsDataURL(file);
-                } else {
-                    imagePreview.style.display = 'none';
-                    imagePreview.src = '';
-                }
-            });
-
-            // Vô hiệu hóa nút submit để tránh gửi nhiều lần
-            slideForm.addEventListener('submit', function() {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...';
-            });
-
-            // Nếu có tham số edit trên URL, tự động mở modal
-            <?php if ($edit_slide): ?>
-                const modal = new bootstrap.Modal(slideModal);
-                const editButton = document.querySelector(`.btn-edit[data-id='<?php echo $edit_slide['id']; ?>']`) || document.getElementById('addSlideBtn');
-                modal.show(editButton);
-            <?php endif; ?>
-        });
-    </script>
+    <script src="js/carousel_slides.js"></script>

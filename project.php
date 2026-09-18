@@ -99,54 +99,5 @@ if ($projects_query) {
     </div>
   </div>
 </div>
-<script>
-// Thay thế sự kiện scroll liên tục bằng IntersectionObserver (tối ưu hiệu suất cực lớn)
-document.addEventListener('DOMContentLoaded', () => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('show');
-        observer.unobserve(entry.target); // Ngừng theo dõi khi đã hiện, giảm tải bộ nhớ
-      }
-    });
-  }, { threshold: 0.1 }); // Hiển thị khi xuất hiện 10% màn hình
-
-  document.querySelectorAll('.futa-project-page .fade-in').forEach(el => {
-    observer.observe(el);
-  });
-
-    // Hàm mở modal và tải nội dung
-    window.openContentModal = function(element) {
-        const type = element.dataset.type;
-        const id = element.dataset.id;
-
-        const modal = new bootstrap.Modal(document.getElementById('contentModal'));
-        const modalTitle = document.getElementById('contentModalLabel');
-        const modalBody = document.getElementById('contentModalBody');
-
-        // Reset modal
-        modalTitle.textContent = 'Đang tải...';
-        modalBody.innerHTML = `<div class="text-center p-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>`;
-        modal.show();
-
-        // Xác định endpoint API
-        let apiUrl = `api.php?resource=projects&id=${id}`;
-
-        // Gọi API để lấy dữ liệu
-        fetch(apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                if (data && !data.error) {
-                    modalTitle.textContent = data.title;
-                    // Hiển thị nội dung
-                    modalBody.innerHTML = `
-                        <img src="${data.preview_image}" class="img-fluid rounded mb-3" alt="${data.title}">
-                        <div>${data.description}</div>
-                    `;
-                }
-            });
-    }
-});
-</script>
-
+<script src="js/project.js"></script>
 <?php include 'includes/footer.php'; ?>

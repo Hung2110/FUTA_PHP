@@ -16,18 +16,38 @@ if (isset($_GET['error'])) {
     $message_type = 'danger';
 }
 
+// --- Filter by Status ---
+$filter = isset($_GET['filter']) && in_array($_GET['filter'], ['published', 'draft']) ? $_GET['filter'] : 'all';
+
+// Lấy số lượng theo từng trạng thái để hiển thị badge
+$status_counts_result = $conn->query("
+    SELECT 
+        COUNT(*) as total,
+        SUM(CASE WHEN status = 'published' THEN 1 ELSE 0 END) as count_published,
+        SUM(CASE WHEN status = 'draft' THEN 1 ELSE 0 END) as count_draft
+    FROM posts
+");
+$status_counts = $status_counts_result ? $status_counts_result->fetch_assoc() : ['total' => 0, 'count_published' => 0, 'count_draft' => 0];
+
 // --- Pagination Logic ---
 $limit = 10; // Số bài viết trên mỗi trang
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
 $offset = ($page - 1) * $limit;
 
-// Lấy tổng số bài viết để tính tổng số trang
-$total_posts_result = $conn->query("SELECT COUNT(*) as total FROM posts");
-$total_posts = $total_posts_result->fetch_assoc()['total'];
-$total_pages = ceil($total_posts / $limit);
+$count_sql = "SELECT COUNT(*) as total FROM posts";
+if ($filter !== 'all') {
+    $count_sql .= " WHERE status = '" . $conn->real_escape_string($filter) . "'";
+}
+$total_posts_result = $conn->query($count_sql);
+$total_posts = $total_posts_result ? $total_posts_result->fetch_assoc()['total'] : 0;
+$total_pages = max(1, ceil($total_posts / $limit));
 
 // Lấy bài viết cho trang hiện tại
-$posts_query = "SELECT p.*, u.fullname as author FROM posts p LEFT JOIN users u ON p.created_by = u.id ORDER BY p.created_at DESC LIMIT ? OFFSET ?";
+$posts_query = "SELECT p.*, u.fullname as author FROM posts p LEFT JOIN users u ON p.created_by = u.id";
+if ($filter !== 'all') {
+    $posts_query .= " WHERE p.status = '" . $conn->real_escape_string($filter) . "'";
+}
+$posts_query .= " ORDER BY p.created_at DESC LIMIT ? OFFSET ?";
 $stmt_posts = $conn->prepare($posts_query);
 $stmt_posts->bind_param("ii", $limit, $offset);
 $stmt_posts->execute();
@@ -44,156 +64,20 @@ $posts = $stmt_posts->get_result();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 
-    <style>
-        body { background: #f7f9fc; }
-        .card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; background: #fff; }
-        .form-control, .form-select, textarea { border-radius: 8px; }
-
-        /* ======================================================================
-           BẢNG QUẢN LÝ TIN TỨC - 1 BẢNG NGANG CHUẨN
-           ====================================================================== */
-        .table-responsive.table-responsive-horizontal {
-            width: 100% !important;
-            max-width: 100% !important;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 #f8fafc;
-        }
-        .table-responsive.table-responsive-horizontal::-webkit-scrollbar {
-            height: 6px;
-        }
-        .table-responsive.table-responsive-horizontal::-webkit-scrollbar-track {
-            background: #f8fafc;
-        }
-        .table-responsive.table-responsive-horizontal::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-
-        .table.table-horizontal {
-            display: table !important;
-            width: 100% !important;
-            border-collapse: collapse !important;
-            vertical-align: middle;
-            margin-bottom: 0;
-            background: #fff;
-        }
-        .table.table-horizontal thead {
-            display: table-header-group !important;
-        }
-        .table.table-horizontal thead tr {
-            display: table-row !important;
-            background: #f8fafc !important;
-        }
-        .table.table-horizontal thead th {
-            display: table-cell !important;
-            text-transform: uppercase !important;
-            font-size: 0.78rem !important;
-            font-weight: 700 !important;
-            color: #64748b !important;
-            background: #f8fafc !important;
-            border-bottom: 2px solid #e2e8f0 !important;
-            padding: 12px 14px !important;
-            vertical-align: middle !important;
-            white-space: nowrap !important;
-            letter-spacing: 0.03em;
-        }
-        .table.table-horizontal tbody {
-            display: table-row-group !important;
-        }
-        .table.table-horizontal tbody tr {
-            display: table-row !important;
-            background: transparent !important;
-            border-bottom: 1px solid #f1f5f9 !important;
-            transition: background-color 0.15s ease !important;
-        }
-        .table.table-horizontal tbody tr:hover {
-            background-color: #f8fafc !important;
-        }
-        .table.table-horizontal tbody td {
-            display: table-cell !important;
-            padding: 11px 14px !important;
-            border: none !important;
-            border-bottom: 1px solid #f1f5f9 !important;
-            font-size: 0.88rem !important;
-            color: #1e293b !important;
-            vertical-align: middle !important;
-            white-space: normal !important;
-            word-break: break-word !important;
-        }
-        .table.table-horizontal thead th:last-child,
-        .table.table-horizontal tbody td:last-child {
-            text-align: right !important;
-            white-space: nowrap !important;
-        }
-
-        /* Chi tiết ô Hình ảnh */
-        .post-table-img {
-            width: 56px;
-            height: 42px;
-            object-fit: cover;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-            border: 1px solid #e2e8f0;
-            display: inline-block;
-            vertical-align: middle;
-            transition: transform 0.15s ease;
-        }
-        .post-table-img:hover {
-            transform: scale(1.06);
-        }
-
-        .post-title-text {
-            line-height: 1.4;
-            font-size: 0.92rem;
-            font-weight: 600;
-            color: #0f172a;
-            word-break: break-word;
-            white-space: normal;
-        }
-
-        .badge { padding: .35em .65em; font-size: 11px; }
-
-        /* Nút thao tác */
-        .action-btn {
-            width: 32px;
-            height: 32px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.82rem;
-            border-radius: 6px;
-            padding: 0;
-            transition: all 0.15s ease;
-        }
-
-        @media (max-width: 576px) {
-            .table.table-horizontal tbody td {
-                padding: 10px 6px !important;
-            }
-            .post-table-img {
-                width: 44px;
-                height: 33px;
-                border-radius: 4px;
-            }
-            .action-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 0.75rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="css/news.css">
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
 <div class="main-content">
-    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2 page-header-responsive">
-        <h1><i class="fas fa-newspaper text-primary"></i> Quản lý Tin tức</h1>
-        <div class="d-flex gap-2 flex-wrap btn-group-header">
-            <a href="import.php?type=posts" class="btn btn-outline-primary"><i class="fas fa-file-import"></i> Import từ file</a>
+    <div class="page-header">
+        <div>
+            <h1><i class="fas fa-newspaper text-primary me-2"></i>Quản Lý Tin Tức</h1>
+            <p class="mb-0">Quản lý, biên tập và xuất bản bài viết tin tức.</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="import.php?type=posts" class="btn btn-outline-primary"><i class="fas fa-file-import me-1"></i> Import từ file</a>
             <a href="post-edit.php" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Thêm bài viết mới
+                <i class="fas fa-plus me-1"></i> Thêm bài viết mới
             </a>
         </div>
     </div>
@@ -205,19 +89,36 @@ $posts = $stmt_posts->get_result();
         </div>
     <?php endif; ?>
 
-    <div class="card">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 table-filter-toolbar">
+        <div class="btn-group filter-btn-group" role="group">
+            <a href="news.php" class="btn <?php echo $filter === 'all' ? 'btn-primary' : 'btn-outline-secondary'; ?>">
+                Tất cả <span class="badge <?php echo $filter === 'all' ? 'bg-white text-primary' : 'bg-secondary'; ?> ms-1"><?php echo (int)($status_counts['total'] ?? 0); ?></span>
+            </a>
+            <a href="news.php?filter=published" class="btn <?php echo $filter === 'published' ? 'btn-success fw-semibold' : 'btn-outline-secondary'; ?>">
+                <i class="far fa-check-circle me-1"></i>Đã xuất bản <span class="badge <?php echo $filter === 'published' ? 'bg-white text-success' : 'bg-secondary'; ?> ms-1"><?php echo (int)($status_counts['count_published'] ?? 0); ?></span>
+            </a>
+            <a href="news.php?filter=draft" class="btn <?php echo $filter === 'draft' ? 'btn-secondary text-white fw-semibold' : 'btn-outline-secondary'; ?>">
+                <i class="far fa-file-alt me-1"></i>Bản nháp <span class="badge <?php echo $filter === 'draft' ? 'bg-dark text-white' : 'bg-secondary'; ?> ms-1"><?php echo (int)($status_counts['count_draft'] ?? 0); ?></span>
+            </a>
+        </div>
+        <div class="text-muted small filter-count-info">
+            <i class="fas fa-newspaper me-1 text-primary"></i> Tổng số: <strong><?php echo number_format($status_counts['total'] ?? 0); ?></strong> bài viết
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0">
         <div class="card-body p-0">
             <div class="table-responsive table-responsive-horizontal">
                 <table class="table table-hover align-middle mb-0 table-horizontal">
                     <thead>
                         <tr>
-                            <th class="ps-3 d-none d-md-table-cell" style="width: 55px;">ID</th>
-                            <th class="text-center" style="width: 80px;">Hình ảnh</th>
-                            <th>Bài viết</th>
-                            <th class="d-none d-md-table-cell" style="width: 130px;">Tác giả</th>
-                            <th class="d-none d-md-table-cell text-center" style="width: 115px;">Trạng thái</th>
-                            <th class="d-none d-md-table-cell" style="width: 140px;">Ngày tạo</th>
-                            <th class="text-end pe-3" style="width: 110px;">Thao tác</th>
+                            <th class="text-center d-none d-md-table-cell" style="width: 14.285%;">ID</th>
+                            <th class="text-center" style="width: 14.285%;">Hình ảnh</th>
+                            <th class="text-start ps-2" style="width: 14.285%;">Bài viết</th>
+                            <th class="text-center d-none d-md-table-cell" style="width: 14.285%;">Tác giả</th>
+                            <th class="text-center d-none d-md-table-cell" style="width: 14.285%;">Trạng thái</th>
+                            <th class="text-center d-none d-md-table-cell" style="width: 14.285%;">Ngày tạo</th>
+                            <th class="text-center pe-3" style="width: 14.285%;">Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -236,8 +137,8 @@ $posts = $stmt_posts->get_result();
                             $summary_text = preg_replace('/\s+/', ' ', $summary_text);
                         ?>
                         <tr>
-                            <td class="ps-3 fw-bold text-secondary d-none d-md-table-cell">#<?php echo $post['id']; ?></td>
-                            <td class="text-center" style="width: 80px;">
+                            <td class="text-center fw-bold text-secondary d-none d-md-table-cell">#<?php echo $post['id']; ?></td>
+                            <td class="text-center" style="width: 14.285%;">
                                 <?php if (!empty($post_img)): ?>
                                     <a href="javascript:void(0)" class="btn-view d-inline-block"
                                         data-bs-toggle="modal" data-bs-target="#viewPostModal"
@@ -251,7 +152,7 @@ $posts = $stmt_posts->get_result();
                                     </a>
                                 <?php endif; ?>
                             </td>
-                            <td class="ps-2">
+                            <td class="ps-2 text-start">
                                 <div class="min-w-0">
                                     <div class="fw-semibold text-dark post-title-text" title="<?php echo htmlspecialchars($post['title']); ?>"><?php echo htmlspecialchars($post['title']); ?></div>
                                     <?php $blog_url = "../news_single.php?slug=" . htmlspecialchars($post['slug']); ?>
@@ -287,7 +188,7 @@ $posts = $stmt_posts->get_result();
                                     </div>
                                 </div>
                             </td>
-                            <td class="d-none d-md-table-cell">
+                            <td class="d-none d-md-table-cell text-center">
                                 <span class="text-secondary fw-medium" title="<?php echo htmlspecialchars($post['author'] ?? 'Admin'); ?>">
                                     <i class="far fa-user me-1 text-muted"></i><?php echo htmlspecialchars($post['author'] ?? 'Admin'); ?>
                                 </span>
@@ -297,12 +198,12 @@ $posts = $stmt_posts->get_result();
                                     <?php echo $post['status']=='published' ? 'Đã xuất bản' : 'Bản nháp'; ?>
                                 </span>
                             </td>
-                            <td class="d-none d-md-table-cell text-muted" style="font-size: 13px; white-space: nowrap;">
+                            <td class="d-none d-md-table-cell text-center text-muted" style="font-size: 13px; white-space: nowrap;">
                                 <div><i class="far fa-calendar-alt me-1 text-secondary"></i><?php echo date('d/m/Y', strtotime($post['created_at'])); ?></div>
-                                <div class="small text-secondary ps-3"><i class="far fa-clock me-1 text-muted"></i><?php echo date('H:i', strtotime($post['created_at'])); ?></div>
+                                <div class="small text-secondary"><i class="far fa-clock me-1 text-muted"></i><?php echo date('H:i', strtotime($post['created_at'])); ?></div>
                             </td>
-                            <td class="text-end pe-3">
-                                <div class="d-inline-flex gap-1 justify-content-end">
+                            <td class="text-center pe-3">
+                                <div class="d-inline-flex gap-1 justify-content-center">
                                     <button type="button" class="btn btn-sm btn-outline-info btn-view action-btn" title="Xem trước"
                                         data-bs-toggle="modal" data-bs-target="#viewPostModal"
                                         data-title="<?php echo htmlspecialchars($post['title']); ?>"
@@ -331,18 +232,20 @@ $posts = $stmt_posts->get_result();
             <?php if ($total_pages > 1): ?>
             <nav class="mt-4 d-flex justify-content-center mb-4">
                 <ul class="pagination">
-                    <?php if ($page > 1): ?>
-                        <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?>">Trước</a></li>
+                    <?php 
+                    $filter_param = ($filter !== 'all') ? '&filter=' . urlencode($filter) : '';
+                    if ($page > 1): ?>
+                        <li class="page-item"><a class="page-link" href="?page=<?php echo $page - 1; ?><?php echo $filter_param; ?>">Trước</a></li>
                     <?php endif; ?>
 
                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <li class="page-item <?php echo ($i == $page) ? 'active' : ''; ?>">
-                            <a class="page-link" href="?page=<?php echo $i; ?>"><?php echo $i; ?></a>
+                            <a class="page-link" href="?page=<?php echo $i; ?><?php echo $filter_param; ?>"><?php echo $i; ?></a>
                         </li>
                     <?php endfor; ?>
 
                     <?php if ($page < $total_pages): ?>
-                        <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?>">Sau</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=<?php echo $page + 1; ?><?php echo $filter_param; ?>">Sau</a></li>
                     <?php endif; ?>
                 </ul>
             </nav>
@@ -374,31 +277,6 @@ $posts = $stmt_posts->get_result();
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const viewPostModal = document.getElementById('viewPostModal');
-    const viewContentDiv = document.getElementById('viewContent');
-    const viewImage = document.getElementById('viewImage');
-
-    viewPostModal.addEventListener('show.bs.modal', function(event) {
-        const button = event.relatedTarget;
-
-        document.getElementById('viewTitle').textContent = button.dataset.title;
-        document.getElementById('viewAuthor').textContent = 'Tác giả: ' + button.dataset.author;
-        document.getElementById('viewCreatedAt').textContent = button.dataset.created_at;
-        
-        if (button.dataset.image && button.dataset.image.trim() !== '') {
-            viewImage.src = button.dataset.image;
-            viewImage.style.display = 'block';
-        } else {
-            viewImage.src = '';
-            viewImage.style.display = 'none';
-        }
-        
-        // Set content for the div
-        viewContentDiv.innerHTML = button.dataset.content || '<p class="text-muted">Không có nội dung chi tiết.</p>';
-    });
-});
-</script>
+<script src="js/news.js"></script>
 </body>
 </html>

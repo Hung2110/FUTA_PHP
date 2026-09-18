@@ -94,4 +94,20 @@ if (array_key_exists($current_page, $page_permissions)) {
         exit;
     }
 }
+
+// Hàm ghi nhật ký hoạt động dùng chung cho toàn hệ thống admin
+if (!function_exists('log_activity')) {
+    function log_activity($conn, $action, $module = 'system') {
+        if (isset($_SESSION['admin_id']) && $conn) {
+            $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+            $user_id = $_SESSION['admin_id'];
+            $stmt = $conn->prepare("INSERT INTO activity_logs (user_id, action, module, ip) VALUES (?, ?, ?, ?)");
+            if ($stmt) {
+                $stmt->bind_param("isss", $user_id, $action, $module, $ip);
+                $stmt->execute();
+                $stmt->close();
+            }
+        }
+    }
+}
 ?>

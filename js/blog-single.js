@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const url = (typeof currentUrl !== 'undefined') ? currentUrl : window.location.href; // currentUrl được định nghĩa trong news_single.php
-    const originalTitle = (typeof postTitle !== 'undefined') ? postTitle : document.title;
+    const url = (typeof currentUrl !== 'undefined') ? currentUrl : window.location.href;
+    const titleEl = document.querySelector('.project-title');
+    const originalTitle = (typeof postTitle !== 'undefined') ? postTitle : (titleEl ? titleEl.textContent.trim() : document.title);
     let translatedTitle = originalTitle;
 
     const facebookBtn = document.getElementById('share-facebook');
@@ -38,8 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
     if (copyBtn) {
         copyBtn.addEventListener('click', () => {
             navigator.clipboard.writeText(url).then(() => {
-                copySuccess.style.display = 'inline';
-                setTimeout(() => { copySuccess.style.display = 'none'; }, 2000);
+                if (copySuccess) {
+                    copySuccess.style.display = 'inline';
+                    setTimeout(() => { copySuccess.style.display = 'none'; }, 2000);
+                }
             });
         });
     }

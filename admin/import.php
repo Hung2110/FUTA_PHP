@@ -24,40 +24,16 @@ $import_type_default = $_GET['type'] ?? 'project';
      <!-- Favicon (Logo trên tab trình duyệt) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { background: #f7f9fc; }
-        .page-header {
-            background: #fff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
-        }
-        .page-header h1 {
-            font-weight: 700;
-            font-size: 1.75rem;
-            margin: 0;
-            color: #1f2a37;
-        }
-        .page-header p { color: #6b7280; margin: 5px 0 0; font-size: 14px; }
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        }
-        .card-body { padding: 2rem; }
-        .form-label { font-weight: 600; color: #374151; }
-        .form-control, .form-select { border-radius: 8px; padding: 10px 14px; }
-        .btn-primary { font-weight: 600; }
-    </style>
+    <link rel="stylesheet" href="css/import.css">
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
         <div class="page-header">
-            <h1><i class="fas fa-file-import me-2 text-primary"></i>Import Dữ liệu</h1>
-            <p class="mb-0">Tải lên file Word (.docx) hoặc PDF để tạo nhanh dự án hoặc bài viết mới.</p>
+            <div>
+                <h1><i class="fas fa-file-import text-primary me-2"></i>Import Dữ Liệu</h1>
+                <p class="mb-0">Tải lên file Word (.docx) hoặc PDF để tạo nhanh dự án hoặc bài viết mới.</p>
+            </div>
         </div>
 
         <?php if ($message): ?>

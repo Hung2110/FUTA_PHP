@@ -187,246 +187,24 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
     <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        :root {
-            --primary: #007bff;
-            --success: #28a745;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --info: #17a2b8;
-            --dark: #343a40;
-            --light: #f8f9fa;
-        }
-
-        body {
-            background: #f7f9fc;
-            color: #1f2a37;
-        }
-
-        .page-header {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 30px;            
-            padding: 25px;           
-        }
-
-        .page-header h1 {
-            font-weight: 700;
-            font-size: 1.75rem;
-            margin: 0;
-            color: #1f2a37;
-        }
-
-        .page-header p {
-            color: #6b7280;
-            margin: 5px 0 0;
-            font-size: 14px;
-        }
-
-        .cta-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            border: none;
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.3);
-            text-decoration: none;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0,123,255,0.4);
-            color: #fff;
-        }
-
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            border-left: 4px solid var(--primary);
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        }
-
-        .stat-card:nth-child(2) {
-            border-left-color: var(--success);
-        }
-
-        .stat-card:nth-child(3) {
-            border-left-color: var(--danger);
-        }
-
-        .stat-card h6 {
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 1px;
-            color: #6b7280;
-            font-weight: 600;
-            margin: 0 0 12px;
-        }
-
-        .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            margin: 8px 0;
-            color: #1f2a37;
-        }
-
-        .stat-trend {
-            font-size: 13px;
-            color: #6b7280;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            overflow: hidden;
-            background: #fff;
-            margin-bottom: 24px;
-        }
-
-        .card-header {
-            background: #f9fafb;
-            border-bottom: 2px solid #e5e7eb;
-            padding: 16px 24px;
-        }
-
-        .card-header h5 {
-            margin: 0;
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #1f2a37;
-        }
-
-        .card-body {
-            padding: 24px;
-        }
-
-        .table {
-            margin: 0;
-        }
-
-        .table thead th {
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 11px;
-            color: #6b7280;
-            border-bottom: 2px solid #e5e7eb;
-            background: #f9fafb;
-            padding: 8px 10px;
-            font-weight: 600;
-        }
-
-        .table tbody td {
-            padding: 8px 10px;
-            vertical-align: middle;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .table tbody tr:hover {
-            background: #f9fafb;
-        }
-
-        .badge {
-            padding: 3px 8px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 11px;
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #374151;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .form-control,
-        .form-select {
-            border-radius: 8px;
-            border: 1px solid #d1d5db;
-            padding: 10px 14px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
-            border-color: #007bff;
-            outline: none;
-        }
-
-        .alert {
-            border-radius: 8px;
-            border: none;
-            padding: 14px 20px;
-            margin-bottom: 24px;
-        }
-
-        .btn {
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s ease;
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #6b7280;
-        }
-
-        .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-    </style>
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="stylesheet" href="css/users.css">
 </head>
 <body>
 <?php include 'sidebar.php'; ?>
 <div class="main-content">
     <div class="page-header">
         <div>
-            <h1><i class="fas fa-users me-2 text-primary"></i>Quản Lý Người Dùng</h1>
-            <p class="mb-0">Quản Lý Tài Khoản, Quyền và Trạng Thái Người Dùng trong Hệ Thống.</p>
+            <h1><i class="fas fa-users text-primary me-2"></i>Quản Lý Người Dùng</h1>
+            <p class="mb-0">Quản lý tài khoản, quyền hạn và trạng thái người dùng trong hệ thống.</p>
         </div>
-        <?php if ($show_form): ?>
-            <a href="users.php" class="cta-button"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
-        <?php else: ?>
-            <a href="users.php?action=add" class="cta-button"><i class="fas fa-plus"></i> Thêm người dùng mới</a>
-        <?php endif; ?>
+        <div class="d-flex gap-2 flex-wrap">
+            <?php if ($show_form): ?>
+                <a href="users.php" class="btn btn-outline-secondary"><i class="fas fa-arrow-left me-1"></i> Quay lại danh sách</a>
+            <?php else: ?>
+                <a href="users.php?action=add" class="btn btn-primary"><i class="fas fa-plus me-1"></i> Thêm người dùng mới</a>
+            <?php endif; ?>
+        </div>
     </div>
 
     <?php if ($message): ?>
@@ -518,37 +296,24 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
             </div>
         </div>
     <?php else: ?>
-        <div class="stat-grid">
-            <div class="stat-card">
-                <h6>Tổng số người dùng</h6>
-                <div class="stat-value"><?php echo number_format($stats['total_users'] ?? 0); ?></div>
-                <div class="stat-trend"><i class="fas fa-users"></i>Tất cả người dùng</div>
+          
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2 table-filter-toolbar">
+            <div class="btn-group filter-btn-group flex-wrap" role="group">
+                <a href="users.php" class="btn <?php echo empty($role_filter) ? 'btn-primary' : 'btn-outline-secondary'; ?>">
+                    Tất cả <span class="badge <?php echo empty($role_filter) ? 'bg-white text-primary' : 'bg-secondary'; ?> ms-1"><?php echo (int)($stats['total_users'] ?? 0); ?></span>
+                </a>
+                <?php foreach ($role_config as $key => $config): ?>
+                    <a href="users.php?role_filter=<?php echo urlencode($key); ?>" class="btn <?php echo $role_filter === $key ? 'btn-primary' : 'btn-outline-secondary'; ?>">
+                        <?php echo $config['label']; ?>
+                    </a>
+                <?php endforeach; ?>
             </div>
-            <div class="stat-card">
-                <h6>Đang hoạt động</h6>
-                <div class="stat-value text-success"><?php echo number_format($stats['active_users'] ?? 0); ?></div>
-                <div class="stat-trend text-success"><i class="fas fa-check-circle"></i>Trạng thái active</div>
-            </div>
-            <div class="stat-card">
-                <h6>Quản Trị Viên</h6>
-                <div class="stat-value text-danger"><?php echo number_format($stats['admin_users'] ?? 0); ?></div>
-                <div class="stat-trend text-danger"><i class="fas fa-shield-alt"></i>Vai trò admin</div>
+            <div class="text-muted small filter-count-info">
+                <i class="fas fa-users me-1 text-primary"></i> Tổng số: <strong><?php echo (int)($stats['total_users'] ?? 0); ?></strong> tài khoản
             </div>
         </div>
-        <div class="card">
-            <div class="card-header">
-                <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách người dùng</h5>
-                    <form method="GET" action="users.php" class="d-flex align-items-center">
-                        <select name="role_filter" class="form-select form-select-sm" style="width: auto; min-width: 180px; max-width: 100%;" onchange="this.form.submit()">
-                            <option value="">-- Tất cả vai trò --</option>
-                            <?php foreach ($role_config as $key => $config): ?>
-                                <option value="<?php echo $key; ?>" <?php echo $role_filter === $key ? 'selected' : ''; ?>><?php echo $config['label']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </form>
-                </div>
-            </div>
+
+        <div class="card shadow-sm border-0">
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table class="table table-hover align-middle mb-0">
@@ -629,31 +394,6 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
     <?php endif; ?>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('form').forEach(function(form) {
-            form.addEventListener('submit', function(e) {
-                var btn = form.querySelector('button[type="submit"]');
-                if (btn) {
-                    btn.disabled = true;
-                    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Đang xử lý...';
-                }
-            });
-        });
-
-        // Toggle password visibility
-        const togglePassword = document.getElementById('togglePassword');
-        if (togglePassword) {
-            togglePassword.addEventListener('click', function() {
-                const passwordInput = document.getElementById('passwordInput');
-                const icon = this.querySelector('i');
-                const isPassword = passwordInput.type === 'password';
-                passwordInput.type = isPassword ? 'text' : 'password';
-                icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
-            });
-        }
-    });
-</script>
-
+<script src="js/users.js"></script>
 </body>
 </html>

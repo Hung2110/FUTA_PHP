@@ -21,6 +21,7 @@ if ($result->num_rows === 0) {
 
 $app = $result->fetch_assoc();
 $stmt->close();
+log_activity($conn, "Xem hồ sơ ứng viên #" . $app['id'] . " (" . $app['fullname'] . ")", 'applications');
 ?>
 <!DOCTYPE html>
 <html lang="vi">
@@ -31,26 +32,21 @@ $stmt->close();
     <link rel="icon" href="../assets/images/logo/futa.png" type="image/png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <style>
-        body { background: #f7f9fc; }
-        .profile-card { border: none; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
-        .profile-card .card-header { background: #fff; border-bottom: 1px solid #edf2f9; padding: 20px 25px; border-radius: 12px 12px 0 0; }
-        .profile-card .card-body { padding: 25px; }
-        .info-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; color: #6c757d; font-weight: 600; margin-bottom: 5px; display: block; }
-        .info-value { font-size: 1.05rem; color: #212529; font-weight: 500; margin-bottom: 20px; }
-        .info-value a { color: #007bff; text-decoration: none; transition: color 0.2s; }
-        .info-value a:hover { color: #0056b3; text-decoration: underline; }
-        .message-box { background: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; border-radius: 4px; font-style: italic; color: #495057; font-size: 0.95rem; }
-        .cv-container { background: #525659; padding: 2px; height: 100%; min-height: 75vh; display: flex; flex-direction: column; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; }
-        .cv-iframe { flex: 1; width: 100%; border: none; }
-    </style>
+    <link rel="stylesheet" href="css/view_application.css">
 </head>
 <body>
     <?php include 'sidebar.php'; ?>
     <div class="main-content">
-        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-            <h1 class="mb-0"><i class="fas fa-user-tie"></i> Hồ Sơ Ứng Viên</h1>
-            <a href="applications.php" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Quay lại danh sách</a>
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-user-tie text-primary me-2"></i>Hồ Sơ Ứng Viên</h1>
+                <p class="mb-0">Xem thông tin chi tiết hồ sơ ứng viên và file CV đính kèm.</p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <a href="applications.php" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left me-1"></i> Quay lại danh sách
+                </a>
+            </div>
         </div>
         
         <div class="row">

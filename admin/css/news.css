@@ -1,0 +1,161 @@
+body { background: #f7f9fc; }
+.card { border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border: 1px solid #e2e8f0; background: #fff; }
+.form-control, .form-select, textarea { border-radius: 8px; }
+
+/* ======================================================================
+   BẢNG QUẢN LÝ TIN TỨC - 1 BẢNG NGANG CHUẨN
+   ====================================================================== */
+.table-responsive.table-responsive-horizontal {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+.table-responsive.table-responsive-horizontal::-webkit-scrollbar {
+    height: 6px;
+}
+.table-responsive.table-responsive-horizontal::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+.table-responsive.table-responsive-horizontal::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.table.table-horizontal {
+    display: table !important;
+    width: 100% !important;
+    border-collapse: collapse !important;
+    vertical-align: middle;
+    margin-bottom: 0;
+    background: #fff;
+}
+@media (min-width: 768px) {
+    .table.table-horizontal {
+        table-layout: fixed !important;
+        min-width: 850px;
+    }
+    .table.table-horizontal thead th,
+    .table.table-horizontal tbody td {
+        width: 14.285% !important;
+    }
+}
+.table.table-horizontal thead {
+    display: table-header-group !important;
+}
+.table.table-horizontal thead tr {
+    display: table-row !important;
+    background: #f8fafc !important;
+}
+.table.table-horizontal thead th {
+    display: table-cell !important;
+    text-transform: uppercase !important;
+    font-size: 0.78rem !important;
+    font-weight: 700 !important;
+    color: #64748b !important;
+    background: #f8fafc !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+    padding: 12px 14px !important;
+    vertical-align: middle !important;
+    white-space: nowrap !important;
+    letter-spacing: 0.03em;
+}
+.table.table-horizontal tbody {
+    display: table-row-group !important;
+}
+.table.table-horizontal tbody tr {
+    display: table-row !important;
+    background: transparent !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    transition: background-color 0.15s ease !important;
+}
+.table.table-horizontal tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+.table.table-horizontal tbody td {
+    display: table-cell !important;
+    padding: 11px 14px !important;
+    border: none !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+    font-size: 0.88rem !important;
+    color: #1e293b !important;
+    vertical-align: middle !important;
+    white-space: normal !important;
+    word-break: break-word !important;
+}
+.table.table-horizontal thead th:last-child,
+.table.table-horizontal tbody td:last-child {
+    text-align: center !important;
+    white-space: nowrap !important;
+}
+
+/* Chi tiết ô Hình ảnh */
+.post-table-img {
+    width: 56px;
+    height: 42px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    display: inline-block;
+    vertical-align: middle;
+    transition: transform 0.15s ease;
+}
+.post-table-img:hover {
+    transform: scale(1.06);
+}
+
+.post-title-text {
+    line-height: 1.4;
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: #0f172a;
+    word-break: break-word;
+    white-space: normal;
+}
+
+.badge { padding: .35em .65em; font-size: 11px; }
+
+/* Nút thao tác */
+.action-btn {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    border-radius: 6px;
+    padding: 0;
+    transition: all 0.15s ease;
+}
+
+@media (max-width: 767.98px) {
+    .table.table-horizontal thead th:nth-child(2),
+    .table.table-horizontal tbody td:nth-child(2) {
+        width: 65px !important;
+    }
+    .table.table-horizontal thead th:last-child,
+    .table.table-horizontal tbody td:last-child {
+        width: 100px !important;
+        text-align: right !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .table.table-horizontal tbody td {
+        padding: 10px 6px !important;
+    }
+    .post-table-img {
+        width: 44px;
+        height: 33px;
+        border-radius: 4px;
+    }
+    .action-btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+}
+

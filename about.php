@@ -114,12 +114,7 @@ include 'includes/header.php';
 <section class="full-banner">
     <img src="assets/images/banners/QC.jpg" alt="FUTA Banner" class="full-banner-img" width="1920" height="600" loading="lazy" decoding="async">
 </section>  
-    <script>
-      AOS.init({
-    duration: 1000, // thời gian chạy hiệu ứng (ms)
-    once: true      // chỉ chạy 1 lần khi scroll
-  });
-    </script>
+
 
 <!-- Nút chuyển trang trên Mobile -->
 <a href="index.php" class="mobile-page-nav-btn prev"><i class="fas fa-chevron-left"></i></a>
