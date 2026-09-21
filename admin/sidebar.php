@@ -10,6 +10,12 @@ if (!isset($_SESSION['admin_id'])) {
     exit;
 }
 
+// Kiểm tra phiên chat khách hàng chờ quá 5 phút chưa được phản hồi
+require_once __DIR__ . '/../includes/chat_notification_service.php';
+if (isset($conn) && $conn) {
+    checkAndNotifyPendingChats($conn);
+}
+
 // Check if notifications table exists to prevent fatal errors
 $table_exists_query = isset($conn) && $conn ? $conn->query("SHOW TABLES LIKE 'notifications'") : false;
 $table_exists = $table_exists_query && $table_exists_query->num_rows > 0;
@@ -72,92 +78,8 @@ $display_roles = array_map(function($r) use ($role_config) {
 }, $user_roles);
 $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Chưa phân quyền';
 ?>
-<link rel="stylesheet" href="css/admin.css">
+<link rel="stylesheet" href="css/admin.css?v=<?php echo time(); ?>">
 <style>
-    /* ==========================================================================
-       CHUNG CHO TẤT CẢ PAGE-HEADER TRONG HỆ THỐNG ADMIN
-       ========================================================================== */
-    .page-header {
-        background: #ffffff;
-        padding: 20px 24px;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-        border: 1px solid rgba(226, 232, 240, 0.8);
-        margin-bottom: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 16px;
-        transition: all 0.2s ease;
-    }
-    .page-header > div:first-child {
-        flex: 1 1 auto;
-    }
-    .page-header h1 {
-        font-weight: 700;
-        font-size: 1.55rem;
-        line-height: 1.3;
-        margin: 0;
-        color: #1e293b;
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-    .page-header h1 i {
-        font-size: 1.4rem;
-    }
-    .page-header p {
-        color: #64748b;
-        margin: 5px 0 0 0;
-        font-size: 13.5px;
-        line-height: 1.5;
-    }
-    .page-header .btn {
-        font-weight: 600;
-        font-size: 14px;
-        padding: 8px 16px;
-        border-radius: 8px;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.2s ease;
-    }
-    .page-header .btn:hover {
-        transform: translateY(-1px);
-    }
-    @media (max-width: 576px) {
-        .page-header {
-            padding: 16px;
-            margin-bottom: 18px;
-            gap: 14px;
-        }
-        .page-header h1 {
-            font-size: 1.3rem;
-        }
-        .page-header p {
-            font-size: 12.5px;
-        }
-        .page-header .btn {
-            font-size: 13px;
-            padding: 7px 12px;
-        }
-    }
-    @media (max-width: 399.98px) {
-        .page-header {
-            padding: 12px 14px;
-            margin-bottom: 14px;
-            gap: 10px;
-        }
-        .page-header h1 {
-            font-size: 1.18rem;
-        }
-        .page-header p {
-            font-size: 12px;
-        }
-    }
-
     /* ==========================================================================
        UNIVERSAL MULTI-DEVICE RESPONSIVE SYSTEM - FUTA ADMIN
        Supports: Extra Small Mobile (<400px), Mobile (400-575px), Phablets (576-767px),
@@ -165,23 +87,29 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
                  Standard Desktop (1200-1399px), Large Screens (>=1400px)
        ========================================================================== */
 
-    /* Chống tràn ngang cấp trang triệt để trên mọi thiết bị */
-    html, body {
+    /* Chống tràn ngang cấp trang triệt để trên mọi thiết bị nhưng không cản trở position: sticky */
+    html {
         max-width: 100% !important;
         width: 100% !important;
-        overflow-x: hidden !important;
+        overflow-x: hidden;
+        box-sizing: border-box !important;
+    }
+    body {
+        max-width: 100% !important;
+        width: 100% !important;
         box-sizing: border-box !important;
         margin: 0 !important;
         padding: 0 !important;
         position: relative;
+        overflow-x: visible !important;
     }
     *, *::before, *::after {
         box-sizing: border-box !important;
     }
     .main-content {
         max-width: 100% !important;
-        overflow-x: hidden !important;
         box-sizing: border-box !important;
+        overflow: visible !important;
     }
     .main-content .row {
         margin-left: 0 !important;
@@ -244,27 +172,63 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
     .sidebar-submenu {
         background-color: rgba(0,0,0,0.04);
     }
+    /* Khung danh sách thông báo (Notification Dropdown Menu) */
     .notification-dropdown-menu {
-        width: 340px;
-        max-width: calc(100% - 20px);
-        max-height: 420px;
-        overflow-y: auto;
+        width: 360px;
+        max-width: calc(100vw - 30px);
+        border-radius: 14px !important;
+        border: 1px solid rgba(226, 232, 240, 0.9) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+        overflow: hidden;
     }
-    .notification-dropdown-menu::-webkit-scrollbar {
-        width: 6px;
+    .notification-list-body::-webkit-scrollbar {
+        width: 5px;
     }
-    .notification-dropdown-menu::-webkit-scrollbar-track {
-        background: #f8f9fa;
+    .notification-list-body::-webkit-scrollbar-track {
+        background: #f8fafc;
     }
-    .notification-dropdown-menu::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
+    .notification-list-body::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
         border-radius: 4px;
     }
-    .notification-dropdown-menu::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+    .notification-list-body::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
     }
-    .notification-item small {
-        white-space: normal;
+
+    /* Các dòng thông báo */
+    .notification-item {
+        transition: all 0.15s ease;
+        text-decoration: none;
+        white-space: normal !important;
+        cursor: pointer;
+    }
+    .notification-item:hover {
+        background-color: #f8fafc !important;
+    }
+    .notification-item.unread {
+        background-color: #f0f7ff !important;
+        border-left: 3px solid #007bff !important;
+    }
+    .notification-item.unread:hover {
+        background-color: #e3f2fd !important;
+    }
+    .notification-item.read {
+        background-color: #ffffff;
+        border-left: 3px solid transparent !important;
+        opacity: 0.85;
+    }
+    .notification-item.read:hover {
+        opacity: 1;
+    }
+    .notif-icon-box {
+        width: 34px;
+        height: 34px;
+        font-size: 13px;
+        border-radius: 50%;
+    }
+    .unread-dot {
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        animation: pulseNotifBadge 2s infinite ease-in-out;
     }
 
     /* Nội dung chính mặc định trên máy tính (>= 1200px) */
@@ -276,7 +240,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         max-width: 100% !important;
         width: auto;
         box-sizing: border-box !important;
-        overflow-x: hidden !important;
+        overflow: visible !important;
         transition: margin-left 0.3s ease;
     }
 
@@ -288,26 +252,62 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         z-index: 1040;
         display: flex;
         align-items: center;
-        gap: 18px;
         background: rgba(255, 255, 255, 0.95);
-        padding: 7px 22px;
+        padding: 4px 6px;
         border-radius: 50px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        border: 1px solid rgba(226, 232, 240, 0.85);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         transition: all 0.3s ease;
     }
     .top-right-actions .top-right-icon {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         color: #4a5568;
         position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .top-right-actions .user-avatar-btn i {
+        font-size: 1.35rem;
+    }
+    .top-right-actions .top-right-icon:hover,
+    .top-right-actions .top-right-icon:focus,
+    .top-right-actions .top-right-icon[aria-expanded="true"] {
+        color: #003366;
+        background: rgba(0, 51, 102, 0.08);
     }
     .top-right-actions .notification-badge {
         position: absolute;
-        top: -5px;
-        right: -10px;
-        font-size: 0.6em;
-        padding: 2px 5px;
-        border: 1px solid white;
+        top: 5px;
+        right: 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: 2px solid #ffffff;
+        background-color: #10b981;
+        display: inline-block;
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+        animation: pulseNotifGreen 2s infinite ease-in-out;
+        cursor: pointer;
+    }
+    @keyframes pulseNotifGreen {
+        0% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        }
+        70% {
+            box-shadow: 0 0 0 7px rgba(16, 185, 129, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+        }
     }
 
     /* Lớp phủ mờ khi mở Sidebar Drawer */
@@ -331,7 +331,31 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         visibility: visible;
     }
 
-    /* Tối ưu hóa thu gọn diện tích bảng toàn cục (Compact Table Layout) */
+    /* Tối ưu hóa thu gọn diện tích bảng toàn cục & Cuộn giống Nhật Ký Hoạt Động */
+    .card-body > .table-responsive,
+    .card > .table-responsive,
+    .main-content > .card .table-responsive {
+        max-height: 72vh;
+        overflow-y: auto;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #cbd5e1 #f8fafc;
+        border-radius: 12px;
+    }
+    .table-responsive::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f8fafc;
+    }
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 4px;
+    }
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: #94a3b8;
+    }
     .table-responsive {
         width: 100% !important;
         max-width: 100% !important;
@@ -343,12 +367,16 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         vertical-align: middle;
     }
     .table th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
         padding: 8px 10px !important;
         font-size: 0.82rem !important;
         font-weight: 600;
         vertical-align: middle;
-        background-color: #f8fafc;
+        background-color: #f8fafc !important;
         line-height: 1.4;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
     }
     .table td {
         padding: 8px 10px !important;
@@ -487,7 +515,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
             padding-top: 68px !important; 
             width: 100% !important;
             max-width: 100% !important;
-            overflow-x: hidden !important;
+            overflow: visible !important;
             box-sizing: border-box !important;
             font-size: 14px;
         } 
@@ -514,6 +542,21 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
         .top-right-actions .top-right-icon {
             font-size: 1.15rem;
         }
+        .notification-dropdown-menu {
+            position: fixed !important;
+            top: 58px !important;
+            left: 12px !important;
+            right: 12px !important;
+            width: auto !important;
+            max-width: calc(100vw - 24px) !important;
+            max-height: calc(100vh - 75px) !important;
+            transform: none !important;
+            border-radius: 12px !important;
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2) !important;
+        }
+        .notification-list-body {
+            max-height: calc(100vh - 170px) !important;
+        }
         .btn-back-subpage {
             width: 36px;
             height: 36px;
@@ -532,27 +575,14 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
             color: #0f172a !important;
         }
 
-        /* Tiêu đề trang */
-        .page-header {
-            flex-wrap: wrap !important;
-            gap: 12px !important;
-            padding: 14px 18px !important;
-            margin-bottom: 16px !important;
-            border-radius: 10px !important;
-        }
         /* Thanh tác vụ / Toolbar */
         .main-content > .d-flex.justify-content-between.align-items-center {
             padding: 0 !important;
         }
-        .main-content h1,
-        .page-header h1 {
+        .main-content h1 {
             font-size: 1.35rem !important;
             font-weight: 700 !important;
             margin-bottom: 0 !important;
-        }
-        .page-header p {
-            font-size: 0.88rem !important;
-            color: #475569 !important;
         }
 
         /* Card và Card Header */
@@ -1374,6 +1404,7 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
             gap: 8px !important;
         }
         .page-header {
+            top: 48px !important;
             padding: 10px 10px !important;
             margin-bottom: 10px !important;
         }
@@ -1553,49 +1584,112 @@ $display_role_str = !empty($display_roles) ? implode(', ', $display_roles) : 'Ch
     </div>
 
     <!-- Dropdown thông báo & Người dùng -->
-    <div class="d-flex align-items-center gap-3 ms-auto">
+    <div class="d-flex align-items-center gap-1 ms-auto">
         <!-- Notification Dropdown -->
         <div class="dropdown">
-            <a href="#" class="text-secondary top-right-icon" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Thông báo">
+            <a href="#" class="top-right-icon notification-bell-btn" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Thông báo" title="<?php echo $unread_count > 0 ? "Có $unread_count thông báo mới" : "Thông báo"; ?>">
                 <i class="fas fa-bell"></i>
                 <?php if ($unread_count > 0): ?>
-                    <span class="badge rounded-pill bg-danger notification-badge"><?php echo $unread_count; ?></span>
+                    <span class="notification-badge" id="notificationBadge" data-count="<?php echo $unread_count; ?>" title="Có <?php echo $unread_count; ?> thông báo mới"></span>
                 <?php endif; ?>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end notification-dropdown-menu shadow border-0" aria-labelledby="notificationDropdown">
-                <li class="dropdown-header fw-bold text-dark">Bạn có <?php echo $unread_count; ?> thông báo mới</li>
-                <li><hr class="dropdown-divider"></li>
-                <?php if (!$table_exists): ?>
-                    <li class="text-center text-danger p-2 small">Lỗi: Bảng `notifications` không tồn tại.</li>
-                <?php elseif (empty($notifications)): ?>
-                    <li class="text-center text-muted p-3">
-                        <i class="far fa-bell-slash fa-2x d-block mb-2 opacity-50"></i>
-                        Không có thông báo mới
-                    </li>
-                <?php else: ?>
-                    <?php foreach ($notifications as $notification): ?>
-                        <li>
-                            <a class="dropdown-item notification-item py-2 <?php echo $notification['is_read'] ? '' : 'fw-bold bg-light'; ?>" href="<?php echo htmlspecialchars($notification['link']); ?>" data-id="<?php echo $notification['id']; ?>">
-                                <small><i class="fas <?php echo $notification['type'] == 'contact' ? 'fa-envelope text-primary' : 'fa-file-alt text-success'; ?> me-2"></i><?php echo htmlspecialchars($notification['message']); ?></small>
-                                <small class="d-block text-muted mt-1" style="font-size: 11px;"><i class="far fa-clock me-1"></i><?php echo date('d/m/Y H:i', strtotime($notification['created_at'])); ?></small>
+            <div class="dropdown-menu dropdown-menu-end notification-dropdown-menu shadow border-0 p-0" aria-labelledby="notificationDropdown">
+                <!-- Header Thông báo -->
+                <div class="notification-dropdown-header d-flex justify-content-between align-items-center px-3 py-2 border-bottom bg-white rounded-top">
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="fw-bold text-dark" style="font-size: 0.92rem;"><i class="fas fa-bell text-primary me-1"></i>Thông báo</span>
+                        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle <?php echo $unread_count > 0 ? '' : 'd-none'; ?>" id="unreadCountBadge" style="font-size: 11px; padding: 2px 8px;">
+                            <?php echo $unread_count; ?> mới
+                        </span>
+                    </div>
+                    <?php if ($unread_count > 0): ?>
+                    <button type="button" class="btn btn-sm btn-link p-0 text-decoration-none text-primary fw-medium" id="markAllNotificationsRead" style="font-size: 11.5px;">
+                        <i class="fas fa-check-double me-1"></i>Đã đọc tất cả
+                    </button>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Danh sách thông báo (cuộn mượt) -->
+                <div class="notification-list-body" style="max-height: 350px; overflow-y: auto;">
+                    <?php if (!$table_exists): ?>
+                        <div class="text-center text-danger p-3 small">
+                            <i class="fas fa-exclamation-triangle me-1"></i>Bảng <code>notifications</code> không tồn tại.
+                        </div>
+                    <?php elseif (empty($notifications)): ?>
+                        <div class="text-center text-muted py-4 px-3 empty-notif-state">
+                            <div class="mb-2">
+                                <i class="far fa-bell-slash fa-2x text-secondary opacity-50"></i>
+                            </div>
+                            <div class="fw-semibold small text-dark">Hiện chưa có thông báo nào</div>
+                            <div class="text-muted small mt-1" style="font-size: 11.5px;">Các thông báo từ liên hệ và ứng tuyển sẽ hiển thị tại đây</div>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($notifications as $notification): 
+                            $is_read = !empty($notification['is_read']);
+                            $type = $notification['type'] ?? 'default';
+                            
+                            $icon = 'fa-bell';
+                            $icon_bg = 'bg-primary-subtle text-primary';
+                            if ($type === 'contact') {
+                                $icon = 'fa-envelope';
+                                $icon_bg = 'bg-warning-subtle text-warning';
+                            } elseif ($type === 'application') {
+                                $icon = 'fa-file-alt';
+                                $icon_bg = 'bg-info-subtle text-info';
+                            } elseif ($type === 'recruitment') {
+                                $icon = 'fa-briefcase';
+                                $icon_bg = 'bg-purple-subtle text-purple';
+                            } elseif ($type === 'user') {
+                                $icon = 'fa-user';
+                                $icon_bg = 'bg-success-subtle text-success';
+                            }
+                        ?>
+                            <a class="dropdown-item notification-item d-flex align-items-center gap-2 px-3 py-2.5 border-bottom text-wrap <?php echo $is_read ? 'read' : 'unread'; ?>" 
+                               href="<?php echo !empty($notification['link']) ? htmlspecialchars($notification['link']) : '#'; ?>" 
+                               data-id="<?php echo $notification['id']; ?>">
+                                <div class="notif-icon-box <?php echo $icon_bg; ?> d-flex align-items-center justify-content-center flex-shrink-0">
+                                    <i class="fas <?php echo $icon; ?>"></i>
+                                </div>
+                                <div class="flex-grow-1 overflow-hidden pe-1">
+                                    <div class="notif-msg text-dark small <?php echo $is_read ? '' : 'fw-semibold'; ?>" style="line-height: 1.35; font-size: 12.5px;">
+                                        <?php echo htmlspecialchars($notification['message']); ?>
+                                    </div>
+                                    <div class="notif-time text-muted mt-1" style="font-size: 11px;">
+                                        <i class="far fa-clock me-1"></i><?php echo date('d/m/Y H:i', strtotime($notification['created_at'])); ?>
+                                    </div>
+                                </div>
+                                <?php if (!$is_read): ?>
+                                    <div class="flex-shrink-0 ms-1 d-flex align-items-center unread-dot-wrapper">
+                                        <span class="unread-dot" title="Thông báo mới"></span>
+                                    </div>
+                                <?php endif; ?>
                             </a>
-                        </li>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-            </ul>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Footer -->
+                <div class="notification-dropdown-footer text-center py-2 px-3 border-top bg-light-subtle rounded-bottom">
+                    <a href="activity_logs.php" class="text-decoration-none small fw-semibold text-primary d-inline-flex align-items-center gap-1">
+                        <i class="fas fa-history"></i> Xem lịch sử hoạt động <i class="fas fa-chevron-right small" style="font-size: 9px;"></i>
+                    </a>
+                </div>
+            </div>
         </div>
 
         <!-- User Dropdown -->
         <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-decoration-none text-dark" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="me-2 d-none d-sm-inline fw-semibold"><?php echo htmlspecialchars($_SESSION['admin_fullname'] ?? 'User'); ?></span>
-                <i class="fas fa-user-circle fa-2x text-secondary"></i>
+            <a href="#" class="top-right-icon user-avatar-btn" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Tài khoản: <?php echo htmlspecialchars($_SESSION['admin_fullname'] ?? 'Tài khoản'); ?>" title="<?php echo htmlspecialchars($_SESSION['admin_fullname'] ?? 'Tài khoản'); ?>">
+                <i class="fas fa-user-circle"></i>
             </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
-                <li><h6 class="dropdown-header">Xin chào, <?php echo htmlspecialchars($_SESSION['admin_fullname'] ?? 'User'); ?></h6></li>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown" style="min-width: 200px; border-radius: 12px; margin-top: 8px;">
+                <li class="px-3 py-2 border-bottom bg-light-subtle rounded-top">
+                    <div class="fw-bold text-dark text-truncate" style="font-size: 0.88rem;"><?php echo htmlspecialchars($_SESSION['admin_fullname'] ?? 'Tài khoản'); ?></div>
+                    <div class="text-muted small text-truncate" style="font-size: 11.5px;"><?php echo htmlspecialchars($_SESSION['admin_username'] ?? 'admin'); ?></div>
+                </li>
                 <li><a class="dropdown-item py-2" href="profile.php"><i class="fas fa-user-edit fa-fw me-2 text-primary"></i>Hồ sơ</a></li>
                 <li><a class="dropdown-item py-2" href="../index.php" target="_blank"><i class="fas fa-globe fa-fw me-2 text-success"></i>Xem website</a></li>
-                <li><hr class="dropdown-divider"></li>
+                <li><hr class="dropdown-divider my-1"></li>
                 <li><a class="dropdown-item py-2 text-danger" href="logout.php"><i class="fas fa-sign-out-alt fa-fw me-2"></i>Đăng xuất</a></li>
             </ul>
         </div>

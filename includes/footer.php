@@ -50,6 +50,12 @@
     <script src="js/security.js?v=1.0.0" defer></script>
 
     <!-- Tích hợp Chat Widget dùng chung cho toàn trang -->
-    <?php include 'chat_widget.php'; ?>
+    <?php 
+    if (isset($conn) && $conn) {
+        require_once __DIR__ . '/chat_notification_service.php';
+        checkAndNotifyPendingChats($conn);
+    }
+    include 'chat_widget.php'; 
+    ?>
 </body>
 </html>

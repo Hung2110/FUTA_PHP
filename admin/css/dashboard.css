@@ -1,11 +1,17 @@
-body { background: #f7f9fc; }
+/* ==========================================================================
+   FUTA ADVERTISING - DASHBOARD STYLES (ĐÃ GỘP GỌN & TRIỆT TIÊU XUNG ĐỘT)
+   ========================================================================== */
 
-/* Stat Cards */
+body { 
+    background: #f7f9fc; 
+}
+
+/* 1. Thẻ thống kê tổng quan (Stat Cards) */
 .stat-card {
-    background: white;
+    background: #ffffff;
     padding: 16px 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     border-left: 4px solid;
     height: 100%;
     display: flex;
@@ -13,23 +19,36 @@ body { background: #f7f9fc; }
     justify-content: space-between;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
 }
-.stat-card.users { border-color: #003366; }
-.stat-card.projects { border-color: #667eea; }
-.stat-card.applications { border-color: #4facfe; }
-.stat-card.contacts { border-color: #43e97b; }
-.stat-icon { font-size: 2rem; margin-bottom: 8px; }
-.stat-card.users .stat-icon { color: #003366; }
-.stat-card.projects .stat-icon { color: #667eea; }
-.stat-card.applications .stat-icon { color: #4facfe; }
-.stat-card.contacts .stat-icon { color: #43e97b; }
-.stat-number { font-size: 1.55rem; font-weight: 700; color: #1e293b; }
-.stat-label { font-size: 0.82rem; color: #64748b; font-weight: 500; }
 
-/* Section Header & Titles */
+.stat-icon { 
+    font-size: 2rem; 
+    margin-bottom: 8px; 
+}
+
+.stat-number { 
+    font-size: 1.55rem; 
+    font-weight: 700; 
+    color: #1e293b; 
+}
+
+.stat-label { 
+    font-size: 0.82rem; 
+    color: #64748b; 
+    font-weight: 500; 
+}
+
+/* Gộp màu sắc nhận diện cho các thẻ Stat Card */
+.stat-card.users, .stat-card.users .stat-icon { border-color: #003366; color: #003366; }
+.stat-card.projects, .stat-card.projects .stat-icon { border-color: #667eea; color: #667eea; }
+.stat-card.applications, .stat-card.applications .stat-icon { border-color: #4facfe; color: #4facfe; }
+.stat-card.contacts, .stat-card.contacts .stat-icon { border-color: #43e97b; color: #43e97b; }
+
+/* 3. Tiêu đề phân hệ & Icon (Section Header) */
 .section-title {
     font-size: 1.05rem;
     font-weight: 700;
@@ -39,104 +58,413 @@ body { background: #f7f9fc; }
     align-items: center;
     gap: 8px;
 }
+
 .section-subtitle {
     font-size: 0.8rem;
     color: #64748b;
 }
 
-/* Dashboard Menu Bar & Responsive Filters */
-.dashboard-menu-bar {
-    margin-bottom: 20px;
+.dashboard-bar-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #003366;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    flex-shrink: 0;
 }
 
-/* Desktop Filter Pills (>= 992px) */
+/* 4. Khối Menu Bar Dashboard (Dashboard Menu Bar) - Ghim cố định khi cuộn */
+.dashboard-menu-bar {
+    position: sticky;
+    top: 168px;
+    z-index: 1020;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 14px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    padding: 14px 20px;
+    margin-bottom: 22px;
+    display: block;
+    transition: all 0.2s ease;
+}
+
+/* 5. Thanh công cụ lọc & Dải nút Pills (Filter Toolbar & Pills) */
+.dashboard-filter-toolbar {
+    min-height: 36px;
+}
+
+.dashboard-filter-pills {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 2px 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.dashboard-filter-pills::-webkit-scrollbar {
+    display: none;
+}
+
+/* Nút lọc nhanh (Pills) */
 .btn-section-filter {
-    font-size: 0.76rem;
-    padding: 4px 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 5px 12px;
+    height: 34px;
     border-radius: 20px;
-    background: #fff;
+    background: #f1f5f9;
     color: #475569;
     border: 1px solid #e2e8f0;
     transition: all 0.2s ease;
     cursor: pointer;
     text-decoration: none;
-    line-height: 1.4;
+    line-height: 1.35;
     white-space: nowrap;
+    flex-shrink: 0;
 }
+
 .btn-section-filter:hover {
-    background: #f1f5f9;
+    background: #e2e8f0;
     color: #0f172a;
     border-color: #cbd5e1;
 }
+
 .btn-section-filter.active {
-    background: #003366;
-    color: #fff;
-    border-color: #003366;
-    box-shadow: 0 2px 6px rgba(0, 51, 102, 0.2);
+    background: #003366 !important;
+    color: #ffffff !important;
+    border-color: #003366 !important;
+    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.22);
     font-weight: 600;
 }
 
-/* Mobile & Tablet Filter Dropdown (< 992px) */
+.btn-section-filter.active i {
+    color: #ffffff !important;
+}
+
+/* 6. Dropdown lọc phân hệ (Filter Dropdown) */
+.dashboard-filter-dropdown,
 .mobile-filter-dropdown {
-    width: 100%;
+    width: auto;
+    min-width: 240px;
 }
-.mobile-filter-dropdown .dropdown-toggle {
-    border: 1px solid #cbd5e1;
-    background: #ffffff;
-    padding: 8px 14px;
-    border-radius: 8px;
-    font-size: 0.86rem;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    color: #1e293b;
-}
-.mobile-filter-dropdown .dropdown-toggle:hover,
-.mobile-filter-dropdown .dropdown-toggle:focus {
-    border-color: #003366;
+
+.btn-filter-dropdown {
+    border: 1px solid #e2e8f0;
     background: #f8fafc;
-    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    padding: 5px 14px;
+    border-radius: 8px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: #1e293b;
+    height: 34px;
+    min-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.2s ease;
 }
+
+.btn-filter-dropdown:hover,
+.btn-filter-dropdown:focus {
+    background: #ffffff;
+    border-color: #cbd5e1;
+    color: #003366;
+    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.08);
+}
+
+.dashboard-filter-dropdown .dropdown-menu,
 .mobile-filter-dropdown .dropdown-menu {
     border-radius: 10px;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    border: 1px solid #edf2f7;
+    padding: 6px;
+    max-height: 390px;
+    overflow-y: auto;
+    min-width: 260px;
 }
+
+/* Helper classes thay thế triệt để toàn bộ inline styles trong dashboard.php */
+.status-dot {
+    font-size: 6px;
+    vertical-align: middle;
+}
+
+.filter-divider {
+    width: 1px;
+    height: 24px;
+    background-color: #cbd5e1;
+    opacity: 0.5;
+    margin: 0 4px;
+    flex-shrink: 0;
+}
+
+/* Icon nhận diện chuẩn hóa theo phân hệ */
+.filter-icon {
+    width: 18px;
+    text-align: center;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.text-navy { color: #003366 !important; }
+.text-pink { color: #db2777 !important; }
+.text-purple { color: #9333ea !important; }
+.text-amber { color: #ca8a04 !important; }
+
+/* Nút Xem tất cả trên từng card phân hệ */
+.btn-card-more {
+    font-size: 11px !important;
+    padding: 2px 8px !important;
+    border-radius: 20px !important;
+    font-weight: 500;
+}
+
+/* Nút hành động nhỏ trong bảng (Xem CV) */
+.btn-card-action {
+    font-size: 11px !important;
+    padding: 2px 8px !important;
+    border-radius: 4px !important;
+}
+
+/* Nút outline tùy chỉnh cho phân hệ Carousel, Tuyển dụng, Import */
+.btn-outline-pink {
+    color: #db2777 !important;
+    border-color: #db2777 !important;
+}
+.btn-outline-pink:hover,
+.btn-outline-pink:focus {
+    background-color: #db2777 !important;
+    border-color: #db2777 !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-purple {
+    color: #9333ea !important;
+    border-color: #9333ea !important;
+}
+.btn-outline-purple:hover,
+.btn-outline-purple:focus {
+    background-color: #9333ea !important;
+    border-color: #9333ea !important;
+    color: #ffffff !important;
+}
+
+.btn-outline-amber {
+    color: #ca8a04 !important;
+    border-color: #ca8a04 !important;
+}
+.btn-outline-amber:hover,
+.btn-outline-amber:focus {
+    background-color: #ca8a04 !important;
+    border-color: #ca8a04 !important;
+    color: #ffffff !important;
+}
+
+/* Avatar nhỏ & icon trong bảng */
+.avatar-xs {
+    width: 18px;
+    height: 18px;
+    object-fit: cover;
+}
+
+.avatar-icon-xs {
+    font-size: 15px;
+}
+
+.cell-meta-indent {
+    padding-left: 19px;
+}
+
+.empty-state-icon {
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+.badge-role-pill {
+    font-size: 11px !important;
+}
+
+.table-title-truncate {
+    max-width: 220px;
+}
+
+.table-title-truncate-xs { max-width: 130px; }
+.table-title-truncate-sm { max-width: 140px; }
+.table-title-truncate-md { max-width: 170px; }
+.table-title-truncate-lg { max-width: 250px; }
+
+/* Chiều rộng các cột bảng cố định (chuẩn hóa tỷ lệ không cần inline style) */
+.col-w-24 { width: 24%; }
+.col-w-25 { width: 25%; }
+.col-w-26 { width: 26%; }
+.col-w-28 { width: 28%; }
+.col-w-30 { width: 30%; }
+.col-w-32 { width: 32%; }
+.col-w-36 { width: 36%; }
+.col-w-38 { width: 38%; }
+.col-w-40 { width: 40%; }
+.col-w-44 { width: 44%; }
+.col-w-45 { width: 45%; }
+.col-w-46 { width: 46%; }
+.col-w-48 { width: 48%; }
+
+/* Kích thước ảnh xem trước carousel */
+.carousel-thumb-preview {
+    width: 58px;
+    height: 32px;
+    object-fit: cover;
+}
+
+.dashboard-filter-dropdown .dropdown-item,
 .mobile-filter-dropdown .dropdown-item {
     font-size: 0.84rem;
-    padding: 8px 14px;
+    padding: 7px 12px;
+    border-radius: 6px;
     transition: all 0.15s ease;
     color: #334155;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
+
+.dashboard-filter-dropdown .dropdown-item:hover,
 .mobile-filter-dropdown .dropdown-item:hover {
     background-color: #f1f5f9;
     color: #003366;
 }
+
+.dashboard-filter-dropdown .dropdown-item.active,
 .mobile-filter-dropdown .dropdown-item.active {
     background-color: #eff6ff;
     color: #003366;
     font-weight: 600;
 }
 
-/* Dashboard Cards (Tách biệt từng trang con theo đúng thứ tự sidebar) */
+/* 7. Gộp chung các quy tắc Badge số lượng (Count Badges) */
+.filter-count-badge,
+.filter-dropdown-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+}
+
+.filter-count-badge {
+    min-width: 20px;
+    padding: 0 6px;
+    height: 18px;
+    font-size: 0.68rem;
+    background: #e2e8f0;
+    color: #475569;
+    margin-left: 4px;
+}
+
+.btn-section-filter:hover .filter-count-badge {
+    background: #cbd5e1;
+    color: #1e293b;
+}
+
+.btn-section-filter.active .filter-count-badge {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+}
+
+.filter-dropdown-badge {
+    font-size: 0.72rem;
+    padding: 1px 7px;
+    min-width: 22px;
+    text-align: center;
+    background-color: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.dropdown-item.active .filter-dropdown-badge {
+    background-color: #003366 !important;
+    color: #ffffff !important;
+    border-color: #003366 !important;
+}
+
+/* 8. Khung cuộn danh sách các thẻ Card (Dashboard Cards Scroll) */
+.dashboard-cards-scroll {
+    max-height: calc(100vh - 310px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+    padding-right: 4px;
+    padding-bottom: 24px;
+}
+
+.dashboard-cards-scroll::-webkit-scrollbar,
+.dashboard-table-card .table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.dashboard-cards-scroll::-webkit-scrollbar-track,
+.dashboard-table-card .table-responsive::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.dashboard-cards-scroll::-webkit-scrollbar-thumb,
+.dashboard-table-card .table-responsive::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.dashboard-cards-scroll::-webkit-scrollbar-thumb:hover,
+.dashboard-table-card .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* 9. Thẻ bảng dữ liệu các trang (Dashboard Table Cards) */
 .dashboard-table-card {
     border-radius: 10px;
-    border: 1px solid rgba(0,0,0,0.06);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.03);
     overflow: hidden;
-    background: #fff;
+    background: #ffffff;
     height: 100%;
     display: flex;
     flex-direction: column;
     transition: box-shadow 0.2s ease;
 }
+
 .dashboard-table-card:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
+
 .dashboard-table-card .card-header {
     padding: 11px 16px;
     border-bottom: 1px solid #edf2f7;
-    background-color: #fff;
+    background-color: #ffffff;
 }
+
+.dashboard-table-card .card-body {
+    flex: 1 1 auto;
+}
+
+/* Viền trên nhận diện cho 10 phân hệ */
 .dashboard-table-card.card-section-users { border-top: 3px solid #003366; }
 .dashboard-table-card.card-section-projects { border-top: 3px solid #0284c7; }
 .dashboard-table-card.card-section-news { border-top: 3px solid #16a34a; }
@@ -148,11 +476,25 @@ body { background: #f7f9fc; }
 .dashboard-table-card.card-section-contacts { border-top: 3px solid #ea580c; }
 .dashboard-table-card.card-section-chat { border-top: 3px solid #0ea5e9; }
 
-.dashboard-table-card .card-body {
-    flex: 1 1 auto;
+/* Bảng nội bộ cuộn độc lập */
+.dashboard-table-card .table-responsive {
+    max-height: 285px !important;
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
 }
 
-/* Module Badges */
+.dashboard-table-card .dashboard-table thead th {
+    position: sticky !important;
+    top: 0 !important;
+    background-color: #f8fafc !important;
+    color: #64748b !important;
+    z-index: 2 !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* 10. Module Badges */
 .badge-module {
     display: inline-flex;
     align-items: center;
@@ -164,20 +506,20 @@ body { background: #f7f9fc; }
     border: 1px solid transparent;
     white-space: nowrap;
 }
+
 .badge-mod-users { background: #e6edf5; color: #003366; border-color: #b8cde3; }
 .badge-mod-projects { background: #e0f2fe; color: #0369a1; border-color: #bae6fd; }
 .badge-mod-news { background: #dcfce7; color: #15803d; border-color: #bbf7d0; }
 .badge-mod-carousel { background: #fce7f3; color: #be185d; border-color: #fbcfe8; }
 .badge-mod-recruitments { background: #f3e8ff; color: #7e22ce; border-color: #e9d5ff; }
 .badge-mod-applications { background: #e0e7ff; color: #4338ca; border-color: #c7d2fe; }
-.badge-mod-logs { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
-.badge-mod-auth { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
+.badge-mod-logs, .badge-mod-auth { background: #f1f5f9; color: #334155; border-color: #cbd5e1; }
 .badge-mod-import { background: #fef9c3; color: #a16207; border-color: #fef08a; }
 .badge-mod-contacts { background: #ffedd5; color: #c2410c; border-color: #fed7aa; }
 .badge-mod-chat { background: #e0f2fe; color: #0284c7; border-color: #bae6fd; }
 .badge-mod-default { background: #f8fafc; color: #475569; border-color: #e2e8f0; }
 
-/* Table Item Titles & Links */
+/* Chi tiết liên kết và thông tin trong bảng */
 .table-item-title {
     color: #1e293b;
     text-decoration: none;
@@ -186,15 +528,18 @@ body { background: #f7f9fc; }
     display: inline-block;
     max-width: 100%;
 }
+
 .table-item-title:hover {
     color: #003366;
     text-decoration: underline;
 }
+
 .cell-meta-sub {
     font-size: 0.75rem;
     color: #94a3b8;
     margin-top: 2px;
 }
+
 .ip-badge {
     font-size: 0.72rem;
     color: #475569;
@@ -204,6 +549,7 @@ body { background: #f7f9fc; }
     font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
     border: 1px solid #e2e8f0;
 }
+
 .activity-user-avatar {
     width: 28px;
     height: 28px;
@@ -217,13 +563,13 @@ body { background: #f7f9fc; }
     flex-shrink: 0;
     overflow: hidden;
 }
+
 .activity-user-avatar img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
-/* Action text with ellipsis on large desktop */
 .cell-action-text {
     max-width: 300px;
     overflow: hidden;
@@ -231,7 +577,12 @@ body { background: #f7f9fc; }
     white-space: nowrap;
 }
 
-/* Desktop layout styles */
+/* ==========================================================================
+   GỘP TẤT CẢ MEDIA QUERIES (CONSOLIDATED RESPONSIVE BREAKPOINTS)
+   Không còn khai báo phân mảnh, loại bỏ xung đột chồng chéo giữa các khối
+   ========================================================================== */
+
+/* 1. Màn hình lớn (Desktop >= 992px) */
 @media (min-width: 992px) {
     .dashboard-table {
         table-layout: fixed;
@@ -261,142 +612,181 @@ body { background: #f7f9fc; }
     }
 }
 
-/* Responsive Điều Chỉnh cho Tablet & Mobile (Khung màn hình vừa và nhỏ) */
+/* 1.1 Màn hình Laptop (992px - 1199.98px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .dashboard-menu-bar {
+        top: 158px;
+    }
+}
+
+/* 2. Màn hình Tablet & Mobile (< 992px) - ĐÃ GỘP THÀNH 1 KHỐI DUY NHẤT */
 @media (max-width: 991.98px) {
     .dashboard-menu-bar {
-        flex-direction: column;
-        align-items: stretch !important;
-        gap: 12px;
+        position: sticky !important;
+        top: 134px !important;
+        z-index: 1020 !important;
+        padding: 12px 16px !important;
+        margin-bottom: 16px !important;
+        border-radius: 12px !important;
     }
+
+    .dashboard-filter-dropdown,
+    .mobile-filter-dropdown,
+    .btn-filter-dropdown {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    .dashboard-cards-scroll {
+        max-height: calc(100vh - 280px);
+        padding-right: 2px;
+    }
+
     .stat-card {
         padding: 14px 16px;
         border-radius: 10px;
     }
+
     .stat-icon {
         font-size: 1.5rem;
         margin-bottom: 4px;
     }
+
     .stat-number {
         font-size: 1.4rem;
-        font-weight: 700;
     }
-    .stat-label {
-        font-size: 0.82rem;
-        color: #475569;
-    }
+
     .dashboard-table-card .card-header {
         padding: 10px 14px;
     }
+
     .dashboard-table-card .card-header h6 {
         font-size: 0.95rem !important;
         font-weight: 600;
     }
+
     .dashboard-table th {
         padding: 9px 12px !important;
         font-size: 0.80rem !important;
         background-color: #f8fafc;
     }
+
     .dashboard-table td {
         padding: 9px 12px !important;
         font-size: 0.85rem !important;
         line-height: 1.5;
     }
+
     .dashboard-table .badge {
         font-size: 0.78rem !important;
         padding: 0.35em 0.65em !important;
     }
+
     .cell-action-text {
         max-width: 100%;
         white-space: normal;
     }
 }
 
+/* 3. Màn hình điện thoại (< 768px) - ĐÃ GỘP THÀNH 1 KHỐI DUY NHẤT */
 @media (max-width: 767.98px) {
     .stat-card {
-        padding: 12px 12px;
+        padding: 12px;
         border-radius: 8px;
-        border-left-width: 4px;
     }
+
     .stat-icon {
         font-size: 1.35rem;
         margin-bottom: 3px;
     }
+
     .stat-number {
         font-size: 1.3rem;
     }
+
     .stat-label {
         font-size: 0.80rem;
     }
+
     .dashboard-table-card {
         border-radius: 8px;
     }
+
     .dashboard-table-card .card-header {
         padding: 10px 12px;
     }
+
     .dashboard-table-card .card-header h6 {
         font-size: 0.90rem !important;
     }
+
     .dashboard-table th {
         padding: 8px 10px !important;
         font-size: 0.76rem !important;
         letter-spacing: 0;
     }
+
     .dashboard-table td {
         padding: 8px 10px !important;
         font-size: 0.82rem !important;
         line-height: 1.45;
     }
+
     .dashboard-table .badge {
         font-size: 0.75rem !important;
         padding: 0.3em 0.6em !important;
     }
-    .mobile-filter-dropdown .dropdown-toggle {
-        font-size: 0.82rem;
-        padding: 7px 12px;
-    }
-    .mobile-filter-dropdown .dropdown-item {
-        font-size: 0.82rem;
-        padding: 7px 12px;
-    }
 }
 
-/* Điện thoại cực nhỏ (< 400px) */
+/* 4. Màn hình điện thoại nhỏ (< 400px) - ĐÃ GỘP THÀNH 1 KHỐI DUY NHẤT */
 @media (max-width: 399.98px) {
-    .stat-card {
-        padding: 10px 10px;
-        border-radius: 8px;
+    .dashboard-menu-bar {
+        top: 130px !important;
+        padding: 8px 10px !important;
+        margin-bottom: 10px !important;
     }
+
+    .dashboard-cards-scroll {
+        max-height: calc(100vh - 240px);
+    }
+
+    .stat-card {
+        padding: 10px;
+    }
+
     .stat-icon {
         font-size: 1.2rem;
         margin-bottom: 2px;
     }
+
     .stat-number {
         font-size: 1.15rem;
     }
+
     .stat-label {
         font-size: 0.76rem;
     }
+
     .dashboard-table-card .card-header {
         padding: 8px 10px;
     }
+
     .dashboard-table th {
         padding: 7px 8px !important;
         font-size: 0.74rem !important;
     }
+
     .dashboard-table td {
         padding: 7px 8px !important;
         font-size: 0.78rem !important;
-        line-height: 1.4;
     }
+
     .dashboard-table .badge {
         font-size: 0.70rem !important;
-        padding: 0.25em 0.5em !important;
     }
-    .mobile-filter-dropdown .dropdown-toggle {
-        font-size: 0.78rem;
-        padding: 6px 10px;
-    }
-    .mobile-filter-dropdown .dropdown-item {
+
+    .btn-filter-dropdown,
+    .dashboard-filter-dropdown .dropdown-item {
         font-size: 0.78rem;
         padding: 6px 10px;
     }

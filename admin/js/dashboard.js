@@ -48,6 +48,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (activeFilterText && labelHtml) {
             activeFilterText.innerHTML = labelHtml;
         }
+
+        // 5. Tự động cuộn thanh pills đến nút đang chọn nếu bị tràn
+        const activeBtn = document.querySelector(`.btn-section-filter[data-target="${target}"]`);
+        if (activeBtn && activeBtn.scrollIntoView) {
+            activeBtn.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+        }
+
+        // 6. Cuộn khung danh sách thẻ card về đỉnh khi đổi bộ lọc
+        const scrollContainer = document.querySelector('.dashboard-cards-scroll');
+        if (scrollContainer) {
+            scrollContainer.scrollTop = 0;
+        }
     }
 
     // Sự kiện click nút bấm Desktop
@@ -75,11 +87,33 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Hỗ trợ lăn chuột ngang mượt mà trên thanh filter pills
+    const pillsTrack = document.querySelector('.dashboard-filter-pills');
+    if (pillsTrack) {
+        pillsTrack.addEventListener('wheel', function(e) {
+            if (e.deltaY !== 0) {
+                e.preventDefault();
+                this.scrollLeft += e.deltaY;
+            }
+        }, { passive: false });
+    }
+
     // Khởi tạo tooltips
     if (typeof bootstrap !== 'undefined' && bootstrap.Tooltip) {
         const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
         tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl);
         });
+    }
+
+    // Chuyển tiếp cuộn chuột từ vùng header hoặc menu bar vào khung thẻ card (ngoại trừ thanh pills cuộn ngang)
+    const cardsScroll = document.querySelector('.dashboard-cards-scroll');
+    const mainContent = document.querySelector('.main-content');
+    if (cardsScroll && mainContent) {
+        mainContent.addEventListener('wheel', function(e) {
+            if (!e.target.closest('.dashboard-cards-scroll') && !e.target.closest('.dashboard-filter-pills')) {
+                cardsScroll.scrollTop += e.deltaY;
+            }
+        }, { passive: true });
     }
 });

@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../db.php';
+require_once __DIR__ . '/chat_notification_service.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -17,6 +18,9 @@ switch ($action) {
         exit;
     }
 
+    // Đảm bảo cấu trúc cột email_notified_at
+    ensureChatEmailNotificationColumn($conn);
+
     // Kiểm tra xem khách hàng (số điện thoại) đã có phiên chat nào chưa
     $stmt = $conn->prepare("SELECT id FROM chat_sessions WHERE phone = ? ORDER BY last_message_time DESC LIMIT 1");
     $stmt->bind_param("s", $phone);
@@ -24,15 +28,15 @@ switch ($action) {
     $result = $stmt->get_result();
     
     if ($row = $result->fetch_assoc()) {
-        // Nếu là khách cũ, tái sử dụng session_id và cập nhật thời gian, tên, email mới nhất
+        // Nếu là khách cũ, tái sử dụng session_id và cập nhật thời gian, tên, email mới nhất và reset email_notified_at
         $session_id = $row['id'];
-        $update_stmt = $conn->prepare("UPDATE chat_sessions SET name = ?, email = ?, last_message_time = NOW(), last_active_time = NOW(), last_sender = 'customer' WHERE id = ?");
+        $update_stmt = $conn->prepare("UPDATE chat_sessions SET name = ?, email = ?, last_message_time = NOW(), last_active_time = NOW(), last_sender = 'customer', email_notified_at = NULL WHERE id = ?");
         $update_stmt->bind_param("ssi", $name, $email, $session_id);
         $update_stmt->execute();
         $update_stmt->close();
     } else {
         // Khách mới, tạo phiên chat hoàn toàn mới
-        $insert_stmt = $conn->prepare("INSERT INTO chat_sessions (name, phone, email, last_message_time, last_active_time, last_sender) VALUES (?, ?, ?, NOW(), NOW(), 'customer')");
+        $insert_stmt = $conn->prepare("INSERT INTO chat_sessions (name, phone, email, last_message_time, last_active_time, last_sender, email_notified_at) VALUES (?, ?, ?, NOW(), NOW(), 'customer', NULL)");
         $insert_stmt->bind_param("sss", $name, $phone, $email);
         
         if ($insert_stmt->execute()) {
@@ -125,7 +129,7 @@ if ($action === 'send_message') {
 
         // Cập nhật thời gian và người gửi cuối cùng trong phiên chat
         if ($sender === 'customer') {
-            $stmt2 = $conn->prepare("UPDATE chat_sessions SET last_message_time = NOW(), last_active_time = NOW(), last_sender = ? WHERE id = ?");
+            $stmt2 = $conn->prepare("UPDATE chat_sessions SET last_message_time = NOW(), last_active_time = NOW(), last_sender = ?, email_notified_at = NULL WHERE id = ?");
         } else {
             $stmt2 = $conn->prepare("UPDATE chat_sessions SET last_message_time = NOW(), last_sender = ? WHERE id = ?");
         }
@@ -198,6 +202,10 @@ if ($action === 'get_sessions') {
             $sessions[] = $row;
         }
     }
+
+    // Tự động kiểm tra các phiên chat chờ quá 5 phút
+    checkAndNotifyPendingChats($conn);
+
     echo json_encode(['success' => true, 'sessions' => $sessions]);
     exit;
 }
@@ -216,6 +224,9 @@ if ($action === 'get_messages') {
         $messages[] = $row;
     }
     $stmt->close();
+
+    // Tự động kiểm tra các phiên chat chờ quá 5 phút
+    checkAndNotifyPendingChats($conn);
 
     echo json_encode(['success' => true, 'messages' => $messages]);
     exit;

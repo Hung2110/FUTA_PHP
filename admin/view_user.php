@@ -76,6 +76,18 @@ $status_colors = ['active' => 'success', 'inactive' => 'secondary'];
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><strong>ID Người dùng:</strong> <span class="value">#<?php echo $user['id']; ?></span></li>
                     <li class="list-group-item"><strong>Tên đăng nhập:</strong> <span class="value"><?php echo htmlspecialchars($user['username']); ?></span></li>
+                    <?php if (!empty(array_intersect(['admin', 'user_manager'], $user_roles)) || ($user['id'] == $_SESSION['admin_id'])): ?>
+                    <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <strong>Mật khẩu hiện hành:</strong> 
+                        <div class="d-flex align-items-center gap-2">
+                            <span id="viewUserPassMasked" class="font-monospace fw-bold">••••••••</span>
+                            <span id="viewUserPassText" class="font-monospace fw-bold text-primary d-none"><?php echo !empty($user['plain_password']) ? htmlspecialchars($user['plain_password']) : '(Chưa lưu mật khẩu dạng xem)'; ?></span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary py-0 px-2 shadow-none" id="btnToggleViewUserPass" title="Hiện/Ẩn mật khẩu">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </li>
+                    <?php endif; ?>
                     <li class="list-group-item"><strong>Họ và tên:</strong> <span class="value"><?php echo htmlspecialchars($user['fullname']); ?></span></li>
                     <li class="list-group-item"><strong>Email:</strong> <span class="value"><?php echo htmlspecialchars($user['email']); ?></span></li>
                     <li class="list-group-item"><strong>Số điện thoại:</strong> <span class="value"><?php echo htmlspecialchars($user['phone'] ?: 'Chưa cập nhật'); ?></span></li>
@@ -99,5 +111,27 @@ $status_colors = ['active' => 'success', 'inactive' => 'secondary'];
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const btnToggle = document.getElementById('btnToggleViewUserPass');
+        if (btnToggle) {
+            btnToggle.addEventListener('click', function() {
+                const masked = document.getElementById('viewUserPassMasked');
+                const text = document.getElementById('viewUserPassText');
+                const icon = this.querySelector('i');
+                const isHidden = text.classList.contains('d-none');
+                if (isHidden) {
+                    text.classList.remove('d-none');
+                    masked.classList.add('d-none');
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    text.classList.add('d-none');
+                    masked.classList.remove('d-none');
+                    icon.className = 'fas fa-eye';
+                }
+            });
+        }
+    });
+    </script>
 </body>
 </html>

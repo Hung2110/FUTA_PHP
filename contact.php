@@ -13,16 +13,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $phone = trim($_POST['phone'] ?? '');
     $subject = trim($_POST['subject'] ?? '');
     $content = trim($_POST['content'] ?? '');
-    if ($name && $email && $phone && $content) { // subject is now optional
+
+    if ($name && $email && $phone && $content) {
         $stmt = $conn->prepare("INSERT INTO contact (name, email, phone, subject, message) VALUES (?, ?, ?, ?, ?)");
         $stmt->bind_param('sssss', $name, $email, $phone, $subject, $content);
         if ($stmt->execute()) {
             $contact_id = $conn->insert_id; // Lấy ID của liên hệ vừa tạo
             $stmt->close();
 
-            $adminEmails = [];
-            // --- Tạo thông báo cho admin/contact_manager ---
-            $admin_users_query = $conn->query("SELECT id, email FROM users WHERE (FIND_IN_SET('admin', role) > 0 OR FIND_IN_SET('contact_manager', role) > 0) AND status = 'active'");
+            // 1. Tạo thông báo trong hệ thống admin (chuông thông báo) cho admin & contact_manager
+            $admin_users_query = $conn->query("SELECT id FROM users WHERE (FIND_IN_SET('admin', role) > 0 OR FIND_IN_SET('contact_manager', role) > 0) AND status = 'active'");
             if ($admin_users_query && $admin_users_query->num_rows > 0) {
                 $notification_message = "Có liên hệ mới từ: " . htmlspecialchars($name);
                 $notification_link = "view_contact.php?id=" . $contact_id;
@@ -30,9 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $notify_stmt = $conn->prepare("INSERT INTO notifications (user_id, type, message, link) VALUES (?, ?, ?, ?)");
                 while ($admin_user = $admin_users_query->fetch_assoc()) {
-                    if (!empty($admin_user['email'])) {
-                        $adminEmails[] = $admin_user['email'];
-                    }
                     if (isset($admin_user['id'])) {
                         $notify_stmt->bind_param("isss", $admin_user['id'], $notification_type, $notification_message, $notification_link);
                         $notify_stmt->execute();
@@ -40,64 +37,175 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
                 $notify_stmt->close();
             }
-            // --- Kết thúc tạo thông báo ---
-        }
-        
-        // Nếu không có user nào trong DB có quyền này, dùng fallback mặc định
-        if (empty($adminEmails)) {
-            $envEmails = getenv('ADMIN_EMAILS');
-            $adminEmails = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['futaadvertising@futa.vn'];
-        }
-        
-        $mailSubject = "[FUTA ADVERTISING] Liên hệ mới từ $name";
-        $mailBody = "<h3>Bạn nhận được một liên hệ mới từ website FUTA:</h3>" .
-            "<p><strong>Tên Khách Hàng:</strong> " . htmlspecialchars($name) . "</p>" .
-            "<p><strong>Email:</strong> " . htmlspecialchars($email) . "</p>" .
-            "<p><strong>Điện thoại:</strong> " . htmlspecialchars($phone) . "</p>" .
-            "<p><strong>Website:</strong> " . htmlspecialchars($subject) . "</p>" .
-            "<p><strong>Nội dung:</strong><br>" . nl2br(htmlspecialchars($content)) . "</p>";
 
-        $mail = new PHPMailer(true);
-        try {
-            $mail->SMTPDebug = 2; // Bật hiển thị lỗi chi tiết để kiểm tra
-            $mail->Debugoutput = 'html'; // Xuất lỗi dưới dạng HTML để dễ đọc trên trình duyệt
-            $mail->isSMTP();
-            $mail->Host       = 'smtp.gmail.com'; // Thay bằng SMTP server của bạn (VD: smtp.gmail.com)
-            $mail->SMTPAuth   = true;
-            $mail->Username   = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn'; // Thay bằng email gửi đi của bạn
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-            $mail->Password   = getenv('xtonupudcelpoixh') ?: '';    // Lấy từ biến môi trường
-            $mail->Port       = 587; // Sử dụng cổng 587 cho STARTTLS của Gmail
-            $mail->CharSet    = 'UTF-8'; // Bổ sung để hỗ trợ tiếng Việt không bị lỗi font
-            
-            // Fix lỗi không gửi được mail trên localhost / XAMPP do thiếu chứng chỉ SSL
-            $mail->SMTPOptions = array(
-                'ssl' => array(
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true
-                )
-            );
-            
-            $mail->setFrom(getenv('SMTP_USER') ?: 'futaadvertising@futa.vn', 'FUTA Advertising');
-            $mail->addReplyTo($email, $name);
-            $mail->isHTML(true);
-            $mail->Subject = $mailSubject;
-            $mail->Body    = $mailBody;
-            
-            foreach ($adminEmails as $adminEmail) {
-                $mail->addAddress($adminEmail);
+            // 2. Lấy danh sách email của người được Admin phân quyền Quản lý liên hệ (contact_manager)
+            $managerEmails = [];
+            $manager_query = $conn->query("SELECT id, fullname, email FROM users WHERE FIND_IN_SET('contact_manager', role) > 0 AND status = 'active'");
+            if ($manager_query && $manager_query->num_rows > 0) {
+                while ($mgr = $manager_query->fetch_assoc()) {
+                    if (!empty($mgr['email']) && filter_var($mgr['email'], FILTER_VALIDATE_EMAIL)) {
+                        $managerEmails[$mgr['email']] = $mgr['fullname'] ?? 'Quản Lý Liên Hệ';
+                    }
+                }
             }
+
+            // Nếu chưa có tài khoản nào được phân quyền contact_manager riêng, gửi thông báo dự phòng tới Admin
+            if (empty($managerEmails)) {
+                $fallback_query = $conn->query("SELECT id, fullname, email FROM users WHERE FIND_IN_SET('admin', role) > 0 AND status = 'active'");
+                if ($fallback_query && $fallback_query->num_rows > 0) {
+                    while ($adm = $fallback_query->fetch_assoc()) {
+                        if (!empty($adm['email']) && filter_var($adm['email'], FILTER_VALIDATE_EMAIL)) {
+                            $managerEmails[$adm['email']] = $adm['fullname'] ?? 'Quản Trị Viên';
+                        }
+                    }
+                }
+            }
+
+            // Dự phòng cuối cùng qua biến môi trường ADMIN_EMAILS hoặc email mặc định của công ty
+            if (empty($managerEmails)) {
+                $envEmails = getenv('ADMIN_EMAILS');
+                $defaultList = $envEmails ? array_map('trim', explode(',', $envEmails)) : ['futaadvertising@futa.vn'];
+                foreach ($defaultList as $dEmail) {
+                    if (filter_var($dEmail, FILTER_VALIDATE_EMAIL)) {
+                        $managerEmails[$dEmail] = 'Quản Lý Liên Hệ FUTA';
+                    }
+                }
+            }
+
+            // 3. Chuẩn bị đường dẫn xem chi tiết liên hệ trên trang Admin
+            $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
+            $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+            $baseDir = rtrim(dirname($_SERVER['PHP_SELF']), '/\\');
+            $adminViewUrl = $protocol . $host . $baseDir . '/admin/view_contact.php?id=' . $contact_id;
+
+            // 4. Nội dung Email HTML chuẩn nhận diện thương hiệu FUTA
+            $displaySubject = $subject ?: 'Tư vấn dịch vụ quảng cáo';
+            $currentTime = date('d/m/Y H:i:s');
+            $mailSubject = "[FUTA ADVERTISING] Liên hệ mới từ $name - " . $displaySubject;
             
-            $mail->send();
-            
+            $mailBody = '
+            <!DOCTYPE html>
+            <html lang="vi">
+            <head>
+                <meta charset="UTF-8">
+                <style>
+                    body { font-family: "Segoe UI", Arial, sans-serif; line-height: 1.6; color: #333333; margin: 0; padding: 0; background-color: #f4f6f9; }
+                    .email-wrapper { max-width: 620px; margin: 25px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.07); border: 1px solid #e2e8f0; }
+                    .email-header { background: linear-gradient(135deg, #003366 0%, #002244 100%); padding: 26px 30px; text-align: center; color: #ffffff; border-bottom: 4px solid #ff6600; }
+                    .email-header h2 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+                    .email-header p { margin: 6px 0 0 0; font-size: 13px; color: #cbd5e1; }
+                    .email-body { padding: 28px 30px; }
+                    .badge-alert { display: inline-block; background-color: #fff7ed; color: #ea580c; border: 1px solid #ffedd5; padding: 5px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 18px; }
+                    .info-table { width: 100%; border-collapse: collapse; margin-bottom: 22px; }
+                    .info-table td { padding: 10px 14px; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+                    .info-table td.label { width: 35%; font-weight: 600; color: #475569; background-color: #f8fafc; }
+                    .info-table td.value { color: #1e293b; }
+                    .message-box { background: #f8fafc; border-left: 4px solid #ff6600; border-radius: 6px; padding: 16px; margin-bottom: 25px; }
+                    .message-title { font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 8px; }
+                    .message-content { font-size: 14px; color: #1e293b; white-space: pre-wrap; word-break: break-word; line-height: 1.6; }
+                    .btn-action { display: inline-block; background: #ff6600; color: #ffffff !important; text-decoration: none; padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; text-align: center; box-shadow: 0 3px 8px rgba(255, 102, 0, 0.35); }
+                    .email-footer { background: #f8fafc; padding: 18px 30px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e2e8f0; }
+                </style>
+            </head>
+            <body>
+                <div class="email-wrapper">
+                    <div class="email-header">
+                        <h2>FUTA ADVERTISING</h2>
+                        <p>Hệ thống Quản lý Yêu cầu & Liên hệ Khách hàng</p>
+                    </div>
+                    <div class="email-body">
+                        <div class="badge-alert">
+                            📬 Thông báo liên hệ mới từ Website
+                        </div>
+                        <p style="margin-top:0; font-size: 15px;">Xin chào <strong>Quản lý liên hệ</strong>,</p>
+                        <p style="font-size: 14px; color: #475569;">Website FUTA Advertising vừa tiếp nhận một yêu cầu liên hệ / tư vấn dịch vụ mới từ khách hàng. Dưới đây là thông tin chi tiết:</p>
+                        
+                        <table class="info-table">
+                            <tr>
+                                <td class="label">Họ và tên:</td>
+                                <td class="value"><strong>' . htmlspecialchars($name) . '</strong></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Số điện thoại:</td>
+                                <td class="value"><a href="tel:' . htmlspecialchars($phone) . '" style="color:#003366; font-weight:600; text-decoration:none;">' . htmlspecialchars($phone) . '</a></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Email khách hàng:</td>
+                                <td class="value"><a href="mailto:' . htmlspecialchars($email) . '" style="color:#003366; text-decoration:none;">' . htmlspecialchars($email) . '</a></td>
+                            </tr>
+                            <tr>
+                                <td class="label">Nhu cầu / Website:</td>
+                                <td class="value">' . htmlspecialchars($displaySubject) . '</td>
+                            </tr>
+                            <tr>
+                                <td class="label">Thời gian tiếp nhận:</td>
+                                <td class="value">' . $currentTime . '</td>
+                            </tr>
+                        </table>
+
+                        <div class="message-box">
+                            <div class="message-title">Nội dung tin nhắn khách hàng:</div>
+                            <div class="message-content">' . nl2br(htmlspecialchars($content)) . '</div>
+                        </div>
+
+                        <div style="text-align: center; margin: 25px 0 10px 0;">
+                            <a href="' . htmlspecialchars($adminViewUrl) . '" class="btn-action" target="_blank">
+                                Xem & Xử Lý Liên Hệ Trên Admin &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="email-footer">
+                        <p style="margin: 0 0 4px 0;">Email này được gửi tự động đến tài khoản được phân quyền <strong>Quản Lý Liên Hệ</strong> trên hệ thống FUTA Advertising.</p>
+                        <p style="margin: 0;">Bạn có thể phản hồi trực tiếp cho khách hàng bằng cách bấm nút <strong>Reply</strong> email này.</p>
+                    </div>
+                </div>
+            </body>
+            </html>';
+
+            // 5. Khởi tạo và cấu hình PHPMailer
+            $mail = new PHPMailer(true);
+            try {
+                $mail->SMTPDebug = 0; // Tắt debug ra màn hình để tránh làm hỏng HTTP headers
+                $mail->isSMTP();
+                $mail->Host       = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn';
+                $mail->Password   = getenv('SMTP_PASS') ?: 'xtonupudcelpoixh';
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = getenv('SMTP_PORT') ? (int)getenv('SMTP_PORT') : 587;
+                $mail->CharSet    = 'UTF-8';
+                
+                // Bỏ qua xác thực chứng chỉ SSL khi kiểm thử trên local / Laragon / XAMPP
+                $mail->SMTPOptions = array(
+                    'ssl' => array(
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    )
+                );
+                
+                $senderEmail = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn';
+                $mail->setFrom($senderEmail, 'FUTA Advertising');
+                $mail->addReplyTo($email, $name); // Bấm Reply sẽ gửi thẳng vào email của khách hàng
+                $mail->isHTML(true);
+                $mail->Subject = $mailSubject;
+                $mail->Body    = $mailBody;
+                $mail->AltBody = "Khách hàng: $name\nSố điện thoại: $phone\nEmail: $email\nWebsite/Nhu cầu: $displaySubject\nThời gian: $currentTime\nNội dung:\n$content";
+                
+                foreach ($managerEmails as $mgrEmail => $mgrName) {
+                    $mail->addAddress($mgrEmail, $mgrName ?: 'Quản Lý Liên Hệ');
+                }
+                
+                $mail->send();
+            } catch (Exception $e) {
+                // Ghi log lỗi gửi email vào server log nhưng không ngắt luồng thông báo thành công của khách hàng
+                error_log("Lỗi gửi email liên hệ (PHPMailer): " . $mail->ErrorInfo . " | Exception: " . $e->getMessage());
+            }
+
             header("Location: contact.php?success=1");
             exit;
-        } catch (Exception $e) {
-            // Bắt lỗi và thông báo cho người dùng, đồng thời ghi log
-            error_log("Gửi email thất bại. Lỗi: {$mail->ErrorInfo}");
-            $error = "Thông tin liên hệ của bạn đã được lưu thành công. Nhân viên của chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.";
-            $success = true;
+        } else {
+            $error = 'Có lỗi xảy ra khi lưu thông tin. Vui lòng thử lại!';
         }
     } else {
         $error = 'Vui lòng nhập đầy đủ thông tin!';

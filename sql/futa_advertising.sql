@@ -186,6 +186,7 @@ CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `username` varchar(100) DEFAULT NULL,
   `password` varchar(255) DEFAULT NULL,
+  `plain_password` varchar(255) DEFAULT NULL,
   `fullname` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `phone` varchar(50) DEFAULT NULL,
@@ -214,6 +215,7 @@ CREATE TABLE IF NOT EXISTS `chat_sessions` (
   `last_message_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `last_active_time` datetime DEFAULT NULL,
   `last_sender` enum('customer','admin') DEFAULT 'customer',
+  `email_notified_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

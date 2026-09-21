@@ -97,7 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_application'])
                         $mail->SMTPAuth   = true;
                         
                         $mail->Username   = getenv('SMTP_USER') ?: 'futaadvertising@futa.vn'; // Email gửi đi
-                        $mail->Password   = getenv('SMTP_PASS') ?: ''; // Nên dời vào biến môi trường
+                        $mail->Password   = getenv('SMTP_PASS') ?: 'xtonupudcelpoixh'; // Sử dụng App Password chuẩn
+                        $mail->SMTPDebug  = 0; // Tắt debug output
                         
                         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                         $mail->Port       = 587;

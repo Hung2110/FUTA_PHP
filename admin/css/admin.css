@@ -2,13 +2,17 @@
    FUTA ADVERTISING - ADMIN SHARED STYLES (CHUNG CHO TOÀN BỘ HỆ THỐNG ADMIN)
    ========================================================================== */
 
-/* Chuẩn hóa Page Header dùng chung cho tất cả các trang quản trị */
 .page-header {
-    background: #ffffff;
-    padding: 20px 24px;
+    position: sticky;
+    top: 15px;
+    z-index: 1025;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 16px 24px;
     border-radius: 12px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
-    border: 1px solid rgba(226, 232, 240, 0.8);
+    border: none !important;
     margin-bottom: 24px;
     display: flex;
     justify-content: space-between;
@@ -16,6 +20,37 @@
     flex-wrap: wrap;
     gap: 16px;
     transition: all 0.2s ease;
+}
+
+@media (min-width: 1200px) {
+    .page-header {
+        top: 72px;
+        padding: 16px 24px;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .page-header {
+        top: 66px;
+        padding: 14px 20px;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .page-header {
+        position: sticky !important;
+        top: 54px !important;
+        z-index: 1025 !important;
+        padding: 12px 16px !important;
+        padding-right: 16px !important;
+        margin-bottom: 16px !important;
+        border-radius: 0 0 10px 10px !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+        border: none !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
 }
 
 .page-header > div:first-child {
@@ -349,6 +384,125 @@
         display: flex !important;
         flex-wrap: wrap !important;
     }
+}
+
+/* ==========================================================================
+   NOTIFICATION BELL & DROPDOWN MENU (CHUÔNG THÔNG BÁO)
+   ========================================================================== */
+.notification-dropdown-menu {
+    width: 360px;
+    max-width: calc(100vw - 30px);
+    border-radius: 14px !important;
+    border: 1px solid rgba(226, 232, 240, 0.9) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04) !important;
+    overflow: hidden;
+}
+
+.notification-list-body::-webkit-scrollbar {
+    width: 5px;
+}
+.notification-list-body::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+.notification-list-body::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+.notification-list-body::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.notification-item {
+    transition: all 0.15s ease;
+    text-decoration: none;
+    white-space: normal !important;
+    cursor: pointer;
+}
+.notification-item:hover {
+    background-color: #f8fafc !important;
+}
+.notification-item.unread {
+    background-color: #f0f7ff !important;
+    border-left: 3px solid #007bff !important;
+}
+.notification-item.unread:hover {
+    background-color: #e3f2fd !important;
+}
+.notification-item.read {
+    background-color: #ffffff;
+    border-left: 3px solid transparent !important;
+    opacity: 0.85;
+}
+.notification-item.read:hover {
+    opacity: 1;
+}
+
+@media (max-width: 575.98px) {
+    .notification-dropdown-menu {
+        position: fixed !important;
+        top: 58px !important;
+        left: 12px !important;
+        right: 12px !important;
+        width: auto !important;
+        max-width: calc(100vw - 24px) !important;
+        max-height: calc(100vh - 75px) !important;
+        transform: none !important;
+        border-radius: 12px !important;
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2) !important;
+    }
+    .notification-list-body {
+        max-height: calc(100vh - 170px) !important;
+    }
+}
+
+/* ==========================================================================
+   CUỘN BẢNG DỌC & CỐ ĐỊNH TIÊU ĐỀ TH TOÀN HỆ THỐNG (GIỐNG NHẬT KÝ HOẠT ĐỘNG)
+   ========================================================================== */
+.card-body > .table-responsive,
+.card > .table-responsive,
+.main-content > .card .table-responsive {
+    max-height: 72vh;
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+    border-radius: 12px;
+}
+
+.card-body > .table-responsive::-webkit-scrollbar,
+.card > .table-responsive::-webkit-scrollbar,
+.main-content > .card .table-responsive::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.card-body > .table-responsive::-webkit-scrollbar-track,
+.card > .table-responsive::-webkit-scrollbar-track,
+.main-content > .card .table-responsive::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.card-body > .table-responsive::-webkit-scrollbar-thumb,
+.card > .table-responsive::-webkit-scrollbar-thumb,
+.main-content > .card .table-responsive::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.card-body > .table-responsive::-webkit-scrollbar-thumb:hover,
+.card > .table-responsive::-webkit-scrollbar-thumb:hover,
+.main-content > .card .table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8fafc !important;
+    color: #475569;
+    font-weight: 600;
+    z-index: 2;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 

@@ -28,42 +28,101 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Xử lý đánh dấu đã đọc cho thông báo
+    // Xử lý thông báo (Notification)
+    const markAllBtn = document.getElementById('markAllNotificationsRead');
+    const badgeEl = document.getElementById('notificationBadge') || document.querySelector('.notification-badge');
+    const countBadge = document.getElementById('unreadCountBadge');
+
+    // 1. Đánh dấu tất cả thông báo là đã đọc
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation(); // Không đóng dropdown để người dùng nhìn thấy sự thay đổi
+
+            // Cập nhật giao diện tức thì (Optimistic UI)
+            document.querySelectorAll('.notification-item.unread').forEach(item => {
+                item.classList.remove('unread');
+                item.classList.add('read');
+                const dot = item.querySelector('.unread-dot');
+                if (dot) dot.remove();
+                const dotWrapper = item.querySelector('.unread-dot-wrapper');
+                if (dotWrapper) dotWrapper.remove();
+                const msg = item.querySelector('.notif-msg');
+                if (msg) msg.classList.remove('fw-semibold');
+            });
+
+            const bellDot = document.getElementById('notificationBadge') || document.querySelector('.notification-badge');
+            if (bellDot) bellDot.remove();
+            if (badgeEl) badgeEl.remove();
+            if (countBadge) {
+                countBadge.style.display = 'none';
+                countBadge.classList.add('d-none');
+            }
+            markAllBtn.style.display = 'none';
+
+            // Gửi API lên server
+            fetch('mark_notification_read.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=mark_all'
+            }).catch(error => {
+                console.error('Lỗi khi đánh dấu đã đọc tất cả thông báo:', error);
+            });
+        });
+    }
+
+    // 2. Đánh dấu từng thông báo khi bấm vào
     document.querySelectorAll('.notification-item').forEach(item => {
         item.addEventListener('click', function(e) {
             const notificationId = this.dataset.id;
-            const isUnread = this.classList.contains('fw-bold');
+            const isUnread = this.classList.contains('unread') || this.classList.contains('fw-bold');
             const href = this.getAttribute('href');
 
-            if (isUnread) {
-                e.preventDefault(); // Ngăn trình duyệt chuyển trang ngay lập tức để chờ API
-                
-                // Cập nhật giao diện ngay lập tức (Optimistic UI)
-                this.classList.remove('fw-bold');
-                this.classList.remove('bg-light');
-                const badge = document.querySelector('.notification-badge');
-                if (badge) {
-                    let count = parseInt(badge.textContent) - 1;
+            if (isUnread && notificationId) {
+                e.preventDefault(); // Chặn tạm thời để gửi request
+
+                // Cập nhật giao diện tức thì
+                this.classList.remove('unread', 'fw-bold');
+                this.classList.add('read');
+                const dot = this.querySelector('.unread-dot');
+                if (dot) dot.remove();
+                const dotWrapper = this.querySelector('.unread-dot-wrapper');
+                if (dotWrapper) dotWrapper.remove();
+                const msg = this.querySelector('.notif-msg');
+                if (msg) msg.classList.remove('fw-semibold');
+
+                const currentBadge = document.getElementById('notificationBadge') || document.querySelector('.notification-badge');
+                if (currentBadge) {
+                    let count = parseInt(currentBadge.getAttribute('data-count') || currentBadge.textContent || '1') - 1;
                     if (count > 0) {
-                        badge.textContent = count;
+                        currentBadge.setAttribute('data-count', count);
+                        currentBadge.title = 'Có ' + count + ' thông báo mới';
+                        if (countBadge) countBadge.textContent = count + ' mới';
                     } else {
-                        badge.remove(); // Xóa chấm đỏ nếu đã đọc hết
+                        currentBadge.remove();
+                        if (countBadge) {
+                            countBadge.style.display = 'none';
+                            countBadge.classList.add('d-none');
+                        }
+                        if (markAllBtn) markAllBtn.style.display = 'none';
                     }
                 }
 
+                // Gửi API và chuyển trang
                 fetch('mark_notification_read.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: 'id=' + notificationId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    window.location.href = href; // Chuyển trang sau khi đã đánh dấu đọc thành công
                 }).catch(error => {
-                    console.error('Error:', error);
-                    window.location.href = href; // Vẫn cho phép chuyển trang nếu có lỗi mạng
+                    console.error('Lỗi khi đánh dấu đã đọc thông báo:', error);
+                }).finally(() => {
+                    if (href && href !== '#' && !href.startsWith('javascript:')) {
+                        window.location.href = href;
+                    }
                 });
             }
         });

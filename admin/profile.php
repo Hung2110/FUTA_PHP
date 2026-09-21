@@ -62,8 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($user && md5($current_password) === $user['password']) {
                 // Mật khẩu hiện tại đúng, cập nhật mật khẩu mới
                 $new_password_md5 = md5($new_password);
-                $stmt_update = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-                $stmt_update->bind_param("si", $new_password_md5, $admin_id);
+                $stmt_update = $conn->prepare("UPDATE users SET password = ?, plain_password = ? WHERE id = ?");
+                $stmt_update->bind_param("ssi", $new_password_md5, $new_password, $admin_id);
                 if ($stmt_update->execute()) {
                     $message = 'Đổi mật khẩu thành công!';
                     $message_type = 'success';
@@ -215,20 +215,41 @@ $role_colors = [
                     <h5 class="mb-0">Đổi mật khẩu</h5>
                 </div>
                 <div class="card-body">
+                    <!-- Hiển thị mật khẩu hiện hành của cá nhân tài khoản -->
+                    <div class="mb-3 p-2 px-3 bg-light rounded border d-flex justify-content-between align-items-center">
+                        <span class="small text-muted"><i class="fas fa-key me-1 text-warning"></i> Mật khẩu hiện tại của bạn:</span>
+                        <div class="d-flex align-items-center gap-2">
+                            <span id="profPassMasked" class="font-monospace fw-bold">••••••••</span>
+                            <span id="profPassText" class="font-monospace fw-bold text-primary d-none"><?php echo !empty($user['plain_password']) ? htmlspecialchars($user['plain_password']) : '(Chưa lưu mật khẩu dạng xem)'; ?></span>
+                            <button class="btn btn-sm btn-outline-secondary py-0 px-2 shadow-none" type="button" id="btnToggleProfPass" title="Hiện/Ẩn mật khẩu">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
                     <form method="POST">
                         <input type="hidden" name="change_password" value="1">
                         <div class="mb-3">
                             <label class="form-label">Mật khẩu hiện tại *</label>
-                            <input type="password" class="form-control" name="current_password" required>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="current_password" id="inputCurrentPass" required>
+                                <button class="btn btn-outline-secondary toggle-pass-btn" type="button" data-target="inputCurrentPass" title="Hiện/Ẩn mật khẩu"><i class="fas fa-eye"></i></button>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Mật khẩu mới *</label>
-                                <input type="password" class="form-control" name="new_password" required>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="new_password" id="inputNewPass" required>
+                                    <button class="btn btn-outline-secondary toggle-pass-btn" type="button" data-target="inputNewPass" title="Hiện/Ẩn mật khẩu"><i class="fas fa-eye"></i></button>
+                                </div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Xác nhận mật khẩu mới *</label>
-                                <input type="password" class="form-control" name="confirm_password" required>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" name="confirm_password" id="inputConfirmPass" required>
+                                    <button class="btn btn-outline-secondary toggle-pass-btn" type="button" data-target="inputConfirmPass" title="Hiện/Ẩn mật khẩu"><i class="fas fa-eye"></i></button>
+                                </div>
                             </div>
                         </div>
                         <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
@@ -239,5 +260,44 @@ $role_colors = [
     </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Toggle xem mật khẩu hiện hành
+    const btnToggleProf = document.getElementById('btnToggleProfPass');
+    if (btnToggleProf) {
+        btnToggleProf.addEventListener('click', function() {
+            const masked = document.getElementById('profPassMasked');
+            const text = document.getElementById('profPassText');
+            const icon = this.querySelector('i');
+            const isHidden = text.classList.contains('d-none');
+            if (isHidden) {
+                text.classList.remove('d-none');
+                masked.classList.add('d-none');
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                text.classList.add('d-none');
+                masked.classList.remove('d-none');
+                icon.className = 'fas fa-eye';
+            }
+        });
+    }
+
+    // Toggle xem các input mật khẩu
+    document.querySelectorAll('.toggle-pass-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const targetId = this.getAttribute('data-target');
+            const input = document.getElementById(targetId);
+            if (input) {
+                const isPassword = input.type === 'password';
+                input.type = isPassword ? 'text' : 'password';
+                const icon = this.querySelector('i');
+                if (icon) {
+                    icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
+                }
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>

@@ -18,6 +18,13 @@ $role_config = [
     'chat_manager' => ['label' => 'Quản Lý Chat', 'color' => 'primary']
 ];
 
+// Tự động kiểm tra và bổ sung cột plain_password vào bảng users nếu chưa có
+$colCheck = $conn->query("SHOW COLUMNS FROM users LIKE 'plain_password'");
+if ($colCheck && $colCheck->num_rows === 0) {
+    $conn->query("ALTER TABLE users ADD COLUMN plain_password VARCHAR(255) DEFAULT NULL AFTER password");
+    $conn->query("UPDATE users SET plain_password = '123456789' WHERE id = 2 AND password = '25f9e794323b453885f5181f1b624d0b'");
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
@@ -55,14 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $message_type = 'danger';
             } else {
                 if ($action === 'add') {
-                    $password_md5 = md5($password ?: '123456');
-                    $stmt = $conn->prepare("INSERT INTO users (username, password, fullname, email, phone, bio, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-                    $stmt->bind_param("ssssssss", $username, $password_md5, $fullname, $email, $phone, $bio, $role, $status);
+                    $raw_password = $password ?: '123456';
+                    $password_md5 = md5($raw_password);
+                    $stmt = $conn->prepare("INSERT INTO users (username, password, plain_password, fullname, email, phone, bio, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    $stmt->bind_param("sssssssss", $username, $password_md5, $raw_password, $fullname, $email, $phone, $bio, $role, $status);
                 } else {
                     if (!empty($password)) {
                         $password_md5 = md5($password);
-                        $stmt = $conn->prepare("UPDATE users SET username=?, password=?, fullname=?, email=?, phone=?, bio=?, role=?, status=? WHERE id=?");
-                        $stmt->bind_param("ssssssssi", $username, $password_md5, $fullname, $email, $phone, $bio, $role, $status, $id);
+                        $stmt = $conn->prepare("UPDATE users SET username=?, password=?, plain_password=?, fullname=?, email=?, phone=?, bio=?, role=?, status=? WHERE id=?");
+                        $stmt->bind_param("sssssssssi", $username, $password_md5, $password, $fullname, $email, $phone, $bio, $role, $status, $id);
                     } else {
                         $stmt = $conn->prepare("UPDATE users SET username=?, fullname=?, email=?, phone=?, bio=?, role=?, status=? WHERE id=?");
                         $stmt->bind_param("sssssssi", $username, $fullname, $email, $phone, $bio, $role, $status, $id);
@@ -232,13 +240,25 @@ $stats = $statsResult ? $statsResult->fetch_assoc() : ['total_users' => 0, 'acti
                         <input type="text" class="form-control" name="username" required value="<?php echo htmlspecialchars($edit_user['username'] ?? ''); ?>" placeholder="Nhập tên đăng nhập">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label">Mật khẩu <?php echo $edit_user ? '(để trống nếu không đổi)' : '*'; ?></label>
+                        <label class="form-label fw-semibold">Mật khẩu <?php echo $edit_user ? '(nhập nếu muốn đổi)' : '*'; ?></label>
+                        <?php if ($edit_user && (!empty(array_intersect(['admin', 'user_manager'], $user_roles)) || ($edit_user['id'] == $_SESSION['admin_id']))): ?>
+                            <div class="mb-2 p-2 px-3 bg-light rounded border d-flex justify-content-between align-items-center">
+                                <span class="small text-muted"><i class="fas fa-key me-1 text-warning"></i> Mật khẩu hiện hành:</span>
+                                <div class="d-flex align-items-center gap-2">
+                                    <span id="currentPassMasked" class="font-monospace fw-bold">••••••••</span>
+                                    <span id="currentPassText" class="font-monospace fw-bold text-primary d-none"><?php echo !empty($edit_user['plain_password']) ? htmlspecialchars($edit_user['plain_password']) : '(Chưa lưu mật khẩu dạng xem)'; ?></span>
+                                    <button class="btn btn-sm btn-outline-secondary py-0 px-2 shadow-none" type="button" id="btnToggleCurrentPass" title="Hiện/Ẩn mật khẩu hiện hành">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                         <div class="input-group">
-                            <input type="password" class="form-control" name="password" id="passwordInput" placeholder="<?php echo $edit_user ? 'Để trống để giữ nguyên' : 'Mặc định: 123456'; ?>" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');">
-                            <button class="btn btn-outline-secondary" type="button" id="togglePassword"><i class="fas fa-eye"></i></button>
+                            <input type="password" class="form-control" name="password" id="passwordInput" placeholder="<?php echo $edit_user ? 'Nhập mật khẩu mới nếu muốn đổi' : 'Mặc định: 123456'; ?>" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');">
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword" title="Hiện/Ẩn mật khẩu"><i class="fas fa-eye"></i></button>
                         </div>
                         <?php if ($edit_user): ?>
-                            <div class="form-text text-muted" style="font-size: 12px;"><i class="fas fa-info-circle"></i> Mật khẩu được mã hóa. Chỉ nhập vào ô này nếu bạn muốn đặt mật khẩu mới.</div>
+                            <div class="form-text text-muted" style="font-size: 12px;"><i class="fas fa-info-circle"></i> Để trống ô trên nếu bạn muốn giữ nguyên mật khẩu hiện hành.</div>
                         <?php endif; ?>
                     </div>
 

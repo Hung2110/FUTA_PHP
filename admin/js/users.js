@@ -20,5 +20,25 @@ document.addEventListener('DOMContentLoaded', function() {
             icon.className = isPassword ? 'fas fa-eye-slash' : 'fas fa-eye';
         });
     }
+
+    // Toggle current password visibility
+    const btnToggleCurrentPass = document.getElementById('btnToggleCurrentPass');
+    if (btnToggleCurrentPass) {
+        btnToggleCurrentPass.addEventListener('click', function() {
+            const masked = document.getElementById('currentPassMasked');
+            const text = document.getElementById('currentPassText');
+            const icon = this.querySelector('i');
+            const isHidden = text.classList.contains('d-none');
+            if (isHidden) {
+                text.classList.remove('d-none');
+                masked.classList.add('d-none');
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                text.classList.add('d-none');
+                masked.classList.remove('d-none');
+                icon.className = 'fas fa-eye';
+            }
+        });
+    }
 });
 

@@ -87,6 +87,17 @@ function loadSessions() {
                 `;
                 list.append(html);
             });
+
+            // Tự động kích hoạt phiên chat nếu có tham số ?session_id= trong URL (từ email cảnh báo)
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetSessionId = urlParams.get('session_id');
+            if (targetSessionId && (!currentSessionId || currentSessionId == targetSessionId)) {
+                const targetItem = $(`.session-item[data-id="${targetSessionId}"]`);
+                if (targetItem.length > 0 && !targetItem.hasClass('active')) {
+                    targetItem.trigger('click');
+                    targetItem[0].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            }
         }
     });
 }
