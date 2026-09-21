@@ -488,7 +488,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     const div = document.createElement('div');
                     div.className = `futa-chat-message ${m.sender}`;
-                    div.innerHTML = formatChatMessage(m.message) + `<div class="futa-chat-time">${msgTimeStr}</div>`;
+
+                    let senderHeader = '';
+                    if (m.sender === 'admin') {
+                        const senderName = m.admin_name || 'FUTA Advertising';
+                        const isBot = (m.admin_name === 'Hệ thống FUTA');
+                        const iconClass = isBot ? 'bi bi-robot' : 'bi bi-headset';
+                        senderHeader = `<div class="futa-sender-name" style="font-size: 11px; font-weight: 600; color: #004aad; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;"><i class="${iconClass}"></i> ${senderName}</div>`;
+                    }
+
+                    div.innerHTML = senderHeader + formatChatMessage(m.message) + `<div class="futa-chat-time">${msgTimeStr}</div>`;
                     msgContainer.appendChild(div);
                     lastMsgId = m.id;
                 });

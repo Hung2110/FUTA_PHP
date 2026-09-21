@@ -5,6 +5,52 @@ require_once __DIR__ . '/chat_notification_service.php';
 
 header('Content-Type: application/json; charset=utf-8');
 
+/**
+ * Tự động gửi lời chào / giới thiệu ban đầu từ FUTA Advertising
+ * trong lúc chờ nhân viên trực tiếp nhận và phản hồi.
+ * Lưu ý: KHÔNG thay đổi last_sender = 'admin' trên bảng chat_sessions để giữ nguyên
+ * cơ chế đếm giờ gửi email cảnh báo 5 phút nếu nhân viên chưa trả lời.
+ */
+function sendAutoGreetingMessage($conn, $sessionId, $customerName = '') {
+    if (!$sessionId || $sessionId <= 0) return false;
+
+    // Tránh gửi lặp nếu tin nhắn mới nhất trong phiên chat đã là lời chào tự động (cooldown 1 phút)
+    $checkStmt = $conn->prepare("
+        SELECT id FROM chat_messages 
+        WHERE session_id = ? 
+          AND sender = 'admin' 
+          AND admin_name = 'Hệ thống FUTA' 
+          AND created_at >= DATE_SUB(NOW(), INTERVAL 1 MINUTE)
+        LIMIT 1
+    ");
+    if ($checkStmt) {
+        $checkStmt->bind_param("i", $sessionId);
+        $checkStmt->execute();
+        $res = $checkStmt->get_result();
+        $alreadySent = ($res && $res->num_rows > 0);
+        $checkStmt->close();
+
+        if ($alreadySent) {
+            return false;
+        }
+    }
+
+    $displayName = !empty(trim($customerName)) ? trim($customerName) : 'Quý khách';
+    $greetingMsg = "Xin chào {$displayName}! Cảm ơn bạn đã liên hệ với FUTA Advertising. "
+                 . "Nhân viên tư vấn của chúng tôi đã nhận được thông tin và sẽ phản hồi bạn trong ít phút. "
+                 . "Trong lúc chờ đợi, nếu cần hỗ trợ khẩn cấp, bạn có thể gọi hotline: 1900 6912 để được hỗ trợ nhanh nhất nhé!";
+
+    $adminName = 'Hệ thống FUTA';
+    $msgStmt = $conn->prepare("INSERT INTO chat_messages (session_id, sender, admin_name, message, created_at) VALUES (?, 'admin', ?, ?, NOW())");
+    if ($msgStmt) {
+        $msgStmt->bind_param("iss", $sessionId, $adminName, $greetingMsg);
+        $success = $msgStmt->execute();
+        $msgStmt->close();
+        return $success;
+    }
+    return false;
+}
+
 $action = $_REQUEST['action'] ?? '';
 switch ($action) {
     case 'start_session':
@@ -56,6 +102,11 @@ switch ($action) {
         $msg_stmt->bind_param("is", $session_id, $initial_message);
         $msg_stmt->execute();
         $msg_stmt->close();
+    }
+
+    // Tự động gửi lời chào / giới thiệu ban đầu từ FUTA Advertising trong lúc chờ nhân viên tiếp nhận
+    if ($session_id > 0) {
+        sendAutoGreetingMessage($conn, $session_id, $name);
     }
 
     if ($session_id > 0) {
@@ -138,6 +189,31 @@ if ($action === 'send_message') {
         $stmt2->close();
 
         $conn->commit();
+
+        // Nếu người gửi là khách hàng, kiểm tra nếu phiên chat chưa từng có phản hồi từ admin hoặc hệ thống
+        if ($sender === 'customer') {
+            $stmtCheck = $conn->prepare("SELECT COUNT(*) as admin_count FROM chat_messages WHERE session_id = ? AND sender = 'admin'");
+            if ($stmtCheck) {
+                $stmtCheck->bind_param("i", $session_id);
+                $stmtCheck->execute();
+                $cRes = $stmtCheck->get_result()->fetch_assoc();
+                $adminCount = (int)($cRes['admin_count'] ?? 0);
+                $stmtCheck->close();
+
+                if ($adminCount === 0) {
+                    $stmtName = $conn->prepare("SELECT name FROM chat_sessions WHERE id = ?");
+                    if ($stmtName) {
+                        $stmtName->bind_param("i", $session_id);
+                        $stmtName->execute();
+                        $nRes = $stmtName->get_result()->fetch_assoc();
+                        $custName = $nRes['name'] ?? '';
+                        $stmtName->close();
+                        sendAutoGreetingMessage($conn, $session_id, $custName);
+                    }
+                }
+            }
+        }
+
         echo json_encode(['success' => true]);
     } catch (Exception $e) {
         $conn->rollback();

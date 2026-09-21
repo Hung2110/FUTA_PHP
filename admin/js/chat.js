@@ -202,7 +202,9 @@ function loadMessages(isInitial = false) {
                 
                 let adminNameHtml = '';
                 if (!isCustomer && m.admin_name) {
-                    adminNameHtml = `<div class="msg-admin-name"><i class="fas fa-headset me-1"></i>${m.admin_name}</div>`;
+                    const isBot = (m.admin_name === 'Hệ thống FUTA');
+                    const icon = isBot ? 'fas fa-robot text-primary' : 'fas fa-headset text-success';
+                    adminNameHtml = `<div class="msg-admin-name"><i class="${icon} me-1"></i>${m.admin_name}</div>`;
                 }
 
                 const html = `
