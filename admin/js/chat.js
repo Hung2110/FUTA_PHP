@@ -3,7 +3,7 @@ let lastMsgId = 0;
 let lastRenderedDate = '';
 let readTimestamps = JSON.parse(localStorage.getItem('futa_admin_chat_read') || '{}');
 let ws = null;
-const apiUrl = '../includes/contact-chat-api.php';
+const apiUrl = window.FUTA_ADMIN_CHAT_API || '../api/contact-chat-api.php';
 
 // 1. KẾT NỐI WEBSOCKET
 function connectWS() {

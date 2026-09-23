@@ -242,6 +242,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const attachInput = document.getElementById('chatAttachFile');
 
     if (chatBtn && chatBox) {
+        const chatApiUrl = window.FUTA_CHAT_API_URL || chatBox.getAttribute('data-api-url') || 'api/contact-chat-api.php';
         let sessionId = localStorage.getItem('futa_chat_session') || null;
         let customerName = localStorage.getItem('futa_chat_name') || '';
         let lastMsgId = 0;
@@ -335,7 +336,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const fd = new URLSearchParams();
                 fd.append('action', 'start_session'); fd.append('name', name); fd.append('phone', phone); fd.append('email', email); fd.append('initial_message', initialMessage);
 
-                const res = await fetch('includes/contact-chat-api.php', { method: 'POST', body: fd }).then(r => r.json());
+                const res = await fetch(chatApiUrl, { method: 'POST', body: fd }).then(r => r.json());
                 if(res.success) {
                     sessionId = res.session_id;
                     customerName = name; 
@@ -375,7 +376,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fd.append('action', 'send_message'); fd.append('session_id', sessionId); fd.append('sender', 'customer'); fd.append('message', msg);
             
             try {
-                const res = await fetch('includes/contact-chat-api.php', { method: 'POST', body: fd }).then(r => r.json());
+                const res = await fetch(chatApiUrl, { method: 'POST', body: fd }).then(r => r.json());
                 if(res.success) {
                     tempDiv.remove(); 
                     await fetchMessages(true); 
@@ -417,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 fd.append('file', file);
                 
                 try {
-                    const res = await fetch('includes/contact-chat-api.php', { method: 'POST', body: fd }).then(r => r.json());
+                    const res = await fetch(chatApiUrl, { method: 'POST', body: fd }).then(r => r.json());
                     if(res.success) {
                         tempDiv.remove();
                         await fetchMessages(true);
@@ -455,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const fetchMessages = async (forceScroll = false) => {
             if(!sessionId) return;
             const t = new Date().getTime(); // Chống cache
-            const res = await fetch(`includes/contact-chat-api.php?action=get_messages&session_id=${sessionId}&last_id=${lastMsgId}&t=${t}`).then(r => r.json());
+            const res = await fetch(`${chatApiUrl}?action=get_messages&session_id=${sessionId}&last_id=${lastMsgId}&t=${t}`).then(r => r.json());
             if(res.success && res.messages.length > 0) {
                 const shouldScroll = forceScroll || (chatBody.scrollTop + chatBody.clientHeight >= chatBody.scrollHeight - 50);
                 

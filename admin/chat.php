@@ -87,6 +87,14 @@ $pageTitle = 'Quản Lý Chat Trực Tuyến';
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <script src="js/chat.js"></script>
+    <?php
+    $adminChatScriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+    $adminChatScriptDir = preg_replace('#/(admin|includes|api)(/.*)?$#i', '', $adminChatScriptDir);
+    $adminChatApiUrl = ($adminChatScriptDir ? $adminChatScriptDir : '') . '/api/contact-chat-api.php';
+    ?>
+    <script>
+    window.FUTA_ADMIN_CHAT_API = '<?php echo htmlspecialchars($adminChatApiUrl, ENT_QUOTES, 'UTF-8'); ?>';
+    </script>
+    <script src="js/chat.js?v=<?php echo file_exists(__DIR__ . '/js/chat.js') ? filemtime(__DIR__ . '/js/chat.js') : time(); ?>"></script>
 </body>
 </html>

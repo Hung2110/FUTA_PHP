@@ -1,9 +1,17 @@
+<?php
+$chatScriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+$chatScriptDir = preg_replace('#/(admin|includes|api)(/.*)?$#i', '', $chatScriptDir);
+$chatApiUrl = ($chatScriptDir ? $chatScriptDir : '') . '/api/contact-chat-api.php';
+?>
 <link rel="stylesheet" href="css/chat-widget.css">
+<script>
+window.FUTA_CHAT_API_URL = '<?php echo htmlspecialchars($chatApiUrl, ENT_QUOTES, 'UTF-8'); ?>';
+</script>
 
 <!-- Khung chứa HTML -->
 <div class="futa-chat-btn" id="futaChatBtn" title="Hỗ trợ trực tuyến"><i class="bi bi-chat-dots-fill"></i></div>
 
-<div class="futa-chat-box" id="futaChatBox">
+<div class="futa-chat-box" id="futaChatBox" data-api-url="<?php echo htmlspecialchars($chatApiUrl, ENT_QUOTES, 'UTF-8'); ?>">
     <div class="futa-chat-header">
         <div class="futa-header-title">
             <div class="title-main" data-i18n="about.chat_title">FUTA ADVERTISING</div>

@@ -43,11 +43,11 @@
     <!-- i18n JS (Đa ngôn ngữ) -->
     <script src="js/i18n.js?v=1.0.0" defer></script>
 
-    <!-- Custom JS -->
-    <script src="js/main.js?v=1.0.0" defer></script>
+    <!-- Custom JS (Tự động cập nhật phiên bản theo filemtime để tránh cache trình duyệt) -->
+    <script src="js/main.js?v=<?php echo file_exists(__DIR__ . '/../js/main.js') ? filemtime(__DIR__ . '/../js/main.js') : time(); ?>" defer></script>
 
     <!-- Security JS (Chặn click chuột phải, F12, xem source) -->
-    <script src="js/security.js?v=1.0.0" defer></script>
+    <script src="js/security.js?v=<?php echo file_exists(__DIR__ . '/../js/security.js') ? filemtime(__DIR__ . '/../js/security.js') : time(); ?>" defer></script>
 
     <!-- Tích hợp Chat Widget dùng chung cho toàn trang -->
     <?php 
